@@ -13,16 +13,16 @@ public class Role {
 
 	private long id;
 	private String roleName;
-	private String lastName;
+	private String Name;
 	private String emailId;
 	
 	public Role() {
 		
 	}
 	
-	public Role(String firstName, String lastName, String emailId) {
-		this.roleName = firstName;
-		this.lastName = lastName;
+	public Role(String roleName, String Name, String emailId) {
+		this.roleName = roleName;
+		this.Name = Name;
 		this.emailId = emailId;
 	}
 	
@@ -35,20 +35,20 @@ public class Role {
 		this.id = id;
 	}
 	
-	@Column(name = "first_name", nullable = false)
+	@Column(name = "roleName", nullable = false)
 	public String getFirstName() {
 		return roleName;
 	}
 	public void setFirstName(String firstName) {
-		this.roleName = firstName;
+		this.roleName = roleName;
 	}
 	
-	@Column(name = "last_name", nullable = false)
+	@Column(name = "Name", nullable = false)
 	public String getLastName() {
-		return lastName;
+		return Name;
 	}
 	public void setLastName(String lastName) {
-		this.lastName = lastName;
+		this.Name = lastName;
 	}
 	
 	@Column(name = "email_address", nullable = false)
@@ -61,7 +61,7 @@ public class Role {
 
 	@Override
 	public String toString() {
-		return "Hostel [id=" + id + ", roleName=" + roleName + ", lastName=" + lastName + ", emailId=" + emailId
+		return "Hostel [id=" + id + ", roleName=" + roleName + ", Name=" + Name + ", emailId=" + emailId
 				+ "]";
 	}
 	
