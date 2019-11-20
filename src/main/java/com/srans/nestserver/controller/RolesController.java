@@ -23,9 +23,10 @@ import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Role;
 import com.srans.nestserver.repository.RoleRepository;
 
-@CrossOrigin(origins = "http://localhost:4200")
+
+@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*") 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v2")
 public class RolesController {
 	@Autowired
 	private RoleRepository roleRepository;
@@ -49,14 +50,14 @@ public class RolesController {
 	}
 
 	@PutMapping("/roles/{id}")
-	public ResponseEntity<Role> updateRole(@PathVariable(value = "id") Long employeeId,
-			@Valid @RequestBody Role employeeDetails) throws ResourceNotFoundException {
-		Role role = roleRepository.findById(employeeId)
-				.orElseThrow(() -> new ResourceNotFoundException("Role not found for this id :: " + employeeId));
+	public ResponseEntity<Role> updateRole(@PathVariable(value = "id") Long role_Id,
+			@Valid @RequestBody Role rolesDetails) throws ResourceNotFoundException {
+		Role role = roleRepository.findById(role_Id)
+				.orElseThrow(() -> new ResourceNotFoundException("Role not found for this id :: " +role_Id));
 
-		role.setEmailId(employeeDetails.getEmailId());
-		role.setLastName(employeeDetails.getLastName());
-		role.setFirstName(employeeDetails.getFirstName());
+		role.setRoleName(rolesDetails.getRoleName());
+		role.setName(rolesDetails.getName());
+		role.setEmailId(rolesDetails.getEmailId());
 		final Role updatedRole = roleRepository.save(role);
 		return ResponseEntity.ok(updatedRole);
 	}

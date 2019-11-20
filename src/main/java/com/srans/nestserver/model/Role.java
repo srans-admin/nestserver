@@ -13,55 +13,62 @@ public class Role {
 
 	private long id;
 	private String roleName;
-	private String Name;
+	private String name;
 	private String emailId;
 	
 	public Role() {
 		
 	}
 	
-	public Role(String roleName, String Name, String emailId) {
+	public Role(long id,String roleName, String name, String emailId) {
 		this.roleName = roleName;
-		this.Name = Name;
+		this.name = name;
 		this.emailId = emailId;
+		this.id=id;
+		
 	}
+	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public long getId() {
 		return id;
 	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
+
 	
-	@Column(name = "roleName", nullable = false)
-	public String getFirstName() {
+	public String getRoleName() {
 		return roleName;
 	}
-	public void setFirstName(String firstName) {
+
+	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
-	
-	@Column(name = "Name", nullable = false)
-	public String getLastName() {
-		return Name;
+
+	@Column(name = "name", nullable = false)
+	public String getName() {
+		return name;
 	}
-	public void setLastName(String lastName) {
-		this.Name = lastName;
+
+	public void setName(String name) {
+		this.name = name;
 	}
+
 	
-	@Column(name = "email_address", nullable = false)
 	public String getEmailId() {
 		return emailId;
 	}
+
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
 	}
 
 	@Override
 	public String toString() {
-		return "Hostel [id=" + id + ", roleName=" + roleName + ", Name=" + Name + ", emailId=" + emailId
+		return "Hostel [id=" + id + ", roleName=" + roleName + ", Name=" + name + ", emailId=" + emailId
 				+ "]";
 	}
 	
