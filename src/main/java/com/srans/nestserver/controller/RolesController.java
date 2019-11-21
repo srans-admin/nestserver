@@ -24,7 +24,10 @@ import com.srans.nestserver.model.Role;
 import com.srans.nestserver.repository.RoleRepository;
 
 
-@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*") 
+
+
+
+@CrossOrigin(origins = "http://localhost:4200") 
 @RestController
 @RequestMapping("/api/v2")
 public class RolesController {
@@ -37,10 +40,10 @@ public class RolesController {
 	}
 
 	@GetMapping("/roles/{id}")
-	public ResponseEntity<Role> getRoleById(@PathVariable(value = "id") Long employeeId)
+	public ResponseEntity<Role> getRoleById(@PathVariable(value = "id") Long roleId)
 			throws ResourceNotFoundException {
-		Role role = roleRepository.findById(employeeId)
-				.orElseThrow(() -> new ResourceNotFoundException("Role not found for this id :: " + employeeId));
+		Role role = roleRepository.findById(roleId)
+				.orElseThrow(() -> new ResourceNotFoundException("Role not found for this id :: " + roleId));
 		return ResponseEntity.ok().body(role);
 	}
 
@@ -63,10 +66,10 @@ public class RolesController {
 	}
 
 	@DeleteMapping("/roles/{id}")
-	public Map<String, Boolean> deleteRole(@PathVariable(value = "id") Long employeeId)
+	public Map<String, Boolean> deleteRole(@PathVariable(value = "id") Long roleId)
 			throws ResourceNotFoundException {
-		Role role = roleRepository.findById(employeeId)
-				.orElseThrow(() -> new ResourceNotFoundException("Role not found for this id :: " + employeeId));
+		Role role = roleRepository.findById(roleId)
+				.orElseThrow(() -> new ResourceNotFoundException("Role not found for this id :: " + roleId));
 
 		roleRepository.delete(role);
 		Map<String, Boolean> response = new HashMap<>();
