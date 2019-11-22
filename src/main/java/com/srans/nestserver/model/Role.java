@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
+
 @Entity
 @Table(name = "role")
 public class Role {
@@ -39,7 +41,7 @@ public class Role {
 		this.id = id;
 	}
 
-	
+	@Column(name = "RoleName")
 	public String getRoleName() {
 		return roleName;
 	}
@@ -68,8 +70,12 @@ public class Role {
 
 	@Override
 	public String toString() {
-		return "Hostel [id=" + id + ", roleName=" + roleName + ", Name=" + name + ", emailId=" + emailId
+		return "Role [id=" + id + ", roleName=" + roleName + ", Name=" + name + ", emailId=" + emailId
 				+ "]";
 	}
 	
-}
+	}
+	
+
+
+

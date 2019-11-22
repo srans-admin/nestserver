@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+//import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
@@ -33,7 +34,7 @@ import com.srans.nestserver.repository.RoleRepository;
 public class RolesController {
 	@Autowired
 	private RoleRepository roleRepository;
-
+	
 	@GetMapping("/roles")
 	public List<Role> getAllRoles() {
 		return roleRepository.findAll();
