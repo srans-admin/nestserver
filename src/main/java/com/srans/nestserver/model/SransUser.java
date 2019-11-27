@@ -9,49 +9,32 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
-@Table(name = "role")
-public class Role implements Serializable {
+@Table(name = "sransuser")
+public class SransUser implements Serializable {
+ 
 	private static final long serialVersionUID = 1L;
 
-	private long id;
-	private String roleName;
-	private String name;
-	private String emailId;
-	
-	public Role() {
-		
-	}
-	
-	public Role(long id,String roleName, String name, String emailId) {
-		this.roleName = roleName;
-		this.name = name;
-		this.emailId = emailId;
-		this.id=id;
-		
-	}
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public long getId() {
-		return id;
+	private long userId;
+	@Column(name = "name")
+	private String name;
+	@Column(name = "emailId")
+	private String emailId;
+	@Column(name = "dob")
+	private String dob;
+	@Column(name = "phoneNumber")
+	private String phoneNumber;
+
+	public long getUserId() {
+		return userId;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
-	@Column(name = "RoleName")
-	public String getRoleName() {
-		return roleName;
-	}
-
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-
-	@Column(name = "name", nullable = false)
 	public String getName() {
 		return name;
 	}
@@ -60,7 +43,6 @@ public class Role implements Serializable {
 		this.name = name;
 	}
 
-	
 	public String getEmailId() {
 		return emailId;
 	}
@@ -69,24 +51,37 @@ public class Role implements Serializable {
 		this.emailId = emailId;
 	}
 
+	public String getDob() {
+		return dob;
+	}
+
+	public void setDob(String dob) {
+		this.dob = dob;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Role [id=");
-		builder.append(id);
-		builder.append(", roleName=");
-		builder.append(roleName);
+		builder.append("SransUser [userId=");
+		builder.append(userId);
 		builder.append(", name=");
 		builder.append(name);
 		builder.append(", emailId=");
 		builder.append(emailId);
+		builder.append(", dob=");
+		builder.append(dob);
+		builder.append(", phoneNumber=");
+		builder.append(phoneNumber);
 		builder.append("]");
 		return builder.toString();
 	}
 
-
 }
-	
-
-
-
