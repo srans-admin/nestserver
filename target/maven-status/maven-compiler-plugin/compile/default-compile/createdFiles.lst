@@ -1,0 +1,13 @@
+com\srans\nestserver\exception\MyFileNotFoundException.class
+com\srans\nestserver\controller\FloorController.class
+com\srans\nestserver\controller\HostelController.class
+com\srans\nestserver\repository\HostelRepository.class
+com\srans\nestserver\model\AuditModel.class
+com\srans\nestserver\model\Floors.class
+com\srans\nestserver\exception\ResourceNotFoundException.class
+com\srans\nestserver\Application.class
+com\srans\nestserver\model\Hostels.class
+com\srans\nestserver\controller\FileUploadController.class
+com\srans\nestserver\exception\ErrorDetails.class
+com\srans\nestserver\exception\GlobalExceptionHandler.class
+com\srans\nestserver\repository\FloorRepository.class
