@@ -35,6 +35,19 @@ public class FloorController {
 	public List<Floors> getAllFloorsByHostelid(@PathVariable(value = "id") Long id) {
 		return floorRepository.findByHostelId(id);
 	}
+	
+	
+	@GetMapping("/hostels/{id}/floor/{floor_id}")
+	public ResponseEntity<Floors> getHostelById(@PathVariable(value = "id") Long hostelsId, @PathVariable(value = "floor_id")Long floor_id)
+			{
+		if (!hostelRepository.existsById(hostelsId)) {
+			throw new ResourceNotFoundException("hostelId " + hostelsId + " not found");
+		}
+
+		Floors floor = floorRepository.findById(floor_id)
+				.orElseThrow(() -> new ResourceNotFoundException("Floor not found for this Hostelid :: " + hostelsId+"Floor not found for this Floor id::" +floor_id));
+		return ResponseEntity.ok().body(floor);
+	}
 
 	@PostMapping("/hostels/{id}/floor")
 	public Floors createFloor(@PathVariable(value = "id") Long id, @Valid @RequestBody Floors floor) {
