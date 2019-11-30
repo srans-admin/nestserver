@@ -18,8 +18,6 @@ public class SransUser implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long userId;
-	@Column(name="userphoto")
-    private	byte userphoto;
 	@Column(name = "name")
 	private String name;
 	@Column(name = "contactNumber")
@@ -74,23 +72,6 @@ public class SransUser implements Serializable {
 
 
 
-
-
-
-
-	public byte getUserphoto() {
-		return userphoto;
-	}
-
-
-
-
-
-
-
-	public void setUserphoto(byte userphoto) {
-		this.userphoto = userphoto;
-	}
 
 
 

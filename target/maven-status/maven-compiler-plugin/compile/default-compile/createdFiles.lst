@@ -13,6 +13,8 @@ com\srans\nestserver\repository\SransUserRepository.class
 com\srans\nestserver\model\Invoice.class
 com\srans\nestserver\controller\RolesController.class
 com\srans\nestserver\controller\FloorController.class
+com\srans\nestserver\model\Rooms.class
+com\srans\nestserver\controller\RoomController.class
 com\srans\nestserver\controller\InvoiceController.class
 com\srans\nestserver\repository\ExpensesRepository.class
 com\srans\nestserver\model\Role.class
@@ -23,6 +25,7 @@ com\srans\nestserver\exception\GlobalExceptionHandler.class
 com\srans\nestserver\repository\ManagementRepository.class
 com\srans\nestserver\repository\FloorRepository.class
 com\srans\nestserver\repository\RoleRepository.class
+com\srans\nestserver\repository\RoomRepository.class
 com\srans\nestserver\model\SransUser.class
 com\srans\nestserver\controller\ManagementController.class
 com\srans\nestserver\controller\SransUserController.class
