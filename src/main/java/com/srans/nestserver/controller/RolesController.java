@@ -25,7 +25,7 @@ import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Role;
 import com.srans.nestserver.repository.RoleRepository;
 
-@CrossOrigin(origins = "http://localhost:4200") 
+@CrossOrigin(origins = "http://localhost:4200",allowedHeaders = "*") 
 @RestController
 @RequestMapping("/api/v1")
 public class RolesController {

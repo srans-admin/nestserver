@@ -25,16 +25,15 @@ import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.SransUser;
 import com.srans.nestserver.repository.SransUserRepository;
 
-
-@CrossOrigin(origins = "http://localhost:4200") 
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1")
 public class SransUserController {
-	
-	//Logger logger = LoggerFactory.getLogger(SransUserController.class);
-	
+
+	// Logger logger = LoggerFactory.getLogger(SransUserController.class);
+
 	@Autowired
-	private SransUserRepository   sransuserRepository;
+	private SransUserRepository sransuserRepository;
 
 	@GetMapping("/sransuser")
 	public List<SransUser> getAllSransUsers() {
@@ -44,14 +43,14 @@ public class SransUserController {
 	@GetMapping("/sransuser/{Id}")
 	public ResponseEntity<SransUser> getSransUserById(@PathVariable(value = "Id") Long SransUserId)
 			throws ResourceNotFoundException {
-		SransUser sransUser = sransuserRepository .findById(SransUserId)
+		SransUser sransUser = sransuserRepository.findById(SransUserId)
 				.orElseThrow(() -> new ResourceNotFoundException("SransUser not found for this Id :: " + SransUserId));
 		return ResponseEntity.ok().body(sransUser);
 	}
 
 	@PostMapping("/sransuser")
 	public SransUser createUser(@RequestBody SransUser sransUser) {
-		System.out.println("User : "+sransUser);
+		System.out.println("User : " + sransUser);
 		return sransuserRepository.save(sransUser);
 	}
 
@@ -59,7 +58,7 @@ public class SransUserController {
 	public ResponseEntity<SransUser> updateUser(@PathVariable(value = "Id") Long SransUserId,
 			@Valid @RequestBody SransUser sransuserDetails) throws ResourceNotFoundException {
 		SransUser sransUser = sransuserRepository.findById(SransUserId)
-				.orElseThrow(() -> new ResourceNotFoundException("SransUser not found for this Id :: " +SransUserId));
+				.orElseThrow(() -> new ResourceNotFoundException("SransUser not found for this Id :: " + SransUserId));
 
 		sransUser.setUserId(sransUser.getUserId());
 		sransUser.setName(sransUser.getName());
@@ -76,8 +75,7 @@ public class SransUserController {
 		sransUser.setEmailId(sransUser.getEmailId());
 		sransUser.setPermanetAddress(sransUser.getPermanetAddress());
 		sransUser.setIdProof(sransUser.getIdProof());
-	
-		
+
 		final SransUser updatedSransUser = sransuserRepository.save(sransUser);
 		return ResponseEntity.ok(updatedSransUser);
 	}
@@ -85,7 +83,7 @@ public class SransUserController {
 	@DeleteMapping("/sransuser/{Id}")
 	public <sransuserRepository> Map<String, Boolean> deleteUser(@PathVariable(value = "Id") Long SransUserId)
 			throws ResourceNotFoundException {
-		SransUser sransUser = sransuserRepository . findById(SransUserId)
+		SransUser sransUser = sransuserRepository.findById(SransUserId)
 				.orElseThrow(() -> new ResourceNotFoundException("SransUser not found for this id :: " + SransUserId));
 
 		sransuserRepository.delete(sransUser);

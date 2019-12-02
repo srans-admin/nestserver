@@ -47,422 +47,118 @@ public class SransUser implements Serializable {
 	private String emailId;
 	@Column(name="permanetAddress")
 	private String permanetAddress;
-	@Column(name="idProofphoto")
-	private byte idProofPhoto;
-	
-	
-	
-
-
-
-
+	@Column(name="idProof")
+	private String idProof;
 	public long getUserId() {
 		return userId;
 	}
-
-
-
-
-
-
-
 	public void setUserId(long userId) {
 		this.userId = userId;
 	}
-
-
-
-
-
-
-
-
-
-
 	public String getName() {
 		return name;
 	}
-
-
-
-
-
-
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
-
-
-
-
-
-
 	public String getContactNumber() {
 		return contactNumber;
 	}
-
-
-
-
-
-
-
 	public void setContactNumber(String contactNumber) {
 		this.contactNumber = contactNumber;
 	}
-
-
-
-
-
-
-
 	public String getFatherName() {
 		return fatherName;
 	}
-
-
-
-
-
-
-
 	public void setFatherName(String fatherName) {
 		this.fatherName = fatherName;
 	}
-
-
-
-
-
-
-
 	public String getFatherphoneNumber() {
 		return fatherphoneNumber;
 	}
-
-
-
-
-
-
-
 	public void setFatherphoneNumber(String fatherphoneNumber) {
 		this.fatherphoneNumber = fatherphoneNumber;
 	}
-
-
-
-
-
-
-
 	public String getMotherName() {
 		return motherName;
 	}
-
-
-
-
-
-
-
 	public void setMotherName(String motherName) {
 		this.motherName = motherName;
 	}
-
-
-
-
-
-
-
 	public String getMotherphoneNumber() {
 		return motherphoneNumber;
 	}
-
-
-
-
-
-
-
 	public void setMotherphoneNumber(String motherphoneNumber) {
 		this.motherphoneNumber = motherphoneNumber;
 	}
-
-
-
-
-
-
-
 	public String getDob() {
 		return dob;
 	}
-
-
-
-
-
-
-
 	public void setDob(String dob) {
 		this.dob = dob;
 	}
-
-
-
-
-
-
-
 	public String getBloodGroup() {
 		return bloodGroup;
 	}
-
-
-
-
-
-
-
 	public void setBloodGroup(String bloodGroup) {
 		this.bloodGroup = bloodGroup;
 	}
-
-
-
-
-
-
-
 	public String getEmergencyContactNumber() {
 		return emergencyContactNumber;
 	}
-
-
-
-
-
-
-
 	public void setEmergencyContactNumber(String emergencyContactNumber) {
 		this.emergencyContactNumber = emergencyContactNumber;
 	}
-
-
-
-
-
-
-
 	public String getNameOfTheEmployer() {
 		return nameOfTheEmployer;
 	}
-
-
-
-
-
-
-
 	public void setNameOfTheEmployer(String nameOfTheEmployer) {
 		this.nameOfTheEmployer = nameOfTheEmployer;
 	}
-
-
-
-
-
-
-
 	public String getOfficeAddress() {
 		return officeAddress;
 	}
-
-
-
-
-
-
-
 	public void setOfficeAddress(String officeAddress) {
 		this.officeAddress = officeAddress;
 	}
-
-
-
-
-
-
-
 	public String getTelephoneNumber() {
 		return telephoneNumber;
 	}
-
-
-
-
-
-
-
 	public void setTelephoneNumber(String telephoneNumber) {
 		this.telephoneNumber = telephoneNumber;
 	}
-
-
-
-
-
-
-
 	public String getEmailId() {
 		return emailId;
 	}
-
-
-
-
-
-
-
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
 	}
-
-
-
-
-
-
-
 	public String getPermanetAddress() {
 		return permanetAddress;
 	}
-
-
-
-
-
-
-
 	public void setPermanetAddress(String permanetAddress) {
 		this.permanetAddress = permanetAddress;
 	}
-
-
-
-
-
-
-
-	
-
-
-
-
-
-
-
-	public byte getIdProof() {
-		return idProofPhoto;
+	public String getIdProof() {
+		return idProof;
 	}
-
-
-
-
-
-
-
-	public void setIdProof(byte idProof) {
-		this.idProofPhoto = idProof;
+	public void setIdProof(String idProof) {
+		this.idProof = idProof;
 	}
-
-
-
-
-
-
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-
-
-
-
-
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SransUser [userId=");
-		builder.append(userId);
-		builder.append(", name=");
-		builder.append(name);
-		builder.append(", contactNumber=");
-		builder.append(contactNumber);
-		builder.append(", fatherName=");
-		builder.append(fatherName);
-		builder.append(", fatherphoneNumber=");
-		builder.append(fatherphoneNumber);
-		builder.append(", motherName=");
-		builder.append(motherName);
-		builder.append(", motherphoneNumber=");
-		builder.append(motherphoneNumber);
-		builder.append(", dob=");
-		builder.append(dob);
-		builder.append(", bloodGroup=");
-		builder.append(bloodGroup);
-		builder.append(", emergencyContactNumber=");
-		builder.append(emergencyContactNumber);
-		builder.append(", nameOfTheEmployer=");
-		builder.append(nameOfTheEmployer);
-		builder.append(", officeAddress=");
-		builder.append(officeAddress);
-		builder.append(", telephoneNumber=");
-		builder.append(telephoneNumber);
-		builder.append(", emailId=");
-		builder.append(emailId);
-		builder.append(", permanetAddress=");
-		builder.append(permanetAddress);
-		builder.append(", idProof=");
-		builder.append(idProofPhoto);
-		builder.append("]");
+		builder.append("SransUser [userId=").append(userId).append(", name=").append(name).append(", contactNumber=")
+				.append(contactNumber).append(", fatherName=").append(fatherName).append(", fatherphoneNumber=")
+				.append(fatherphoneNumber).append(", motherName=").append(motherName).append(", motherphoneNumber=")
+				.append(motherphoneNumber).append(", dob=").append(dob).append(", bloodGroup=").append(bloodGroup)
+				.append(", emergencyContactNumber=").append(emergencyContactNumber).append(", nameOfTheEmployer=")
+				.append(nameOfTheEmployer).append(", officeAddress=").append(officeAddress).append(", telephoneNumber=")
+				.append(telephoneNumber).append(", emailId=").append(emailId).append(", permanetAddress=")
+				.append(permanetAddress).append("]");
 		return builder.toString();
 	}
-
-
-
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 
 }

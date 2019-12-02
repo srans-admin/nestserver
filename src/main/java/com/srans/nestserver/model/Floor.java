@@ -17,8 +17,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "floors")
-public class Floors extends AuditModel {
+@Table(name = "floor")
+public class Floor extends AuditModel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,8 +28,7 @@ public class Floors extends AuditModel {
 
 	
 	@NotNull
-	@Column(name = "floor_name")
-	private String floor_name;
+	private String floorName;
 
 	@Column(name = "description")
 	private String description;
@@ -38,9 +37,8 @@ public class Floors extends AuditModel {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "hostel_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JsonIgnore
-
-	private Hostels hostel;
+	@JsonIgnore 
+	private Hostel hostel;
 
 	public Long getId() {
 		return id;
@@ -50,13 +48,7 @@ public class Floors extends AuditModel {
 		this.id = id;
 	}
 
-	public String getFloor_name() {
-		return floor_name;
-	}
-
-	public void setFloor_name(String floor_name) {
-		this.floor_name = floor_name;
-	}
+	 
 
 	public String getDescription() {
 		return description;
@@ -66,25 +58,33 @@ public class Floors extends AuditModel {
 		this.description = description;
 	}
 
-	public Hostels getHostel() {
+	public Hostel getHostel() {
 		return hostel;
 	}
 
-	public void setHostel(Hostels hostel) {
+	public void setHostel(Hostel hostel) {
 		this.hostel = hostel;
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	} 
+
+	public String getFloorName() {
+		return floorName;
+	}
+
+	public void setFloorName(String floorName) {
+		this.floorName = floorName;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Floors [id=");
+		builder.append("Floor [id=");
 		builder.append(id);
-		builder.append(", floor_name=");
-		builder.append(floor_name);
+		builder.append(", floorName=");
+		builder.append(floorName);
 		builder.append(", description=");
 		builder.append(description);
 		builder.append(", hostel=");
@@ -92,5 +92,7 @@ public class Floors extends AuditModel {
 		builder.append("]");
 		return builder.toString();
 	}
+	
+	
 
 }

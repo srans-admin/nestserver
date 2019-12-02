@@ -27,15 +27,18 @@ public class Rooms extends AuditModel {
 
 	@Column(name = "facilities")
 	private String facilities;
+	
+	@Column(name="roomstatus")
+	private String roomstatus;
 
-	@Column(name = "description")
-	private String description;
+	@Column(name="sharetype")
+	private int sharetype;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "floor_id", referencedColumnName = "id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
-	private Floors floor;
+	private Floor floor;
 
 	public Long getId() {
 		return id;
@@ -53,28 +56,39 @@ public class Rooms extends AuditModel {
 		this.facilities = facilities;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getRoomstatus() {
+		return roomstatus;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setRoomstatus(String roomstatus) {
+		this.roomstatus = roomstatus;
 	}
 
-	public Floors getFloor() {
+	public int getSharetype() {
+		return sharetype;
+	}
+
+	public void setSharetype(int sharetype) {
+		this.sharetype = sharetype;
+	}
+
+	public Floor getFloor() {
 		return floor;
 	}
 
-	public void setFloor(Floors floor) {
+	public void setFloor(Floor floor) {
 		this.floor = floor;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Rooms [id=").append(id).append(", facilities=").append(facilities).append(", description=")
-				.append(description).append(", floor=").append(floor).append("]");
+		builder.append("Rooms [id=").append(id).append(", facilities=").append(facilities).append(", roomstatus=")
+				.append(roomstatus).append(", sharetype=").append(sharetype).append(", floor=").append(floor)
+				.append("]");
 		return builder.toString();
 	}
 
+	
+	
 }

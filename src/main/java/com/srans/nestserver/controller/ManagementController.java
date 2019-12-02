@@ -30,7 +30,7 @@ import com.srans.nestserver.repository.ManagementRepository;
 
 
 
-@CrossOrigin(origins = "http://localhost:4200") 
+@CrossOrigin(origins = "http://localhost:4200",allowedHeaders = "*") 
 @RestController
 @RequestMapping("/api/v1")
 public class ManagementController {
