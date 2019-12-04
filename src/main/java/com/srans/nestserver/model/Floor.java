@@ -1,27 +1,29 @@
 package com.srans.nestserver.model;
 
+import java.util.List;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
-@Table(name = "floors")
+@Table(name = "floor")
 public class Floor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
-	private String floor_name;
-
-	private String description;
-
+	@Column private Long id; 
+	@Column private String floorName; 
+	@Column private String description;
+	
 	@Transient
+	private List<Room> rooms;
+
+	/*@Transient
 	@ManyToOne
 	@JoinColumn(name = "floor_id", referencedColumnName = "id")
 	private Floor floor;
@@ -29,20 +31,11 @@ public class Floor {
 	@Transient
 	@ManyToOne
 	@JoinColumn(name = "hostel_id", referencedColumnName = "id")
-	private Hostels hostel;
+	private Hostel hostel;*/
 
 	public Floor() {
 		super();
 		// TODO Auto-generated constructor stub
-	}
-
-	public Floor(Long id, String floor_name, String description, Floor floor, Hostels hostel) {
-		super();
-		this.id = id;
-		this.floor_name = floor_name;
-		this.description = description;
-		this.floor = floor;
-		this.hostel = hostel;
 	}
 
 	public Long getId() {
@@ -53,12 +46,12 @@ public class Floor {
 		this.id = id;
 	}
 
-	public String getFloor_name() {
-		return floor_name;
+	public String getFloorName() {
+		return floorName;
 	}
 
-	public void setFloor_name(String floor_name) {
-		this.floor_name = floor_name;
+	public void setFloorName(String floorName) {
+		this.floorName = floorName;
 	}
 
 	public String getDescription() {
@@ -69,20 +62,12 @@ public class Floor {
 		this.description = description;
 	}
 
-	public Floor getFloor() {
-		return floor;
+	public List<Room> getRooms() {
+		return rooms;
 	}
 
-	public void setFloor(Floor floor) {
-		this.floor = floor;
-	}
-
-	public Hostels getHostel() {
-		return hostel;
-	}
-
-	public void setHostel(Hostels hostel) {
-		this.hostel = hostel;
+	public void setRooms(List<Room> rooms) {
+		this.rooms = rooms;
 	}
 
 	@Override
@@ -90,16 +75,16 @@ public class Floor {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Floor [id=");
 		builder.append(id);
-		builder.append(", floor_name=");
-		builder.append(floor_name);
+		builder.append(", floorName=");
+		builder.append(floorName);
 		builder.append(", description=");
 		builder.append(description);
-		builder.append(", floor=");
-		builder.append(floor);
-		builder.append(", hostel=");
-		builder.append(hostel);
+		builder.append(", rooms=");
+		builder.append(rooms);
 		builder.append("]");
 		return builder.toString();
 	}
 
+	 
+	 
 }

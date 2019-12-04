@@ -7,11 +7,9 @@ com\srans\nestserver\exception\ResourceNotFoundException.class
 com\srans\nestserver\model\Management.class
 com\srans\nestserver\controller\ExpensesController.class
 com\srans\nestserver\controller\FileUploadController.class
-com\srans\nestserver\model\Hostel.class
 com\srans\nestserver\repository\SransUserRepository.class
 com\srans\nestserver\model\Invoice.class
 com\srans\nestserver\controller\RolesController.class
-com\srans\nestserver\model\Rooms.class
 com\srans\nestserver\controller\RoomController.class
 com\srans\nestserver\controller\InvoiceController.class
 com\srans\nestserver\repository\ExpensesRepository.class

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.srans.nestserver.model.Rooms;
+import com.srans.nestserver.model.Room;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.RoomRepository;
 

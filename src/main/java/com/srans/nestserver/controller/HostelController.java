@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.srans.nestserver.model.Hostels;
+import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.RoomRepository;
@@ -23,7 +23,7 @@ public class HostelController {
 	private HostelRepository hostelRepository;
 
 	@Autowired
-	private FloorRepository floorRepository;
+	FloorRepository floorRepository;
 
 	@Autowired
 	RoomRepository roomRepository;
@@ -175,9 +175,11 @@ public class HostelController {
 	 * ResourceNotFoundException("roomId " + id + " not found")); }
 	 */
 
-	@PostMapping("/hostels/save")
-	public Hostels saveHostel(@Valid @RequestBody Hostels hostel) {
-		return  hostelRepository.save(hostel);
+	@PostMapping("/hostels")
+	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) {
+		
+		return hostelRepository.saveWholeObject(hostel);
+		//return  hostelRepository.save(hostel);
 	}
 
 }

@@ -1,13 +1,17 @@
 package com.srans.nestserver.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.srans.nestserver.model.Hostels;
+import com.srans.nestserver.model.Hostel;
 
 
 @Repository
-public interface HostelRepository extends JpaRepository<Hostels, Long> {
+public interface HostelRepository extends JpaRepository<Hostel, Long> {
+	
+	@Autowired 
+	FloorRepository floorRepository = null;
 	
 	/*
 	 * @Autowired public FloorRepository floorRepository=null;
@@ -19,5 +23,19 @@ public interface HostelRepository extends JpaRepository<Hostels, Long> {
 	 * floor = floorRepository.save(floor); } return hostel; }
 	 */
 	 
+	
+	public default Hostel saveWholeObject(Hostel hostel){
+		
+		Hostel tmpHostel = null;
+		
+		tmpHostel = this.save(hostel);
+		
+	    hostel.getfloors().forEach( floor -> floorRepository.saveWholeObject(floor));
+		
+	    tmpHostel.setfloors(hostel.getfloors());
+	    
+		return tmpHostel;
+		
+	}
 
 }
