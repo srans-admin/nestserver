@@ -4,6 +4,7 @@ C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\model\Expenses.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\repository\ExpensesRepository.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\model\Invoice.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\model\Role.java
+C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\model\Hostel.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\controller\HostelController.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\repository\SransUserRepository.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\repository\RoleRepository.java
@@ -12,11 +13,9 @@ C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\controller\InvoiceCon
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\repository\HostelRepository.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\exception\MyFileNotFoundException.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\controller\RolesController.java
-C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\controller\FloorController.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\repository\ManagementRepository.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\controller\FileUploadController.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\controller\ManagementController.java
-C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\model\Hostels.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\repository\RoomRepository.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\model\Management.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\exception\ErrorDetails.java
@@ -25,7 +24,7 @@ C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\model\SransUser.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\repository\FloorRepository.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\exception\ResourceNotFoundException.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\model\Rooms.java
-C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\model\Floors.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\repository\InvoiceRepository.java
+C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\model\Floor.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\exception\GlobalExceptionHandler.java
 C:\CodeBase\nest-server\src\main\java\com\srans\nestserver\controller\SransUserController.java
