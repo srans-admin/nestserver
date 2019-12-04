@@ -11,7 +11,7 @@ import com.srans.nestserver.model.Hostel;
 public interface HostelRepository extends JpaRepository<Hostel, Long> {
 	
 	@Autowired 
-	FloorRepository floorRepository = null;
+	public FloorRepository floorRepository = null ;
 	
 	/*
 	 * @Autowired public FloorRepository floorRepository=null;
@@ -26,7 +26,7 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 	
 	public default Hostel saveWholeObject(Hostel hostel){
 		
-		Hostel tmpHostel = null;
+		Hostel tmpHostel = new Hostel();
 		
 		tmpHostel = this.save(hostel);
 		

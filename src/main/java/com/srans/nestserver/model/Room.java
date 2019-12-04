@@ -14,8 +14,10 @@ public class Room {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id; 
+	 @Column private Long hostelId;
+	 @Column private Long floorId;
 	@Column private String roomName; 
-	@Column private int roomType; 
+	@Column private String roomType; 
 	@Column private int rent;
 	
 	/*@Transient
@@ -43,11 +45,11 @@ public class Room {
 		this.roomName = roomName;
 	}
 
-	public int getRoomType() {
+	public String getRoomType() {
 		return roomType;
 	}
 
-	public void setRoomType(int roomType) {
+	public void setRoomType(String roomType) {
 		this.roomType = roomType;
 	}
 
@@ -59,11 +61,31 @@ public class Room {
 		this.rent = rent;
 	}
 
+	public Long getHostelId() {
+		return hostelId;
+	}
+
+	public void setHostelId(Long hostelId) {
+		this.hostelId = hostelId;
+	}
+
+	public Long getFloorId() {
+		return floorId;
+	}
+
+	public void setFloorId(Long floorId) {
+		this.floorId = floorId;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Room [id=");
 		builder.append(id);
+		builder.append(", hostelId=");
+		builder.append(hostelId);
+		builder.append(", floorId=");
+		builder.append(floorId);
 		builder.append(", roomName=");
 		builder.append(roomName);
 		builder.append(", roomType=");
@@ -74,8 +96,7 @@ public class Room {
 		return builder.toString();
 	}
 
-	
-
+	 
 	 
 	 
 

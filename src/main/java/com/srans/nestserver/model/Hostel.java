@@ -26,11 +26,14 @@ public class Hostel {
 	@Column private String hostelType; 
 	
 	@Transient
-	private List<Floor> floors = new ArrayList<>();
+	private List<Floor> floors ;
 
 	public Hostel() {
 		super();
-		// TODO Auto-generated constructor stub
+		this.hostelName = "";
+		this.hostelAddress = "";
+		this.hostelType = "";
+		this.floors = new ArrayList<>();
 	}
 
 	public Hostel(Long id, String hostelName, String hostelAddress, String hostelType, List<Floor> floors) {

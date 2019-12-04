@@ -1,14 +1,18 @@
 package com.srans.nestserver.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.srans.nestserver.model.Floor;
 import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
@@ -174,12 +178,34 @@ public class HostelController {
 	 * return ResponseEntity.ok().build(); }).orElseThrow(() -> new
 	 * ResourceNotFoundException("roomId " + id + " not found")); }
 	 */
+	
+	@GetMapping("/hostels") 
+	public List<Hostel> getAllPosts() {
+		return  hostelRepository.findAll(); 
+	}
 
 	@PostMapping("/hostels")
 	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) {
 		
-		return hostelRepository.saveWholeObject(hostel);
-		//return  hostelRepository.save(hostel);
+		System.out.println("Before Save: "+hostel);
+		Hostel responseHostel = hostelRepository.save(hostel);
+ 
+		
+		responseHostel.getfloors().forEach( floor -> {
+	    	floor.setHostelId(responseHostel.getId());
+	    	Floor resFloor = floorRepository.save(floor);
+	    	
+	    	floor.getRooms().forEach( room -> {
+	    		room.setHostelId(responseHostel.getId());
+	    		room.setFloorId(resFloor.getId());
+	    		roomRepository.save(room);
+	    		
+	    	});
+	    	
+	    }); 
+		
+		System.out.println("After Save: "+hostel);
+		return  responseHostel;
 	}
 
 }

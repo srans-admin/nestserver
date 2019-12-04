@@ -1,5 +1,6 @@
 package com.srans.nestserver.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -16,9 +17,15 @@ public class Floor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column private Long id; 
+	@Column private Long id;
+	@Column
+	private Long hostelId;
+	
+
 	@Column private String floorName; 
 	@Column private String description;
+	 
+	
 	
 	@Transient
 	private List<Room> rooms;
@@ -35,9 +42,17 @@ public class Floor {
 
 	public Floor() {
 		super();
-		// TODO Auto-generated constructor stub
+		this.rooms = new ArrayList();
 	}
 
+	
+	public Long getHostelId() {
+		return hostelId;
+	}
+
+	public void setHostelId(Long hostelId) {
+		this.hostelId = hostelId;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -75,6 +90,8 @@ public class Floor {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Floor [id=");
 		builder.append(id);
+		builder.append(", hostelId=");
+		builder.append(hostelId);
 		builder.append(", floorName=");
 		builder.append(floorName);
 		builder.append(", description=");
