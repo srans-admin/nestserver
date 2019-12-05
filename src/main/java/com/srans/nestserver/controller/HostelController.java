@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.hibernate.annotations.common.util.impl.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,6 +30,8 @@ import com.srans.nestserver.repository.RoomRepository;
 @RequestMapping("api/v1")
 @RestController
 public class HostelController {
+	
+	Logger logger=org.slf4j.LoggerFactory.getLogger(HostelController.class);
 
 	@Autowired
 	private HostelRepository hostelRepository;
@@ -45,6 +49,8 @@ public class HostelController {
 
 	@PostMapping("/hostels")
 	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) {
+		
+		logger.trace("Adding All Hostel Details..");
 
 		System.out.println("Before Save: " + hostel);
 		Hostel responseHostel = hostelRepository.save(hostel);
@@ -88,6 +94,7 @@ public class HostelController {
 
 	@GetMapping("/hostels/{id}/floor")
 	public List<Floor> getAllFloorsByHostelid(@PathVariable(value = "id") Long id) {
+		logger.info("All Floor Getting");
 		return floorRepository.findByHostelId(id);
 	}
 
