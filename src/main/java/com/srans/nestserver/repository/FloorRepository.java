@@ -1,18 +1,22 @@
 package com.srans.nestserver.repository;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.srans.nestserver.model.Floor;
-import com.srans.nestserver.model.Hostel;
 
 @Repository
 public interface FloorRepository extends JpaRepository<Floor, Long> {
-	/*
-	 * List<Floor> findByHostelId(Long hostel_id); Optional<Floor>
-	 * findByIdAndHostelId(Long floor_id, Long hostel_id);
-	 */
+	
+	
+	  List<Floor> findByHostelId(Long hostel_id); Optional<Floor>
+	  findByIdAndHostelId(Long floor_id, Long hostel_id);
+	 
+	 
 	
 	@Autowired
 	RoomRepository roomRepository = null;

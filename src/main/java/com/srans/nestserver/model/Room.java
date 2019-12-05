@@ -2,10 +2,18 @@ package com.srans.nestserver.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "room")
@@ -25,15 +33,9 @@ public class Room {
 	@Column
 	private int roomRent;
 
-	/*
-	 * @Transient
-	 * 
-	 * @OneToMany(mappedBy = "room", cascade = { CascadeType.MERGE,
-	 * CascadeType.PERSIST }) private List<Floor> hostelList = new ArrayList<>();
-	 */
 	public Room() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Long getId() {

@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Implementation-Title: nest-server
 Implementation-Version: 0.0.1
-Built-By: Mine
+Built-By: user
 Implementation-Vendor-Id: com.srans
-Build-Jdk: 1.8.0_65
+Build-Jdk: 1.8.0_221
 Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
  ot-starter-parent/nest-server
 Created-By: Maven Integration for Eclipse

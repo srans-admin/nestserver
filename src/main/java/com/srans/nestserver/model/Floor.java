@@ -17,35 +17,24 @@ public class Floor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column private Long id;
+	@Column
+	private Long id;
 	@Column
 	private Long hostelId;
-	
 
-	@Column private String floorName; 
-	@Column private String description;
-	 
-	
-	
+	@Column
+	private String floorName;
+	@Column
+	private String description;
+
 	@Transient
 	private List<Room> rooms;
-
-	/*@Transient
-	@ManyToOne
-	@JoinColumn(name = "floor_id", referencedColumnName = "id")
-	private Floor floor;
-
-	@Transient
-	@ManyToOne
-	@JoinColumn(name = "hostel_id", referencedColumnName = "id")
-	private Hostel hostel;*/
 
 	public Floor() {
 		super();
 		this.rooms = new ArrayList();
 	}
 
-	
 	public Long getHostelId() {
 		return hostelId;
 	}
@@ -53,6 +42,7 @@ public class Floor {
 	public void setHostelId(Long hostelId) {
 		this.hostelId = hostelId;
 	}
+
 	public Long getId() {
 		return id;
 	}
@@ -102,6 +92,4 @@ public class Floor {
 		return builder.toString();
 	}
 
-	 
-	 
 }
