@@ -8,22 +8,29 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "room") 
+@Table(name = "room")
 public class Room {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id; 
-	 @Column private Long hostelId;
-	 @Column private Long floorId;
-	@Column private String roomName; 
-	@Column private String roomType; 
-	@Column private int rent;
-	
-	/*@Transient
-	@OneToMany(mappedBy = "room", cascade = { CascadeType.MERGE, CascadeType.PERSIST })
-	private List<Floor> hostelList = new ArrayList<>();
-*/
+	private Long id;
+	@Column
+	private Long hostelId;
+	@Column
+	private Long floorId;
+	@Column
+	private String roomName;
+	@Column
+	private String roomType;
+	@Column
+	private int roomRent;
+
+	/*
+	 * @Transient
+	 * 
+	 * @OneToMany(mappedBy = "room", cascade = { CascadeType.MERGE,
+	 * CascadeType.PERSIST }) private List<Floor> hostelList = new ArrayList<>();
+	 */
 	public Room() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -53,12 +60,12 @@ public class Room {
 		this.roomType = roomType;
 	}
 
-	public int getRent() {
-		return rent;
+	public int getRoomRent() {
+		return roomRent;
 	}
 
-	public void setRent(int rent) {
-		this.rent = rent;
+	public void setRoomRent(int roomRent) {
+		this.roomRent = roomRent;
 	}
 
 	public Long getHostelId() {
@@ -90,14 +97,10 @@ public class Room {
 		builder.append(roomName);
 		builder.append(", roomType=");
 		builder.append(roomType);
-		builder.append(", rent=");
-		builder.append(rent);
+		builder.append(", roomRent=");
+		builder.append(roomRent);
 		builder.append("]");
 		return builder.toString();
 	}
-
-	 
-	 
-	 
 
 }
