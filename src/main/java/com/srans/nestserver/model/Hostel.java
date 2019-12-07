@@ -28,8 +28,8 @@ public class Hostel {
 	 
 	@Column private String receptionImage;
 	
-	@Transient
-	private MultipartFile receptionUIImage;
+	//@Transient
+	//private MultipartFile receptionUIImage;
 	
 	@Transient
 	private List<Floor> floors ;
@@ -100,21 +100,13 @@ public class Hostel {
 		this.receptionImage = receptionImage;
 	}
 
-	public MultipartFile getReceptionUIImage() {
+	/*public MultipartFile getReceptionUIImage() {
 		return receptionUIImage;
 	}
 
 	public void setReceptionUIImage(MultipartFile receptionUIImage) {
 		this.receptionUIImage = receptionUIImage;
-	}
-
-	public List<Floor> getFloors() {
-		return floors;
-	}
-
-	public void setFloors(List<Floor> floors) {
-		this.floors = floors;
-	}
+	}*/ 
 
 	@Override
 	public String toString() {

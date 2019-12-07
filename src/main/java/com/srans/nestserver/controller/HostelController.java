@@ -1,7 +1,6 @@
 package com.srans.nestserver.controller;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.StandardCopyOption;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -74,36 +74,40 @@ public class HostelController {
 
 			});
 
-		});
-		/*
-		//Image Saving Stuff
-		MultipartFile file = hostel.getReceptionUIImage();
+		}); 
+		logger.info("OUT::POST::/hostels::saveHostel::"+hostel); 
+		return responseHostel;
+	}
+	
+	
+	@PostMapping("/hostels/uploadImage/{cat}/{id}")
+	public void uploadHostelImages(@RequestParam("file") MultipartFile file,@PathVariable("cat") String cat, @PathVariable("id") Long id) throws NSException {
+		 
+		logger.info("In::POST:://hostels/uploadImage/{cat}/{id}::uploadHostelImages::"+id+"::"+cat); 
+		 
 		InputStream inputStream = null;
 		try {
 			 
-		inputStream = file.getInputStream(); 
-		String targetDir = System.getProperty("server.servlet.context-path");
-		if(targetDir == null){
-			targetDir = "uploads/"+hostel.getHostelName(); 
-		}
-		new File(targetDir).mkdir(); 
+		inputStream = file.getInputStream();
 		
-	    File targetFile = new File(targetDir+File.separator+"reception");
+		String targetDir = "uploads/h-"+id; 
+		new File(targetDir).mkdir(); 
+		targetDir = targetDir+File.separator+cat;
+		new File(targetDir).mkdir();
+		
+	    File targetFile = new File(targetDir+File.separator+file.getOriginalFilename());
 	 
 	    java.nio.file.Files.copy( inputStream,  targetFile.toPath(),  StandardCopyOption.REPLACE_EXISTING);
-	 
 	   
-	    
 		} catch (IOException e) {
 			 throw new NSException("NS0001");
 		}finally{
 			if( inputStream != null){
 			 IOUtils.closeQuietly(inputStream);
 			}
-		}*/
+		}
+		logger.info("OUT::POST:://hostels/uploadImage/{cat}/{id}::uploadHostelImages::"+id+"::"+cat); 
 
-	logger.info("OUT::POST::/hostels::saveHostel::"+hostel); 
-		return responseHostel;
 	}
 
 	@PutMapping("/hostels/{id}")
