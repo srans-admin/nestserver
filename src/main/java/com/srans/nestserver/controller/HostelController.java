@@ -1,17 +1,16 @@
 package com.srans.nestserver.controller;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,6 +31,7 @@ import com.srans.nestserver.model.Room;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.RoomRepository;
+import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
@@ -39,7 +39,7 @@ import com.srans.nestserver.util.NSException;
 @RestController
 public class HostelController {
 	
-	Logger logger=  LoggerFactory.getLogger(HostelController.class);
+	private Logger logger=  LoggerFactory.getLogger(HostelController.class);
 
 	@Autowired
 	private HostelRepository hostelRepository;
@@ -49,6 +49,9 @@ public class HostelController {
 
 	@Autowired
 	private RoomRepository roomRepository;
+	
+	@Autowired
+	private StorageService storageService;
 
 	@GetMapping("/hostels")
 	public List<Hostel> getAllPosts() {
@@ -80,33 +83,22 @@ public class HostelController {
 	}
 	
 	
-	@PostMapping("/hostels/uploadImage/{cat}/{id}")
-	public void uploadHostelImages(@RequestParam("file") MultipartFile file,@PathVariable("cat") String cat, @PathVariable("id") Long id) throws NSException {
+	@PostMapping("/hostels/{id}/upload/{cat}")
+	public void storeHostelImage( @PathVariable("id") Long id, @RequestParam("file") MultipartFile file,@PathVariable("cat") String cat) throws NSException {
 		 
-		logger.info("In::POST:://hostels/uploadImage/{cat}/{id}::uploadHostelImages::"+id+"::"+cat); 
-		 
-		InputStream inputStream = null;
-		try {
-			 
-		inputStream = file.getInputStream();
-		
-		String targetDir = "uploads/h-"+id; 
-		new File(targetDir).mkdir(); 
-		targetDir = targetDir+File.separator+cat;
-		new File(targetDir).mkdir();
-		
-	    File targetFile = new File(targetDir+File.separator+file.getOriginalFilename());
-	 
-	    java.nio.file.Files.copy( inputStream,  targetFile.toPath(),  StandardCopyOption.REPLACE_EXISTING);
-	   
-		} catch (IOException e) {
-			 throw new NSException("NS0001");
-		}finally{
-			if( inputStream != null){
-			 IOUtils.closeQuietly(inputStream);
-			}
-		}
+		logger.info("In::POST::/hostels/{id}/upload/{cat}::uploadHostelImages::"+id+"::"+cat); 
+		storageService.storeHostelImage(file, cat, id);
 		logger.info("OUT::POST:://hostels/uploadImage/{cat}/{id}::uploadHostelImages::"+id+"::"+cat); 
+
+	}
+	
+	@GetMapping("/hostels/{id}/retrive/{cat}")
+	public ResponseEntity<InputStreamResource> retriveHostelImage(@PathVariable("id") Long id, @PathVariable("cat") String cat) throws NSException, IOException {
+		  
+		 return ResponseEntity
+	                .ok()
+	                .contentType(MediaType.IMAGE_PNG)
+	                .body(new InputStreamResource(storageService.retriveHostelImage(id, cat)));
 
 	}
 
@@ -128,6 +120,12 @@ public class HostelController {
 			hostelRepository.delete(hostel);
 			return ResponseEntity.ok().build();
 		}).orElseThrow(() -> new ResourceNotFoundException("HostelId " + id + " not found"));
+	}
+	
+	@GetMapping("/hostels/{id}")
+	public  Hostel getHostel(@PathVariable(value = "id") Long id) {
+		 
+		return hostelRepository.findById(id).orElse(null) ;
 	}
 
 	@GetMapping("/hostels/{id}/floor")
