@@ -1,11 +1,17 @@
 package com.srans.nestserver.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import javax.validation.Valid;
 
-import org.hibernate.annotations.common.util.impl.LoggerFactory;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,6 +23,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Floor;
@@ -25,13 +32,14 @@ import com.srans.nestserver.model.Room;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.RoomRepository;
+import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RequestMapping("api/v1")
 @RestController
 public class HostelController {
 	
-	Logger logger=org.slf4j.LoggerFactory.getLogger(HostelController.class);
+	Logger logger=  LoggerFactory.getLogger(HostelController.class);
 
 	@Autowired
 	private HostelRepository hostelRepository;
@@ -48,13 +56,13 @@ public class HostelController {
 	}
 
 	@PostMapping("/hostels")
-	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) {
+	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) throws NSException {
 		
-		logger.trace("Adding All Hostel Details..");
-
-		System.out.println("Before Save: " + hostel);
+		logger.info("IN::POST::/hostels::saveHostel::"+hostel); 
+		
 		Hostel responseHostel = hostelRepository.save(hostel);
 
+		//SAVE Database stuff here
 		responseHostel.getfloors().forEach(floor -> {
 			floor.setHostelId(responseHostel.getId());
 			Floor resFloor = floorRepository.save(floor);
@@ -67,8 +75,34 @@ public class HostelController {
 			});
 
 		});
+		/*
+		//Image Saving Stuff
+		MultipartFile file = hostel.getReceptionUIImage();
+		InputStream inputStream = null;
+		try {
+			 
+		inputStream = file.getInputStream(); 
+		String targetDir = System.getProperty("server.servlet.context-path");
+		if(targetDir == null){
+			targetDir = "uploads/"+hostel.getHostelName(); 
+		}
+		new File(targetDir).mkdir(); 
+		
+	    File targetFile = new File(targetDir+File.separator+"reception");
+	 
+	    java.nio.file.Files.copy( inputStream,  targetFile.toPath(),  StandardCopyOption.REPLACE_EXISTING);
+	 
+	   
+	    
+		} catch (IOException e) {
+			 throw new NSException("NS0001");
+		}finally{
+			if( inputStream != null){
+			 IOUtils.closeQuietly(inputStream);
+			}
+		}*/
 
-		System.out.println("After Save: " + hostel);
+	logger.info("OUT::POST::/hostels::saveHostel::"+hostel); 
 		return responseHostel;
 	}
 

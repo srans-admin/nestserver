@@ -8,9 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Table(name = "hostel")
@@ -24,6 +25,11 @@ public class Hostel {
 	@Column private String hostelAddress;
 
 	@Column private String hostelType; 
+	 
+	@Column private String receptionImage;
+	
+	@Transient
+	private MultipartFile receptionUIImage;
 	
 	@Transient
 	private List<Floor> floors ;
@@ -82,6 +88,31 @@ public class Hostel {
 	}
 
 	public void setfloors(List<Floor> floors) {
+		this.floors = floors;
+	} 
+	
+
+	public String getReceptionImage() {
+		return receptionImage;
+	}
+
+	public void setReceptionImage(String receptionImage) {
+		this.receptionImage = receptionImage;
+	}
+
+	public MultipartFile getReceptionUIImage() {
+		return receptionUIImage;
+	}
+
+	public void setReceptionUIImage(MultipartFile receptionUIImage) {
+		this.receptionUIImage = receptionUIImage;
+	}
+
+	public List<Floor> getFloors() {
+		return floors;
+	}
+
+	public void setFloors(List<Floor> floors) {
 		this.floors = floors;
 	}
 
