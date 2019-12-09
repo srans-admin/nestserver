@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.springframework.web.multipart.MultipartFile;
-
 @Entity
 @Table(name = "hostel")
 public class Hostel {
@@ -20,19 +18,20 @@ public class Hostel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column private String hostelName;
+	@Column
+	private String hostelName;
 
-	@Column private String hostelAddress;
+	@Column
+	private String hostelAddress;
 
-	@Column private String hostelType; 
-	 
-	@Column private String receptionImage;
-	
-	//@Transient
-	//private MultipartFile receptionUIImage;
-	
+	@Column
+	private String hostelType;
+
+	@Column
+	private int numOfFloors;
+
 	@Transient
-	private List<Floor> floors ;
+	private List<Floor> floors;
 
 	public Hostel() {
 		super();
@@ -42,14 +41,20 @@ public class Hostel {
 		this.floors = new ArrayList<>();
 	}
 
-	public Hostel(Long id, String hostelName, String hostelAddress, String hostelType, List<Floor> floors) {
+	
+
+	public Hostel(Long id, String hostelName, String hostelAddress, String hostelType, int numOfFloors,
+			List<Floor> floors) {
 		super();
 		this.id = id;
 		this.hostelName = hostelName;
 		this.hostelAddress = hostelAddress;
 		this.hostelType = hostelType;
+		this.numOfFloors = numOfFloors;
 		this.floors = floors;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -89,29 +94,20 @@ public class Hostel {
 
 	public void setfloors(List<Floor> floors) {
 		this.floors = floors;
-	} 
-	
-
-	public String getReceptionImage() {
-		return receptionImage;
 	}
 
-	public void setReceptionImage(String receptionImage) {
-		this.receptionImage = receptionImage;
+	public int getNumOfFloors() {
+		return numOfFloors;
 	}
 
-	/*public MultipartFile getReceptionUIImage() {
-		return receptionUIImage;
+	public void setNumOfFloors(int numOfFloors) {
+		this.numOfFloors = numOfFloors;
 	}
-
-	public void setReceptionUIImage(MultipartFile receptionUIImage) {
-		this.receptionUIImage = receptionUIImage;
-	}*/ 
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Hostels [id=");
+		builder.append("Hostel [id=");
 		builder.append(id);
 		builder.append(", hostelName=");
 		builder.append(hostelName);
@@ -119,6 +115,8 @@ public class Hostel {
 		builder.append(hostelAddress);
 		builder.append(", hostelType=");
 		builder.append(hostelType);
+		builder.append(", numOfFloors=");
+		builder.append(numOfFloors);
 		builder.append(", floors=");
 		builder.append(floors);
 		builder.append("]");

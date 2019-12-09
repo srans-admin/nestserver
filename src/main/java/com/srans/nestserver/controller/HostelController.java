@@ -1,8 +1,9 @@
 package com.srans.nestserver.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -38,8 +39,8 @@ import com.srans.nestserver.util.NSException;
 @RequestMapping("api/v1")
 @RestController
 public class HostelController {
-	
-	private Logger logger=  LoggerFactory.getLogger(HostelController.class);
+
+	private Logger logger = LoggerFactory.getLogger(HostelController.class);
 
 	@Autowired
 	private HostelRepository hostelRepository;
@@ -49,7 +50,7 @@ public class HostelController {
 
 	@Autowired
 	private RoomRepository roomRepository;
-	
+
 	@Autowired
 	private StorageService storageService;
 
@@ -60,12 +61,12 @@ public class HostelController {
 
 	@PostMapping("/hostels")
 	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) throws NSException {
-		
-		logger.info("IN::POST::/hostels::saveHostel::"+hostel); 
-		
+
+		logger.info("IN::POST::/hostels::saveHostel::" + hostel);
+
 		Hostel responseHostel = hostelRepository.save(hostel);
 
-		//SAVE Database stuff here
+		// SAVE Database stuff here
 		responseHostel.getfloors().forEach(floor -> {
 			floor.setHostelId(responseHostel.getId());
 			Floor resFloor = floorRepository.save(floor);
@@ -77,28 +78,27 @@ public class HostelController {
 
 			});
 
-		}); 
-		logger.info("OUT::POST::/hostels::saveHostel::"+hostel); 
+		});
+		logger.info("OUT::POST::/hostels::saveHostel::" + hostel);
 		return responseHostel;
 	}
-	
-	
+
 	@PostMapping("/hostels/{id}/upload/{cat}")
-	public void storeHostelImage( @PathVariable("id") Long id, @RequestParam("file") MultipartFile file,@PathVariable("cat") String cat) throws NSException {
-		 
-		logger.info("In::POST::/hostels/{id}/upload/{cat}::uploadHostelImages::"+id+"::"+cat); 
+	public void storeHostelImage(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file,
+			@PathVariable("cat") String cat) throws NSException {
+
+		logger.info("In::POST::/hostels/{id}/upload/{cat}::uploadHostelImages::" + id + "::" + cat);
 		storageService.storeHostelImage(file, cat, id);
-		logger.info("OUT::POST:://hostels/uploadImage/{cat}/{id}::uploadHostelImages::"+id+"::"+cat); 
+		logger.info("OUT::POST:://hostels/uploadImage/{cat}/{id}::uploadHostelImages::" + id + "::" + cat);
 
 	}
-	
+
 	@GetMapping("/hostels/{id}/retrive/{cat}")
-	public ResponseEntity<InputStreamResource> retriveHostelImage(@PathVariable("id") Long id, @PathVariable("cat") String cat) throws NSException, IOException {
-		  
-		 return ResponseEntity
-	                .ok()
-	                .contentType(MediaType.IMAGE_PNG)
-	                .body(new InputStreamResource(storageService.retriveHostelImage(id, cat)));
+	public ResponseEntity<InputStreamResource> retriveHostelImage(@PathVariable("id") Long id,
+			@PathVariable("cat") String cat) throws NSException, IOException {
+
+		return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG)
+				.body(new InputStreamResource(storageService.retriveHostelImage(id, cat)));
 
 	}
 
@@ -110,6 +110,7 @@ public class HostelController {
 			hostel.setHostelName(hostelRequest.getHostelName());
 			hostel.setHostelAddress(hostelRequest.getHostelAddress());
 			hostel.setHostelType(hostelRequest.getHostelType());
+			hostel.setNumOfFloors(hostelRequest.getNumOfFloors());
 			return hostelRepository.save(hostel);
 		}).orElseThrow(() -> new ResourceNotFoundException("HostelId " + id + " not found"));
 	}
@@ -121,11 +122,11 @@ public class HostelController {
 			return ResponseEntity.ok().build();
 		}).orElseThrow(() -> new ResourceNotFoundException("HostelId " + id + " not found"));
 	}
-	
+
 	@GetMapping("/hostels/{id}")
-	public  Hostel getHostel(@PathVariable(value = "id") Long id) {
-		 
-		return hostelRepository.findById(id).orElse(null) ;
+	public Hostel getHostel(@PathVariable(value = "id") Long id) {
+
+		return hostelRepository.findById(id).orElse(null);
 	}
 
 	@GetMapping("/hostels/{id}/floor")
@@ -236,6 +237,18 @@ public class HostelController {
 			roomRepository.delete(hostel);
 			return ResponseEntity.ok().build();
 		}).orElseThrow(() -> new ResourceNotFoundException("roomId " + id + " not found"));
+	}
+
+	@GetMapping("/hostels/{id}/extendingviews")
+	public Map<String, Object> getTestMap(@PathVariable(value = "id") Long hostelId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("Total floors : ", hostelRepository.numOfFloor(hostelId));
+		map.put("Total Rooms : ", roomRepository.countRoomByHostelId(hostelId));
+		map.put("Total Single Sharing Rooms : ", roomRepository.countSingleSharing(hostelId));
+		map.put("Total Double Sharing Rooms : ", roomRepository.countDoubleSharing(hostelId));
+		map.put("Total Triple Sharing Rooms : ", roomRepository.countTripleSharing(hostelId));
+		map.put("Total Misc. Sharing Rooms : ", roomRepository.countMiscSharing(hostelId));
+		return map;
 	}
 
 }

@@ -2,6 +2,7 @@ package com.srans.nestserver.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.srans.nestserver.model.Hostel;
@@ -12,6 +13,9 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 	
 	@Autowired 
 	public FloorRepository floorRepository = null ; 
+	
+	@Query(value="SELECT num_of_floors FROM HOSTEL WHERE id=?1", nativeQuery = true)
+    public Long numOfFloor(Long hostel_id);
 	
 	public default Hostel saveWholeObject(Hostel hostel){
 		
