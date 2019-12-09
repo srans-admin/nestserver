@@ -48,7 +48,7 @@ public class StorageService {
 	 * @param id
 	 * @throws NSException
 	 */
-	public void storeHostelImage(MultipartFile file, String cat, Long id) throws NSException {
+	public  void storeHostelImage(MultipartFile file, String cat, Long id) throws NSException {
 		 
 		logger.info("In::storeHostelImages::"+file+"::"+id+"::"+cat); 
 		 
@@ -98,4 +98,101 @@ public class StorageService {
 		return null;
     }
 
+	
+	
+	
+	
+	
+	
+	
+	public  void storeTenantImage(MultipartFile file, String cat, Long id) throws NSException {
+		 
+		logger.info("In::storeTenantImages::"+file+"::"+id+"::"+cat); 
+		 
+		InputStream inputStream = null;
+		try {
+			
+		new File(tenantRootLocation).mkdir();
+			 
+		inputStream = file.getInputStream();
+		
+		String targetDir = tenantRootLocation+File.separator+id; 
+		new File(targetDir).mkdir(); 
+		targetDir = targetDir+File.separator+cat;
+		new File(targetDir).mkdir();
+		
+	    File targetFile = new File(targetDir+File.separator+file.getOriginalFilename());
+	 
+	    java.nio.file.Files.copy( inputStream,  targetFile.toPath(),  StandardCopyOption.REPLACE_EXISTING);
+	   
+		} catch (IOException e) {
+			 throw new NSException("NS0001");
+		}finally{
+			if( inputStream != null){
+			 IOUtils.closeQuietly(inputStream);
+			}
+		}
+		logger.info("OUT::POST:://tenant/uploadImage/{cat}/{id}::uploadtenantImages::"+id+"::"+cat); 
+
+	}
+	
+	
+	public List<Resource> retrivetenantImages(){
+		
+		return null;
+		
+	}
+	
+	public  InputStream retrivetenantImage(Long id, String cat) throws IOException {
+		 
+		File dir = new File(tenantRootLocation+File.separator+id+File.separator+cat);
+		if(dir.isDirectory()){
+			File file = dir.listFiles()[0]; 
+		    InputStream targetStream = new FileInputStream(file); 
+	       return targetStream;
+		}
+		
+		return null;
+    }
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
