@@ -24,6 +24,7 @@ public class Floor {
 
 	@Column
 	private String floorName;
+	
 	@Column
 	private String description;
 
