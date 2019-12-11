@@ -13,8 +13,8 @@ import com.srans.nestserver.model.Floor;
 public interface FloorRepository extends JpaRepository<Floor, Long> {
 	
 	
-	  List<Floor> findByHostelId(Long hostel_id); Optional<Floor>
-	  findByIdAndHostelId(Long floor_id, Long hostel_id);
+	  List<Floor> findByHostelId(Long hostel_id); 
+	  Optional<Floor> findByIdAndHostelId(Long floor_id, Long hostel_id);
 	 
 	 
 	

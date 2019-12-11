@@ -1,19 +1,15 @@
 package com.srans.nestserver.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "room")
@@ -33,9 +29,24 @@ public class Room {
 	@Column
 	private int roomRent;
 
+	@Transient
+	private List<Bed> beds;
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Room() {
 		super();
+		this.beds = new ArrayList();
+	}
 
+	public Room(Long id, Long hostelId, Long floorId, String roomName, String roomType, int roomRent, List<Bed> beds) {
+		super();
+		this.id = id;
+		this.hostelId = hostelId;
+		this.floorId = floorId;
+		this.roomName = roomName;
+		this.roomType = roomType;
+		this.roomRent = roomRent;
+		this.beds = beds;
 	}
 
 	public Long getId() {
@@ -86,6 +97,14 @@ public class Room {
 		this.floorId = floorId;
 	}
 
+	public List<Bed> getBeds() {
+		return beds;
+	}
+
+	public void setBeds(List<Bed> beds) {
+		this.beds = beds;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -101,6 +120,8 @@ public class Room {
 		builder.append(roomType);
 		builder.append(", roomRent=");
 		builder.append(roomRent);
+		builder.append(", beds=");
+		builder.append(beds);
 		builder.append("]");
 		return builder.toString();
 	}

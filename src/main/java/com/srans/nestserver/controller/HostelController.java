@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -31,6 +28,7 @@ import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Floor;
 import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.Room;
+import com.srans.nestserver.repository.BedRepository;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.RoomRepository;
@@ -54,11 +52,14 @@ public class HostelController {
 	private RoomRepository roomRepository;
 
 	@Autowired
+	private BedRepository bedRepository;
+
+	@Autowired
 	private StorageService storageService;
 
 	@GetMapping("/hostels")
 	public List<Hostel> getAllPosts() {
-		return hostelRepository.findAll(); 
+		return hostelRepository.findAll();
 	}
 
 	@PostMapping("/hostels")
@@ -69,6 +70,7 @@ public class HostelController {
 		Hostel responseHostel = hostelRepository.save(hostel);
 
 		// SAVE Database stuff here
+		
 		responseHostel.getfloors().forEach(floor -> {
 			floor.setHostelId(responseHostel.getId());
 			Floor resFloor = floorRepository.save(floor);
@@ -76,8 +78,64 @@ public class HostelController {
 			floor.getRooms().forEach(room -> {
 				room.setHostelId(responseHostel.getId());
 				room.setFloorId(resFloor.getId());
-				roomRepository.save(room);
+				Room resRoom=roomRepository.save(room);
+				
+				if(resRoom.getRoomType().equals("Single")) {
+					
+					int i;
+					for(i=0;i<1;i++) {
+				     room.getBeds().forEach(bed -> {
+					 bed.setHostelId(responseHostel.getId());
+					 bed.setFloorId(resFloor.getId());
+					 bed.setRoomId(resRoom.getId());
+						bedRepository.save(bed);
+				 });
+			    }
+				 
+			}
+				
+				else if (resRoom.getRoomType().equals("Double")) {
+					int i;
+					for(i=0;i<=1;i++) {
+					     room.getBeds().forEach(bed -> {
+						 bed.setHostelId(responseHostel.getId());
+						 bed.setFloorId(resFloor.getId());
+						 bed.setRoomId(resRoom.getId());
+							bedRepository.save(bed);
+					 
+					 });
+				    }
+					
+				}
+				
+				else if (resRoom.getRoomType().equals("Triple")) {
+					int i;
+					for(i=0;i<=2;i++) {
+					     room.getBeds().forEach(bed -> {
+						 bed.setHostelId(responseHostel.getId());
+						 bed.setFloorId(resFloor.getId());
+						 bed.setRoomId(resRoom.getId());
+							bedRepository.save(bed);
 
+					 });
+				    }
+					
+				}
+				
+				else if (resRoom.getRoomType().equals("Misc")) {
+					int i;
+					for(i=0;i<10;i++) {
+					     room.getBeds().forEach(bed -> {
+						 bed.setHostelId(responseHostel.getId());
+						 bed.setFloorId(resFloor.getId());
+						 bed.setRoomId(resRoom.getId());
+							bedRepository.save(bed);
+			
+					 });
+				    }
+					
+				}
+	
 			});
 
 		});
@@ -252,27 +310,26 @@ public class HostelController {
 		map.put("Total Misc. Sharing Rooms : ", roomRepository.countMiscSharing(hostelId));
 		return map;
 	}
-	
+
 	@GetMapping("hostels/getId")
-	public Iterable<Long> findAll(){
+	public Iterable<Long> findAll() {
 		return hostelRepository.findId();
 
 	}
-	
+
 	@GetMapping("hostels/{id}/getName")
-		
-		public Map<String, Object> getHostelMap(@PathVariable(value = "id") Long hostelId) {
-			Map<String, Object> map = new HashMap<>();
-			map.put("Total Floor : ", hostelRepository.numOfFloor(hostelId));
-			map.put("Hostel Name ", hostelRepository.hosteName(hostelId));
-			return map;
-	}
-	
-	@GetMapping("hostels/{id}/getHostelType")
-	
-	public Iterable<String> findAll(@PathVariable(value="id") Long id){
-		return hostelRepository.findType(id);
+
+	public Map<String, Object> getHostelMap(@PathVariable(value = "id") Long hostelId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("Total Floor : ", hostelRepository.numOfFloor(hostelId));
+		map.put("Hostel Name ", hostelRepository.hosteName(hostelId));
+		return map;
 	}
 
+	@GetMapping("hostels/{id}/getHostelType")
+
+	public Iterable<String> findAll(@PathVariable(value = "id") Long id) {
+		return hostelRepository.findType(id);
+	}
 
 }
