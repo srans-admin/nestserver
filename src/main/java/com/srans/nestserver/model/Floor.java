@@ -31,6 +31,7 @@ public class Floor {
 	@Transient
 	private List<Room> rooms;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Floor() {
 		super();
 		this.rooms = new ArrayList();

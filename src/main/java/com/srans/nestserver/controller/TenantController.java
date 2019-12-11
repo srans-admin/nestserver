@@ -137,6 +137,7 @@ return ResponseEntity.ok(updatedTenant);
 @DeleteMapping("/tenant/{Id}")
 public <tenantRepository> Map<String, Boolean> deleteUser(@PathVariable(value = "Id") Long TenantId)
 throws ResourceNotFoundException {
+@SuppressWarnings("unused")
 Tenant tenant = tenantRepository.findById(TenantId)
 .orElseThrow(() -> new ResourceNotFoundException("SransUser not found for this id :: " + TenantId));
 

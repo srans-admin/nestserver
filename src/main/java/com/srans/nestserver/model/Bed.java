@@ -12,7 +12,7 @@ import javax.persistence.Table;
 public class Bed extends AuditModel {
 
 	/**
-	 *  @author Manish
+	 * @author Manish
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +40,7 @@ public class Bed extends AuditModel {
 	String vacatedDate;
 
 	@Column
-	Integer roomNo;
+	Integer bedNo;
 
 	public Bed() {
 		super();
@@ -48,7 +48,7 @@ public class Bed extends AuditModel {
 	}
 
 	public Bed(Long id, Long hostelId, Long floorId, Long roomId, Character alloted, String position,
-			String vacatedDate, Integer roomNo) {
+			String vacatedDate, Integer bedNo) {
 		super();
 		this.id = id;
 		this.hostelId = hostelId;
@@ -57,7 +57,7 @@ public class Bed extends AuditModel {
 		this.alloted = alloted;
 		this.position = position;
 		this.vacatedDate = vacatedDate;
-		this.roomNo = roomNo;
+		this.bedNo = bedNo;
 	}
 
 	public Long getId() {
@@ -117,11 +117,11 @@ public class Bed extends AuditModel {
 	}
 
 	public Integer getRoomNo() {
-		return roomNo;
+		return bedNo;
 	}
 
-	public void setRoomNo(Integer roomNo) {
-		this.roomNo = roomNo;
+	public void setRoomNo(Integer bedNo) {
+		this.bedNo = bedNo;
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class Bed extends AuditModel {
 		builder.append(", vacatedDate=");
 		builder.append(vacatedDate);
 		builder.append(", roomNo=");
-		builder.append(roomNo);
+		builder.append(bedNo);
 		builder.append("]");
 		return builder.toString();
 	}
