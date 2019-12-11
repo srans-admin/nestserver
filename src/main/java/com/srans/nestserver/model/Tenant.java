@@ -21,41 +21,38 @@ public class Tenant implements Serializable {
 	@Column(name = "name")
 	private String name;
 	@Column(name = "contactNumber")
-	private String contactNumber;
+	private long contactNumber;
 	@Column(name = "fatherName")
 	private String fatherName;
 	@Column(name = "fatherphoneNumber")
-	private String fatherphoneNumber;
+	private long fatherphoneNumber;
 	@Column(name="motherName")
 	private String motherName;
 	@Column(name="motherphoneNumber")
-	private String motherphoneNumber;
+	private long motherphoneNumber;
 	@Column(name="dob")
 	private String dob;
 	
 	@Column(name="bloodGroup")
 	private String bloodGroup;
 	@Column(name="emergencyContactNumber")
-	private String emergencyContactNumber;
+	private long emergencyContactNumber;
 	@Column(name="nameOfTheEmployer")
 	private String nameOfTheEmployer;
 	@Column(name="officeAddress")
 	private String officeAddress;
 	@Column(name="telephoneNumber")
-	private String telephoneNumber;
+	private long telephoneNumber;
 	@Column(name="emailId")
 	private String emailId;
 	@Column(name="permanetAddress")
 	private String permanetAddress;
-
 	
 	
 	
-
-
-	public Tenant(long userId, String name, String contactNumber, String fatherName, String fatherphoneNumber,
-			String motherName, String motherphoneNumber, String dob, String bloodGroup, String emergencyContactNumber,
-			String nameOfTheEmployer, String officeAddress, String telephoneNumber, String emailId,
+	public Tenant(long userId, String name, long contactNumber, String fatherName, long fatherphoneNumber,
+			String motherName, long motherphoneNumber, String dob, String bloodGroup, long emergencyContactNumber,
+			String nameOfTheEmployer, String officeAddress, long telephoneNumber, String emailId,
 			String permanetAddress) {
 		super();
 		this.userId = userId;
@@ -73,19 +70,12 @@ public class Tenant implements Serializable {
 		this.telephoneNumber = telephoneNumber;
 		this.emailId = emailId;
 		this.permanetAddress = permanetAddress;
+				
 	}
-
-
-
-
-
 
 	public long getUserId() {
 		return userId;
 	}
-
-
-
 
 
 
@@ -95,269 +85,125 @@ public class Tenant implements Serializable {
 
 
 
-
-
-
 	public String getName() {
 		return name;
 	}
-
-
-
-
 
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-
-
-
-
-
-	public String getContactNumber() {
+	public long getContactNumber() {
 		return contactNumber;
 	}
 
-
-
-
-
-
-	public void setContactNumber(String contactNumber) {
+	public void setContactNumber(long contactNumber) {
 		this.contactNumber = contactNumber;
 	}
-
-
-
-
-
 
 	public String getFatherName() {
 		return fatherName;
 	}
 
-
-
-
-
-
 	public void setFatherName(String fatherName) {
 		this.fatherName = fatherName;
 	}
 
-
-
-
-
-
-	public String getFatherphoneNumber() {
+	public long getFatherphoneNumber() {
 		return fatherphoneNumber;
 	}
 
-
-
-
-
-
-	public void setFatherphoneNumber(String fatherphoneNumber) {
+	public void setFatherphoneNumber(long fatherphoneNumber) {
 		this.fatherphoneNumber = fatherphoneNumber;
 	}
-
-
-
-
-
 
 	public String getMotherName() {
 		return motherName;
 	}
 
-
-
-
-
-
 	public void setMotherName(String motherName) {
 		this.motherName = motherName;
 	}
 
-
-
-
-
-
-	public String getMotherphoneNumber() {
+	public long getMotherphoneNumber() {
 		return motherphoneNumber;
 	}
 
-
-
-
-
-
-	public void setMotherphoneNumber(String motherphoneNumber) {
+	public void setMotherphoneNumber(long motherphoneNumber) {
 		this.motherphoneNumber = motherphoneNumber;
 	}
-
-
-
-
-
 
 	public String getDob() {
 		return dob;
 	}
 
-
-
-
-
-
 	public void setDob(String dob) {
 		this.dob = dob;
 	}
-
-
-
-
-
 
 	public String getBloodGroup() {
 		return bloodGroup;
 	}
 
-
-
-
-
-
 	public void setBloodGroup(String bloodGroup) {
 		this.bloodGroup = bloodGroup;
 	}
 
-
-
-
-
-
-	public String getEmergencyContactNumber() {
+	public long getEmergencyContactNumber() {
 		return emergencyContactNumber;
 	}
 
 
 
-
-
-
-	public void setEmergencyContactNumber(String emergencyContactNumber) {
+	public void setEmergencyContactNumber(long emergencyContactNumber) {
 		this.emergencyContactNumber = emergencyContactNumber;
 	}
-
-
-
-
-
 
 	public String getNameOfTheEmployer() {
 		return nameOfTheEmployer;
 	}
 
-
-
-
-
-
 	public void setNameOfTheEmployer(String nameOfTheEmployer) {
 		this.nameOfTheEmployer = nameOfTheEmployer;
 	}
-
-
-
-
-
 
 	public String getOfficeAddress() {
 		return officeAddress;
 	}
 
-
-
-
-
-
 	public void setOfficeAddress(String officeAddress) {
 		this.officeAddress = officeAddress;
 	}
 
-
-
-
-
-
-	public String getTelephoneNumber() {
+	public long getTelephoneNumber() {
 		return telephoneNumber;
 	}
 
-
-
-
-
-
-	public void setTelephoneNumber(String telephoneNumber) {
+	public void setTelephoneNumber(long telephoneNumber) {
 		this.telephoneNumber = telephoneNumber;
 	}
-
-
-
-
-
 
 	public String getEmailId() {
 		return emailId;
 	}
 
-
-
-
-
-
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
 	}
-
-
-
-
-
 
 	public String getPermanetAddress() {
 		return permanetAddress;
 	}
 
-
-
-
-
-
 	public void setPermanetAddress(String permanetAddress) {
 		this.permanetAddress = permanetAddress;
 	}
 
-
-
-
-
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+			
 	}
-
-
-
-
-
 
 	@Override
 	public String toString() {
@@ -373,14 +219,7 @@ public class Tenant implements Serializable {
 		return builder.toString();
 	}
 
-
-
-
 }
-
-
-
-
-
-
+	
+	
 
