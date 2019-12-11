@@ -49,3 +49,4 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 	public Long countMiscSharing(Long hostel_id);
 
 }
+
