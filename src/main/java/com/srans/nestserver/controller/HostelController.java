@@ -311,13 +311,14 @@ public class HostelController {
 		return map;
 	}
 
-	@GetMapping("hostels/getId")
-	public Iterable<Long> findAll() {
-		return hostelRepository.findId();
+	@GetMapping("hostels/getName")
+	public List<String> findAll() {
+		return hostelRepository.getAllHostelName();
 
 	}
 
-	@GetMapping("hostels/{id}/getName")
+	@GetMapping("hostels/{id}/getName"
+			)
 
 	public Map<String, Object> getHostelMap(@PathVariable(value = "id") Long hostelId) {
 		Map<String, Object> map = new HashMap<>();
