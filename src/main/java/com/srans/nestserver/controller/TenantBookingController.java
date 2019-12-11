@@ -1,6 +1,8 @@
 package com.srans.nestserver.controller;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,9 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.TenantRepository;
-import com.srans.nestserver.service.StorageService;
 
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RestController
@@ -26,11 +26,18 @@ public class TenantBookingController {
 	private TenantRepository tenantRepository;
 	
 	
-	@GetMapping("tenantbooking/getName")
+	@GetMapping("tenantbooking/hostelName")
 	public List<String> findAll() {
 		return tenantRepository.getAllHostelName();
 
 	}
+	
+	@GetMapping("tenantbooking/hostelName/{hostelname}/bed")
+	public Set<String> data(){
+		HashSet<String> hs=null;
+		return hs ;
+	}
+	
 	
 	
 	

@@ -48,8 +48,7 @@ public class TenantController {
 	@Autowired
 	private StorageService storageService;
 	
-	@Autowired
-	private HostelRepository hostelRepository;
+	
 
 	@GetMapping("/tenant")
 	public List<Tenant> getAllTenant() {
