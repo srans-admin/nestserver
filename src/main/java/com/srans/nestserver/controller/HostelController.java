@@ -311,12 +311,7 @@ public class HostelController {
 		return map;
 	}
 
-	@GetMapping("hostels/getName")
-	public List<String> findAll() {
-		return hostelRepository.getAllHostelName();
-
-	}
-
+	
 	@GetMapping("hostels/{id}/getName"
 			)
 
