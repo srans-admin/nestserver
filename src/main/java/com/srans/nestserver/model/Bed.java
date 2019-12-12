@@ -42,13 +42,16 @@ public class Bed extends AuditModel {
 	@Column
 	Integer bedNo;
 
+	@Column
+	String roomType;
+
 	public Bed() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Bed(Long id, Long hostelId, Long floorId, Long roomId, Character alloted, String position,
-			String vacatedDate, Integer bedNo) {
+			String vacatedDate, Integer bedNo, String roomType) {
 		super();
 		this.id = id;
 		this.hostelId = hostelId;
@@ -58,6 +61,7 @@ public class Bed extends AuditModel {
 		this.position = position;
 		this.vacatedDate = vacatedDate;
 		this.bedNo = bedNo;
+		this.roomType = roomType;
 	}
 
 	public Long getId() {
@@ -124,6 +128,14 @@ public class Bed extends AuditModel {
 		this.bedNo = bedNo;
 	}
 
+	public String getRoomType() {
+		return roomType;
+	}
+
+	public void setRoomType(String roomType) {
+		this.roomType = roomType;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -141,8 +153,10 @@ public class Bed extends AuditModel {
 		builder.append(position);
 		builder.append(", vacatedDate=");
 		builder.append(vacatedDate);
-		builder.append(", roomNo=");
+		builder.append(", bedNo=");
 		builder.append(bedNo);
+		builder.append(", roomType=");
+		builder.append(roomType);
 		builder.append("]");
 		return builder.toString();
 	}

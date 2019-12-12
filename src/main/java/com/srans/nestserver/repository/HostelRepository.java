@@ -18,7 +18,6 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 	@Query(value="SELECT hostel_name FROM HOSTEL WHERE id=?1", nativeQuery = true)
     public String hostelNameById(Long id);
 	
-	
 	@Autowired 
 	public FloorRepository floorRepository = null ; 
 	

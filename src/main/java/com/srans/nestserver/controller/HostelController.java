@@ -70,7 +70,7 @@ public class HostelController {
 		Hostel responseHostel = hostelRepository.save(hostel);
 
 		// SAVE Database stuff here
-		
+
 		responseHostel.getfloors().forEach(floor -> {
 			floor.setHostelId(responseHostel.getId());
 			Floor resFloor = floorRepository.save(floor);
@@ -78,64 +78,15 @@ public class HostelController {
 			floor.getRooms().forEach(room -> {
 				room.setHostelId(responseHostel.getId());
 				room.setFloorId(resFloor.getId());
-				Room resRoom=roomRepository.save(room);
-				
-				if(resRoom.getRoomType().equals("Single")) {
-					
-					int i;
-					for(i=0;i<1;i++) {
-				     room.getBeds().forEach(bed -> {
-					 bed.setHostelId(responseHostel.getId());
-					 bed.setFloorId(resFloor.getId());
-					 bed.setRoomId(resRoom.getId());
-						bedRepository.save(bed);
-				 });
-			    }
-				 
-			}
-				
-				else if (resRoom.getRoomType().equals("Double")) {
-					int i;
-					for(i=0;i<=1;i++) {
-					     room.getBeds().forEach(bed -> {
-						 bed.setHostelId(responseHostel.getId());
-						 bed.setFloorId(resFloor.getId());
-						 bed.setRoomId(resRoom.getId());
-							bedRepository.save(bed);
-					 
-					 });
-				    }
-					
-				}
-				
-				else if (resRoom.getRoomType().equals("Triple")) {
-					int i;
-					for(i=0;i<=2;i++) {
-					     room.getBeds().forEach(bed -> {
-						 bed.setHostelId(responseHostel.getId());
-						 bed.setFloorId(resFloor.getId());
-						 bed.setRoomId(resRoom.getId());
-							bedRepository.save(bed);
+				Room resRoom = roomRepository.save(room);
+				room.getBeds().forEach(bed -> {
+					bed.setHostelId(responseHostel.getId());
+					bed.setFloorId(resFloor.getId());
+					bed.setRoomId(resRoom.getId());
+					bed.setRoomType(resRoom.getRoomType());
+					bedRepository.save(bed);
+				});
 
-					 });
-				    }
-					
-				}
-				
-				else if (resRoom.getRoomType().equals("Misc")) {
-					int i;
-					for(i=0;i<10;i++) {
-					     room.getBeds().forEach(bed -> {
-						 bed.setHostelId(responseHostel.getId());
-						 bed.setFloorId(resFloor.getId());
-						 bed.setRoomId(resRoom.getId());
-							bedRepository.save(bed);
-			
-					 });
-				    }
-					
-				}
-	
 			});
 
 		});
@@ -311,9 +262,7 @@ public class HostelController {
 		return map;
 	}
 
-	
-	@GetMapping("hostels/{id}/getName"
-			)
+	@GetMapping("hostels/{id}/getName")
 
 	public Map<String, Object> getHostelMap(@PathVariable(value = "id") Long hostelId) {
 		Map<String, Object> map = new HashMap<>();
