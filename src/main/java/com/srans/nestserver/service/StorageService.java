@@ -106,7 +106,7 @@ public class StorageService {
 		 
 		InputStream inputStream = null;
 		try {
-			
+						
 		new File(tenantRootLocation).mkdir();
 			 
 		inputStream = file.getInputStream();

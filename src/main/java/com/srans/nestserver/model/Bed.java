@@ -42,9 +42,6 @@ public class Bed extends AuditModel {
 	@Column
 	Integer bedNo;
 
-	@Column
-	String roomType;
-
 	public Bed() {
 		super();
 
@@ -61,7 +58,6 @@ public class Bed extends AuditModel {
 		this.position = position;
 		this.vacatedDate = vacatedDate;
 		this.bedNo = bedNo;
-		this.roomType = roomType;
 	}
 
 	public Long getId() {
@@ -128,13 +124,7 @@ public class Bed extends AuditModel {
 		this.bedNo = bedNo;
 	}
 
-	public String getRoomType() {
-		return roomType;
-	}
-
-	public void setRoomType(String roomType) {
-		this.roomType = roomType;
-	}
+	
 
 	@Override
 	public String toString() {
@@ -156,7 +146,6 @@ public class Bed extends AuditModel {
 		builder.append(", bedNo=");
 		builder.append(bedNo);
 		builder.append(", roomType=");
-		builder.append(roomType);
 		builder.append("]");
 		return builder.toString();
 	}

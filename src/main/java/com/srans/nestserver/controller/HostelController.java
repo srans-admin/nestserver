@@ -83,7 +83,6 @@ public class HostelController {
 					bed.setHostelId(responseHostel.getId());
 					bed.setFloorId(resFloor.getId());
 					bed.setRoomId(resRoom.getId());
-					bed.setRoomType(resRoom.getRoomType());
 					bedRepository.save(bed);
 				});
 
