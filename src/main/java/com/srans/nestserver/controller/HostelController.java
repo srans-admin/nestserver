@@ -252,12 +252,12 @@ public class HostelController {
 	@GetMapping("/hostels/{id}/extendingviews")
 	public Map<String, Object> getTestMap(@PathVariable(value = "id") Long hostelId) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("Total floors : ", hostelRepository.numOfFloor(hostelId));
-		map.put("Total Rooms : ", roomRepository.countRoomByHostelId(hostelId));
-		map.put("Total Single Sharing Rooms : ", roomRepository.countSingleSharing(hostelId));
-		map.put("Total Double Sharing Rooms : ", roomRepository.countDoubleSharing(hostelId));
-		map.put("Total Triple Sharing Rooms : ", roomRepository.countTripleSharing(hostelId));
-		map.put("Total Misc. Sharing Rooms : ", roomRepository.countMiscSharing(hostelId));
+		map.put("Total_floors:- ", hostelRepository.numOfFloor(hostelId));
+		map.put("Total_Rooms:- ", roomRepository.countRoomByHostelId(hostelId));
+		map.put("Single_Sharing_Rooms:- ", roomRepository.countSingleSharing(hostelId));
+		map.put("Double_Sharing_Rooms:- ", roomRepository.countDoubleSharing(hostelId));
+		map.put("Triple_Sharing_Rooms:- ", roomRepository.countTripleSharing(hostelId));
+		map.put("Misc_Sharing_Rooms:- ", roomRepository.countMiscSharing(hostelId));
 		return map;
 	}
 

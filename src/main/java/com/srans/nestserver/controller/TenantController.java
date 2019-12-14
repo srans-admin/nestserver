@@ -117,15 +117,7 @@ public class TenantController {
 		tenant.setContactNumber(tenant.getContactNumber());
 		tenant.setDob(tenant.getDob());
 		tenant.setEmailId(tenant.getEmailId());
-		tenant.setEmergencyContactNumber(tenant.getEmergencyContactNumber());
-		tenant.setFatherName(tenant.getMotherName());
-		tenant.setFatherphoneNumber(tenant.getFatherphoneNumber());
-		tenant.setMotherphoneNumber(tenant.getMotherphoneNumber());
-		tenant.setName(tenant.getName());
-		tenant.setNameOfTheEmployer(tenant.getNameOfTheEmployer());
-		tenant.setOfficeAddress(tenant.getOfficeAddress());
-		tenant.setPermanetAddress(tenant.getPermanetAddress());
-		tenant.setTelephoneNumber(tenant.getTelephoneNumber());
+		
 
 		final Tenant updatedTenant = tenantRepository.save(tenant);
 		return ResponseEntity.ok(updatedTenant);

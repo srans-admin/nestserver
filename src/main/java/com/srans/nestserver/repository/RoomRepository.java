@@ -24,7 +24,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
 		tmproom = this.save(room);
 
-		room.getBeds().forEach(bed -> bedRepository.save(bed));
+		room.getBeds().forEach(bed-> bedRepository.save(bed));
 
 		tmproom.setBeds(room.getBeds());
 

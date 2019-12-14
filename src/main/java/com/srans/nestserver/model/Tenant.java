@@ -1,6 +1,8 @@
 package com.srans.nestserver.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,48 +10,68 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "tenant")
 public class Tenant implements Serializable {
- 
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long userId;
+	private Long userId;
+	
 	@Column(name = "name")
 	private String name;
+	
 	@Column(name = "contactNumber")
-	private long contactNumber;
+	private Long contactNumber;
+	
 	@Column(name = "fatherName")
 	private String fatherName;
+	
 	@Column(name = "fatherphoneNumber")
-	private long fatherphoneNumber;
-	@Column(name="motherName")
-	private String motherName;
-	@Column(name="motherphoneNumber")
-	private long motherphoneNumber;
-	@Column(name="dob")
+	private Long fatherphoneNumber;
+	
+	@Column(name = "dob")
 	private String dob;
 	
-	@Column(name="bloodGroup")
+	@Column(name = "bloodGroup")
 	private String bloodGroup;
-	@Column(name="emergencyContactNumber")
-	private long emergencyContactNumber;
-	@Column(name="nameOfTheEmployer")
-	private String nameOfTheEmployer;
-	@Column(name="officeAddress")
+	
+	@Column(name = "officeAddress")
 	private String officeAddress;
-	@Column(name="telephoneNumber")
-	private long telephoneNumber;
-	@Column(name="emailId")
+	
+	@Column(name = "mobileNumber")
+	private Long mobileNumber;
+	
+	@Column(name = "emailId")
 	private String emailId;
-	@Column(name="permanetAddress")
+	
+	@Column(name = "permanetAddress")
 	private String permanetAddress;
-	
-	
-	
+
+	@Transient
+	private List<TenantBooking> tenantBooking;
+
+	public Tenant() {
+		super();
+		this.userId=0L;
+		this.name = "";
+		this.contactNumber= 0L ;
+		this.fatherName = "";
+		this.fatherphoneNumber=0L;
+		this.permanetAddress="";
+		this.emailId="";
+		this.mobileNumber=0L;
+		this.officeAddress="";
+		this.bloodGroup="";
+		this.dob="";
+		this.tenantBooking = new ArrayList<>();
+
+	}
+
 	public Tenant(long userId, String name, long contactNumber, String fatherName, long fatherphoneNumber,
 			String motherName, long motherphoneNumber, String dob, String bloodGroup, long emergencyContactNumber,
 			String nameOfTheEmployer, String officeAddress, long telephoneNumber, String emailId,
@@ -60,35 +82,25 @@ public class Tenant implements Serializable {
 		this.contactNumber = contactNumber;
 		this.fatherName = fatherName;
 		this.fatherphoneNumber = fatherphoneNumber;
-		this.motherName = motherName;
-		this.motherphoneNumber = motherphoneNumber;
 		this.dob = dob;
 		this.bloodGroup = bloodGroup;
-		this.emergencyContactNumber = emergencyContactNumber;
-		this.nameOfTheEmployer = nameOfTheEmployer;
 		this.officeAddress = officeAddress;
-		this.telephoneNumber = telephoneNumber;
 		this.emailId = emailId;
 		this.permanetAddress = permanetAddress;
-				
+
 	}
 
 	public long getUserId() {
 		return userId;
 	}
 
-
-
 	public void setUserId(long userId) {
 		this.userId = userId;
 	}
 
-
-
 	public String getName() {
 		return name;
 	}
-
 
 	public void setName(String name) {
 		this.name = name;
@@ -118,20 +130,12 @@ public class Tenant implements Serializable {
 		this.fatherphoneNumber = fatherphoneNumber;
 	}
 
-	public String getMotherName() {
-		return motherName;
-	}
-
 	public void setMotherName(String motherName) {
-		this.motherName = motherName;
 	}
 
-	public long getMotherphoneNumber() {
-		return motherphoneNumber;
-	}
+	
 
 	public void setMotherphoneNumber(long motherphoneNumber) {
-		this.motherphoneNumber = motherphoneNumber;
 	}
 
 	public String getDob() {
@@ -150,24 +154,6 @@ public class Tenant implements Serializable {
 		this.bloodGroup = bloodGroup;
 	}
 
-	public long getEmergencyContactNumber() {
-		return emergencyContactNumber;
-	}
-
-
-
-	public void setEmergencyContactNumber(long emergencyContactNumber) {
-		this.emergencyContactNumber = emergencyContactNumber;
-	}
-
-	public String getNameOfTheEmployer() {
-		return nameOfTheEmployer;
-	}
-
-	public void setNameOfTheEmployer(String nameOfTheEmployer) {
-		this.nameOfTheEmployer = nameOfTheEmployer;
-	}
-
 	public String getOfficeAddress() {
 		return officeAddress;
 	}
@@ -176,14 +162,7 @@ public class Tenant implements Serializable {
 		this.officeAddress = officeAddress;
 	}
 
-	public long getTelephoneNumber() {
-		return telephoneNumber;
-	}
-
-	public void setTelephoneNumber(long telephoneNumber) {
-		this.telephoneNumber = telephoneNumber;
-	}
-
+	
 	public String getEmailId() {
 		return emailId;
 	}
@@ -200,9 +179,12 @@ public class Tenant implements Serializable {
 		this.permanetAddress = permanetAddress;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-			
+	public List<TenantBooking> getTenantBooking() {
+		return tenantBooking;
+	}
+
+	public void setTenantBooking(List<TenantBooking> tenantBooking) {
+		this.tenantBooking = tenantBooking;
 	}
 
 	@Override
@@ -210,16 +192,13 @@ public class Tenant implements Serializable {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Tenant [userId=").append(userId).append(", name=").append(name).append(", contactNumber=")
 				.append(contactNumber).append(", fatherName=").append(fatherName).append(", fatherphoneNumber=")
-				.append(fatherphoneNumber).append(", motherName=").append(motherName).append(", motherphoneNumber=")
-				.append(motherphoneNumber).append(", dob=").append(dob).append(", bloodGroup=").append(bloodGroup)
-				.append(", emergencyContactNumber=").append(emergencyContactNumber).append(", nameOfTheEmployer=")
-				.append(nameOfTheEmployer).append(", officeAddress=").append(officeAddress).append(", telephoneNumber=")
-				.append(telephoneNumber).append(", emailId=").append(emailId).append(", permanetAddress=")
+				.append(fatherphoneNumber).append(", motherName=").append(", motherphoneNumber=")
+				.append(", dob=").append(dob).append(", bloodGroup=").append(bloodGroup)
+				.append(", emergencyContactNumber=").append(", nameOfTheEmployer=")
+				.append(", officeAddress=").append(officeAddress).append(", telephoneNumber=")
+				.append(", emailId=").append(emailId).append(", permanetAddress=")
 				.append(permanetAddress).append("]");
 		return builder.toString();
 	}
 
 }
-	
-	
-

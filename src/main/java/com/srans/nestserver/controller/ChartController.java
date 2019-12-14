@@ -20,30 +20,30 @@ public class ChartController {
 	@Autowired
 	private  BedRepository bedRepository;	
 	
-	@GetMapping("/doughnutchart/{id}/singlebedinfo")
+	@GetMapping("hostels/{id}/singlebed")
 	public Map<String, Object> getSinglebedinfo(@PathVariable(value = "id") Long hostelId) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("Total Bed : ", bedRepository.totalNumberOfBeds(hostelId));
-		map.put("Total Empty Bed : ", bedRepository.totalEmptyBeds(hostelId));
-		map.put("Total Filled Bed : ", bedRepository.totalFilledBeds(hostelId));
+		map.put("Total_Bed : ", bedRepository.totalNumberOfBeds(hostelId));
+		map.put("Total_Empty_Bed : ", bedRepository.totalEmptyBeds(hostelId));
+		map.put("Total_Filled_Bed : ", bedRepository.totalFilledBeds(hostelId));
 		return map;
 	}
 	
-	@GetMapping("/doughnutchart/{id}/doublebedinfo")
+	@GetMapping("/hostels/{id}/doublebed")
 	public Map<String, Object> getDoublebedinfo(@PathVariable(value = "id") Long hostelId) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("Total Bed : ", bedRepository.totalNumberOfBeds1(hostelId));
-		map.put("Total Empty Bed : ", bedRepository.totalEmptyBeds1(hostelId));
-		map.put("Total Filled Bed : ", bedRepository.totalFilledBeds1(hostelId));
+		map.put("Total_Bed : ", bedRepository.totalNumberOfBeds1(hostelId));
+		map.put("Total_Empty_Bed : ", bedRepository.totalEmptyBeds1(hostelId));
+		map.put("Total_Filled_Bed : ", bedRepository.totalFilledBeds1(hostelId));
 		return map;
 	}
 	
-	@GetMapping("/doughnutchart/{id}/triplebedinfo")
+	@GetMapping("/hostels/{id}/triplebed")
 	public Map<String, Object> getTriplebedinfo(@PathVariable(value = "id") Long hostelId) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("Total Bed : ", bedRepository.totalNumberOfBeds2(hostelId));
-		map.put("Total Empty Bed : ", bedRepository.totalEmptyBeds2(hostelId));
-		map.put("Total Filled Bed : ", bedRepository.totalFilledBeds2(hostelId));
+		map.put("Total_Bed : ", bedRepository.totalNumberOfBeds2(hostelId));
+		map.put("Total_Empty_Bed : ", bedRepository.totalEmptyBeds2(hostelId));
+		map.put("Total_Filled_Bed : ", bedRepository.totalFilledBeds2(hostelId));
 		return map;
 	}
 	
