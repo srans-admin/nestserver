@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.repository.BedRepository;
-import com.srans.nestserver.repository.TenantRepository;
 
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RequestMapping("api/v1")

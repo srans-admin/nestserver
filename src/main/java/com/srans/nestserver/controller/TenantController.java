@@ -30,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Tenant;
-import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.TenantRepository;
 import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.util.NSException;
