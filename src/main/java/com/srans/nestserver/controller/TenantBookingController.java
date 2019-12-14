@@ -65,7 +65,7 @@ public class TenantBookingController {
 		
 		responsetenant.getTenantBooking().forEach(tenantbooking->{
 			tenantbooking.setTenantId(responsetenant.getUserId());
-		TenantBooking tenanntBooking=tenantBookRepository.save(tenantbooking);
+		          tenantBookRepository.save(tenantbooking);
 			
 		});
 		return responsetenant;
