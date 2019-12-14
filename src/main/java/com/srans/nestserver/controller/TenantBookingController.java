@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.model.Tenant;
-import com.srans.nestserver.model.TenantBooking;
 import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.TenantRepository;
 import com.srans.nestserver.util.NSException;
