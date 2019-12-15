@@ -1,7 +1,7 @@
 package com.srans.nestserver.controller;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,36 +16,40 @@ import com.srans.nestserver.repository.BedRepository;
 @RequestMapping("api/v1")
 @RestController
 public class ChartController {
-	
+
 	@Autowired
-	private  BedRepository bedRepository;	
-	
-	@GetMapping("hostels/{id}/singlebed")
-	public Map<String, Object> getSinglebedinfo(@PathVariable(value = "id") Long hostelId) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("Total_Bed : ", bedRepository.totalNumberOfBeds(hostelId));
-		map.put("Total_Empty_Bed : ", bedRepository.totalEmptyBeds(hostelId));
-		map.put("Total_Filled_Bed : ", bedRepository.totalFilledBeds(hostelId));
-		return map;
+	private BedRepository bedRepository;
+
+	@GetMapping("hostels/{id}/singlebedinfo")
+	public List<Object> getHostelInfo(@PathVariable(value = "id") Long hostelId) {
+		return Arrays.asList(
+
+				bedRepository.totalNumberOfBeds(hostelId), bedRepository.totalEmptyBeds(hostelId),
+				bedRepository.totalFilledBeds(hostelId));
 	}
-	
-	@GetMapping("/hostels/{id}/doublebed")
-	public Map<String, Object> getDoublebedinfo(@PathVariable(value = "id") Long hostelId) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("Total_Bed : ", bedRepository.totalNumberOfBeds1(hostelId));
-		map.put("Total_Empty_Bed : ", bedRepository.totalEmptyBeds1(hostelId));
-		map.put("Total_Filled_Bed : ", bedRepository.totalFilledBeds1(hostelId));
-		return map;
+
+	@GetMapping("hostels/{id}/doublebedinfo")
+	public List<Object> getHostelInfo1(@PathVariable(value = "id") Long hostelId) {
+		return Arrays.asList(
+
+				bedRepository.totalNumberOfBeds1(hostelId), bedRepository.totalEmptyBeds1(hostelId),
+				bedRepository.totalFilledBeds1(hostelId));
 	}
-	
-	@GetMapping("/hostels/{id}/triplebed")
-	public Map<String, Object> getTriplebedinfo(@PathVariable(value = "id") Long hostelId) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("Total_Bed : ", bedRepository.totalNumberOfBeds2(hostelId));
-		map.put("Total_Empty_Bed : ", bedRepository.totalEmptyBeds2(hostelId));
-		map.put("Total_Filled_Bed : ", bedRepository.totalFilledBeds2(hostelId));
-		return map;
+
+	@GetMapping("hostels/{id}/triplebedinfo")
+	public List<Object> getHostelInfo2(@PathVariable(value = "id") Long hostelId) {
+		return Arrays.asList(
+
+				bedRepository.totalNumberOfBeds2(hostelId), bedRepository.totalEmptyBeds2(hostelId),
+				bedRepository.totalFilledBeds2(hostelId));
 	}
-	
+
+	@GetMapping("hostels/{id}/miscbedinfo")
+	public List<Object> getHostelInfo3(@PathVariable(value = "id") Long hostelId) {
+		return Arrays.asList(
+
+				bedRepository.totalNumberOfBeds3(hostelId), bedRepository.totalEmptyBeds3(hostelId),
+				bedRepository.totalFilledBeds3(hostelId));
+	}
 
 }

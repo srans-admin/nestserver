@@ -12,8 +12,10 @@ public interface BedRepository extends JpaRepository<Bed, Long> {
 	public List<Bed> findByRoomId(Long floor_id);
 
 	public List<Bed> findByFloorId(Long id);
+	
+	
 
-	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where room.room_type='Single' AND room.hostel_id=?1", nativeQuery = true)
+	@Query(value = "select count(bed.id) from bed inner join room on bed.room_id=room.id where room.room_type='Single' AND room.hostel_id=?1", nativeQuery = true)
 	public Long totalNumberOfBeds(Long hostel_id);
 
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Single' AND bed.alloted='Y') AND room.hostel_id=?1", nativeQuery = true)
@@ -39,5 +41,14 @@ public interface BedRepository extends JpaRepository<Bed, Long> {
 
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Triple' AND bed.alloted='N') AND room.hostel_id=?1", nativeQuery = true)
 	public Long totalEmptyBeds2(Long hostel_id);
+	
+	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where room.room_type='Misc' AND room.hostel_id=?1", nativeQuery = true)
+	public Long totalNumberOfBeds3(Long hostel_id);
+
+	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Misc' AND bed.alloted='Y') AND room.hostel_id=?1", nativeQuery = true)
+	public Long totalFilledBeds3(Long hostel_id);
+
+	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Misc' AND bed.alloted='N') AND room.hostel_id=?1", nativeQuery = true)
+	public Long totalEmptyBeds3(Long hostel_id);
 
 }
