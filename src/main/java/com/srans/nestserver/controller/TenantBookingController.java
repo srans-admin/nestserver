@@ -52,24 +52,26 @@ public class TenantBookingController {
 
 	}
 	
-	@PostMapping("/tenantbooking")
-	
-	public Tenant saveTenant(@Valid @RequestBody Tenant tenant) throws NSException {
-		
-		logger.info("IN::POST::/hostels::saveHostel::" + tenant);
-
-		Tenant responsetenant=tenantRepository.save(tenant);
-		
-		// SAVE Database stuff here
-		
-		responsetenant.getTenantBooking().forEach(tenantbooking->{
-			tenantbooking.setTenantId(responsetenant.getUserId());
-		          tenantBookRepository.save(tenantbooking);
-			
-		});
-		return responsetenant;
-			
-		}
+	/*
+	 * @PostMapping("/tenantbooking")
+	 * 
+	 * public Tenant saveTenant(@Valid @RequestBody Tenant tenant) throws
+	 * NSException {
+	 * 
+	 * logger.info("IN::POST::/hostels::saveHostel::" + tenant);
+	 * 
+	 * Tenant responsetenant=tenantRepository.save(tenant);
+	 * 
+	 * // SAVE Database stuff here
+	 * 
+	 * responsetenant.getTenantBooking().forEach(tenantbooking->{
+	 * tenantbooking.setTenantId(responsetenant.getUserId());
+	 * tenantBookRepository.save(tenantbooking);
+	 * 
+	 * }); return responsetenant;
+	 * 
+	 * }
+	 */
 	
 	@GetMapping("/tenantbooking")
 	public List<Tenant> getAllPosts() {

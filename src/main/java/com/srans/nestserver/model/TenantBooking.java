@@ -16,6 +16,7 @@ public class TenantBooking {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column
 	private Long bookingid;
 
 	@Column
@@ -53,7 +54,7 @@ public class TenantBooking {
 
 	public TenantBooking() {
 		super();
-	
+		
 	}
 
 	public TenantBooking(Long bookingid, Long tenantId, Date allotedFrom, String createdBy, String modifiedBy,

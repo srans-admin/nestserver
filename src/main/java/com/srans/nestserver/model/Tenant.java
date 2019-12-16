@@ -1,7 +1,6 @@
 package com.srans.nestserver.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -14,9 +13,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "tenant")
-public class Tenant implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class Tenant {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -80,7 +77,7 @@ public class Tenant implements Serializable {
 		this.officeAddress = "";
 		this.bloodGroup = "";
 		this.dob = "";
-		this.tenantBooking = new ArrayList<>();
+		this.tenantBooking = new LinkedList<>();
 
 	}
 
@@ -238,15 +235,39 @@ public class Tenant implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Tenant [userId=").append(userId).append(", name=").append(name).append(", contactNumber=")
-				.append(contactNumber).append(", fatherName=").append(fatherName).append(", fatherphoneNumber=")
-				.append(fatherphoneNumber).append(", motherName=").append(motherName).append(", motherphoneNumber=")
-				.append(motherphoneNumber).append(", dob=").append(dob).append(", emergencyContactNumber=")
-				.append(emergencyContactNumber).append(", nameOfTheEmployer=").append(nameOfTheEmployer)
-				.append(", bloodGroup=").append(bloodGroup).append(", officeAddress=").append(officeAddress)
-				.append(", mobileNumber=").append(mobileNumber).append(", emailId=").append(emailId)
-				.append(", permanetAddress=").append(permanetAddress).append(", tenantBooking=").append(tenantBooking)
-				.append("]");
+		builder.append("Tenant [userId=");
+		builder.append(userId);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", contactNumber=");
+		builder.append(contactNumber);
+		builder.append(", fatherName=");
+		builder.append(fatherName);
+		builder.append(", fatherphoneNumber=");
+		builder.append(fatherphoneNumber);
+		builder.append(", motherName=");
+		builder.append(motherName);
+		builder.append(", motherphoneNumber=");
+		builder.append(motherphoneNumber);
+		builder.append(", dob=");
+		builder.append(dob);
+		builder.append(", emergencyContactNumber=");
+		builder.append(emergencyContactNumber);
+		builder.append(", nameOfTheEmployer=");
+		builder.append(nameOfTheEmployer);
+		builder.append(", bloodGroup=");
+		builder.append(bloodGroup);
+		builder.append(", officeAddress=");
+		builder.append(officeAddress);
+		builder.append(", mobileNumber=");
+		builder.append(mobileNumber);
+		builder.append(", emailId=");
+		builder.append(emailId);
+		builder.append(", permanetAddress=");
+		builder.append(permanetAddress);
+		builder.append(", tenantBooking=");
+		builder.append(tenantBooking);
+		builder.append("]");
 		return builder.toString();
 	}
 

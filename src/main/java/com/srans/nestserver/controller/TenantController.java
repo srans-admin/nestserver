@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Tenant;
+import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.TenantRepository;
 import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.util.NSException;
@@ -46,6 +47,28 @@ public class TenantController {
 
 	@Autowired
 	private StorageService storageService;
+	
+	@Autowired
+	private TenantBookRepository tenantBookRepository;
+	
+	
+@PostMapping("/tenant")
+	
+	public Tenant saveTenant(@Valid @RequestBody Tenant tenant) throws NSException {
+		
+		logger.info("IN::POST::/hostels::saveHostel::" + tenant);
+
+		Tenant responsetenant=tenantRepository.save(tenant);
+		
+		responsetenant.getTenantBooking().forEach(tenantbooking->{
+			tenantbooking.setTenantId(responsetenant.getUserId());
+		          tenantBookRepository.save(tenantbooking);
+			
+		});
+		logger.info("OUT::POST::/hostels::saveHostel::" + tenant);
+		return responsetenant;
+			
+		}
 	
 	
 
@@ -100,11 +123,11 @@ public class TenantController {
 
 	}
 
-	@PostMapping("/tenant")
-	public Tenant createUser(@RequestBody Tenant tenant) {
-		System.out.println("User : " + tenant);
-		return tenantRepository.save(tenant);
-	}
+	/*
+	 * @PostMapping("/tenant") public Tenant createUser(@RequestBody Tenant tenant)
+	 * { System.out.println("User : " + tenant); return
+	 * tenantRepository.save(tenant); }
+	 */
 
 	@PutMapping("/tenant/{Id}")
 	public ResponseEntity<Tenant> updateUser(@PathVariable(value = "Id") Long TenantId,
@@ -118,7 +141,6 @@ public class TenantController {
 		tenant.setDob(tenant.getDob());
 		tenant.setEmailId(tenant.getEmailId());
 		
-
 		final Tenant updatedTenant = tenantRepository.save(tenant);
 		return ResponseEntity.ok(updatedTenant);
 	}
