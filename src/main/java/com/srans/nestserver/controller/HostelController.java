@@ -1,6 +1,7 @@
 package com.srans.nestserver.controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -250,7 +251,7 @@ public class HostelController {
 	}
 
 	@GetMapping("/hostels/{id}/extendingviews")
-	public Map<String, Object> getTestMap(@PathVariable(value = "id") Long hostelId) {
+	public List<Object> getTestMap(@PathVariable(value = "id") Long hostelId) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("Total_floors:- ", hostelRepository.numOfFloor(hostelId));
 		map.put("Total_Rooms:- ", roomRepository.countRoomByHostelId(hostelId));
@@ -258,7 +259,15 @@ public class HostelController {
 		map.put("Double_Sharing_Rooms:- ", roomRepository.countDoubleSharing(hostelId));
 		map.put("Triple_Sharing_Rooms:- ", roomRepository.countTripleSharing(hostelId));
 		map.put("Misc_Sharing_Rooms:- ", roomRepository.countMiscSharing(hostelId));
-		return map;
+		
+		
+		return Arrays.asList(hostelRepository.numOfFloor(hostelId),
+				             roomRepository.countRoomByHostelId(hostelId),
+				             roomRepository.countSingleSharing(hostelId),
+				             roomRepository.countDoubleSharing(hostelId),
+				             roomRepository.countTripleSharing(hostelId),
+				             roomRepository.countMiscSharing(hostelId)		
+				);
 	}
 
 	@GetMapping("hostels/{id}/getName")
