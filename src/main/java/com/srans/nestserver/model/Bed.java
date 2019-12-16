@@ -115,14 +115,16 @@ public class Bed extends AuditModel {
 	public void setVacatedDate(String vacatedDate) {
 		this.vacatedDate = vacatedDate;
 	}
-
-	public Integer getRoomNo() {
+	
+	public Integer getBedNo() {
 		return bedNo;
 	}
 
-	public void setRoomNo(Integer bedNo) {
+	public void setBedNo(Integer bedNo) {
 		this.bedNo = bedNo;
 	}
+
+	
 
 	
 
@@ -149,5 +151,7 @@ public class Bed extends AuditModel {
 		builder.append("]");
 		return builder.toString();
 	}
+
+	
 
 }
