@@ -29,7 +29,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
+import com.srans.nestserver.model.Room;
 import com.srans.nestserver.model.Tenant;
+import com.srans.nestserver.model.TenantBooking;
+import com.srans.nestserver.repository.PaymentRepository;
+import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.TenantRepository;
 import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.util.NSException;
@@ -46,8 +50,42 @@ public class TenantController {
 
 	@Autowired
 	private StorageService storageService;
-	
-	
+
+	@Autowired
+	private TenantBookRepository tenantBookRepository;
+
+	@Autowired
+	private PaymentRepository paymentRepository;
+
+	@PostMapping("/tenant")
+	public Tenant saveTenant(@Valid @RequestBody Tenant tenant) throws NSException {
+
+		logger.info("IN::POST::/tenant::savetenant::" + tenant);
+
+		Tenant responseTenant = tenantRepository.save(tenant);
+
+		// SAVE Database stuff here
+
+		responseTenant.getTenantBooking().forEach(tenantBooking -> {
+			tenantBooking.setTenantId(responseTenant.getUserId());
+			tenantBooking.setTenantName(responseTenant.getName());
+			TenantBooking resTenantBooking = tenantBookRepository.saveAndFlush(tenantBooking);
+
+			tenantBooking.getPayment().forEach(payment -> {
+				payment.setBookingid(resTenantBooking.getBookingid());
+				payment.setName(resTenantBooking.getTenantName());
+				payment.setRoomName(resTenantBooking.getRoomName());
+				payment.setRoomRent(resTenantBooking.getRoomRent());
+				payment.setRoomType(resTenantBooking.getRoomType());
+				paymentRepository.saveAndFlush(payment);
+
+			});
+
+		});
+
+		logger.info("OUT::POST::/tenant::saveTenant::" + tenant);
+		return responseTenant;
+	}
 
 	@GetMapping("/tenant")
 	public List<Tenant> getAllTenant() {
@@ -100,11 +138,11 @@ public class TenantController {
 
 	}
 
-	@PostMapping("/tenant")
-	public Tenant createUser(@RequestBody Tenant tenant) {
-		System.out.println("User : " + tenant);
-		return tenantRepository.save(tenant);
-	}
+	/*
+	 * @PostMapping("/tenant") public Tenant createUser(@RequestBody Tenant tenant)
+	 * { System.out.println("User : " + tenant); return
+	 * tenantRepository.save(tenant); }
+	 */
 
 	@PutMapping("/tenant/{Id}")
 	public ResponseEntity<Tenant> updateUser(@PathVariable(value = "Id") Long TenantId,
@@ -117,7 +155,6 @@ public class TenantController {
 		tenant.setContactNumber(tenant.getContactNumber());
 		tenant.setDob(tenant.getDob());
 		tenant.setEmailId(tenant.getEmailId());
-		
 
 		final Tenant updatedTenant = tenantRepository.save(tenant);
 		return ResponseEntity.ok(updatedTenant);
@@ -135,7 +172,5 @@ public class TenantController {
 		response.put("deleted", Boolean.TRUE);
 		return response;
 	}
-	
-	
 
 }

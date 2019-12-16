@@ -17,6 +17,10 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
 	@Autowired
 	BedRepository bedRepository = null;
+	
+	@Autowired
+	PaymentRepository paymentrepository=null;
+	
 
 	public default Room saveWholeObject(Room room) {
 
