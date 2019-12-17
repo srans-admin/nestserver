@@ -282,13 +282,11 @@ public class HostelController {
 	public String findAll(@PathVariable(value = "id") Long id) {
 		return hostelRepository.hostelType(id);
 	}
-	
+
 	@GetMapping("hostels/{id}/roomdetail")
-	
-	public Object[] getRoomdetails (@PathVariable(value="id") Long hostelId){
+
+	public Object[] getRoomdetails(@PathVariable(value = "id") Long hostelId) {
 		return hostelRepository.getRoomDetails(hostelId);
 	}
-	
-	
 
 }

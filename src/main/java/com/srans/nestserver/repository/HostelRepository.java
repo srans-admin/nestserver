@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.srans.nestserver.model.Hostel;
-import com.srans.nestserver.model.Room;
 
 
 @Repository
