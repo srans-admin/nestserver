@@ -83,6 +83,7 @@ public class ExpensesController {
 
 		expenses.setExpenseType(ExpensesDetails.getExpenseType());
 		expenses.setAmount(ExpensesDetails.getAmount());
+		expenses.setUpdatedAt(ExpensesDetails.getUpdatedAt());
 		final Expense updatedExpenses = expensesRepository.save(expenses);
 		return ResponseEntity.ok(updatedExpenses);
 	}

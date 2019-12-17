@@ -14,9 +14,6 @@ import com.srans.nestserver.model.Hostel;
 public interface HostelRepository extends JpaRepository<Hostel, Long> {
 	
 	
-	@Query(value="SELECT hostel_name FROM HOSTEL WHERE id=?1", nativeQuery = true)
-    public String hostelNameById(Long id);
-	
 	@Autowired 
 	public FloorRepository floorRepository = null ; 
 	
@@ -24,12 +21,18 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
     public Long numOfFloor(Long hostel_id);
 	
 	@Query(value="SELECT hostel_name FROM HOSTEL WHERE id=?1", nativeQuery=true)
-	public String hosteName(Long hostel_id);
+	public String hostelName(Long hostel_id);
 	
-	@Query(value="SELECT room_type FROM ROOM WHERE hostel_id=?1", nativeQuery=true)
-	public Set<String> findType(Long hostel_id);
+	@Query(value="SELECT hostel_type FROM HOSTEL WHERE  id=?1", nativeQuery=true)
+	public String hostelType(Long hostel_id);
 	
+	@Query(value="SELECT hostel_address FROM HOSTEL WHERE id=?1", nativeQuery=true)
+	public String hostelAddress(Long hostel_id);
 	
+	@Query(value="SELECT room_type FROM ROOM WHERE hostel_id=?1", nativeQuery = true)
+	public Set<String> roomTypes(Long Hostel_id);
+	
+
 	public default Hostel saveWholeObject(Hostel hostel){
 		
 		Hostel tmpHostel = new Hostel();

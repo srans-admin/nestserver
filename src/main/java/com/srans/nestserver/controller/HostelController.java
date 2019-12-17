@@ -252,14 +252,14 @@ public class HostelController {
 
 	@GetMapping("/hostels/{id}/extendingviews")
 	public List<Object> getTestMap(@PathVariable(value = "id") Long hostelId) {
-		
-		return Arrays.asList(hostelRepository.numOfFloor(hostelId),
-				             roomRepository.countRoomByHostelId(hostelId),
-				             roomRepository.countSingleSharing(hostelId),
-				             roomRepository.countDoubleSharing(hostelId),
-				             roomRepository.countTripleSharing(hostelId),
-				             roomRepository.countMiscSharing(hostelId)		
-				);
+
+		return Arrays.asList(
+
+				hostelRepository.hostelName(hostelId), hostelRepository.numOfFloor(hostelId),
+				hostelRepository.hostelType(hostelId), hostelRepository.hostelAddress(hostelId),
+				roomRepository.countRoomByHostelId(hostelId), roomRepository.countSingleSharing(hostelId),
+				roomRepository.countDoubleSharing(hostelId), roomRepository.countTripleSharing(hostelId),
+				roomRepository.countMiscSharing(hostelId));
 	}
 
 	@GetMapping("hostels/{id}/getName")
@@ -267,14 +267,14 @@ public class HostelController {
 	public Map<String, Object> getHostelMap(@PathVariable(value = "id") Long hostelId) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("Total Floor : ", hostelRepository.numOfFloor(hostelId));
-		map.put("Hostel Name ", hostelRepository.hosteName(hostelId));
+		map.put("Hostel Name ", hostelRepository.hostelName(hostelId));
 		return map;
 	}
 
 	@GetMapping("hostels/{id}/getHostelType")
 
-	public Iterable<String> findAll(@PathVariable(value = "id") Long id) {
-		return hostelRepository.findType(id);
+	public String findAll(@PathVariable(value = "id") Long id) {
+		return hostelRepository.hostelType(id);
 	}
 
 }
