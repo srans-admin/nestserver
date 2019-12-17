@@ -33,10 +33,10 @@ public class ExpensesController {
 	// Logger logger = LoggerFactory.getLogger(ExpensesController.class);
 	@Autowired
 	private ExpenseRepository expensesRepository;
-	
+
 	@Autowired
 	private HostelRepository hostelRepository;
-	
+
 	@Autowired
 	private TenantRepository tenantRepository;
 
@@ -54,19 +54,18 @@ public class ExpensesController {
 	 * ResourceNotFoundException(" Expenses not found for this id :: " +
 	 * ExpensesId)); return ResponseEntity.ok().body(expenses); }
 	 */
-	
+
 	@GetMapping("expenses/hostelName")
 	public List<String> findAll() {
 		return tenantRepository.getAllHostelName();
 	}
-	
+
 	@GetMapping("expenses/{id}")
-	public List<Object[]> getExpensesData(@PathVariable(value="id") Long id){
-		
+	public List<Object[]> getExpensesData(@PathVariable(value = "id") Long id) {
+
 		return expensesRepository.getExpenses(id);
 	}
 
-	
 	@PostMapping("/expenses/{id}")
 	public Expense createExpense(@PathVariable(value = "id") Long id, @Valid @RequestBody Expense expense) {
 		return hostelRepository.findById(id).map(hostel -> {
@@ -82,8 +81,8 @@ public class ExpensesController {
 		Expense expenses = expensesRepository.findById(ExpensesId)
 				.orElseThrow(() -> new ResourceNotFoundException("Expenses not found for this id :: " + ExpensesId));
 
-		expenses.setTypeOfExpenses(ExpensesDetails.getTypeOfExpenses());
-		expenses.setAmmount(ExpensesDetails.getAmmount());
+		expenses.setExpenseType(ExpensesDetails.getExpenseType());
+		expenses.setAmount(ExpensesDetails.getAmount());
 		final Expense updatedExpenses = expensesRepository.save(expenses);
 		return ResponseEntity.ok(updatedExpenses);
 	}
