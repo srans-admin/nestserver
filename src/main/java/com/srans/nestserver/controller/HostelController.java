@@ -134,11 +134,12 @@ public class HostelController {
 		}).orElseThrow(() -> new ResourceNotFoundException("HostelId " + id + " not found"));
 	}
 
-	@GetMapping("/hostels/{id}")
-	public Hostel getHostel(@PathVariable(value = "id") Long id) {
-
-		return hostelRepository.findById(id).orElse(null);
-	}
+	
+	  @GetMapping("/hostels/{id}") public Hostel getHostel(@PathVariable(value =
+	  "id") Long id) {
+	  
+	  return hostelRepository.findById(id).orElse(null); }
+	 
 
 	@GetMapping("/hostels/{id}/floor")
 	public List<Floor> getAllFloorsByHostelid(@PathVariable(value = "id") Long id) {
@@ -250,7 +251,7 @@ public class HostelController {
 		}).orElseThrow(() -> new ResourceNotFoundException("roomId " + id + " not found"));
 	}
 
-	@GetMapping("/hostels/{id}/extendingviews")
+	@GetMapping("/hostels/{id}/extendview")
 	public List<Object> getTestMap(@PathVariable(value = "id") Long hostelId) {
 
 		return Arrays.asList(
@@ -269,6 +270,12 @@ public class HostelController {
 		map.put("Total Floor : ", hostelRepository.numOfFloor(hostelId));
 		map.put("Hostel Name ", hostelRepository.hostelName(hostelId));
 		return map;
+	}
+	
+	@GetMapping("hostels/{id}/hosteldetails")
+	public List<Object[]> hosteldetails(@PathVariable(value="id") Long hostelId){
+		return hostelRepository.getHostelInfo(hostelId);
+		
 	}
 
 	@GetMapping("hostels/{id}/getHostelType")
