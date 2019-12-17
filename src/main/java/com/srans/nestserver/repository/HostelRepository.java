@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.srans.nestserver.model.Hostel;
+import com.srans.nestserver.model.Room;
 
 
 @Repository
@@ -37,6 +38,9 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 			+ "from floor t1 inner join room t2 on t1.hostel_id = t2.hostel_id\n"
 			+ "inner join bed t3 on t2.hostel_id=t3.hostel_id where t1.hostel_id=?1", nativeQuery = true)
 	public List<Object[]> getHostelInfo(Long hostelId);
+	
+	@Query(value = "select room_name,room_type from room where room.hostel_id=?1", nativeQuery=true)
+	public Object[] getRoomDetails(Long hostelId);
 	
 
 	public default Hostel saveWholeObject(Hostel hostel){
