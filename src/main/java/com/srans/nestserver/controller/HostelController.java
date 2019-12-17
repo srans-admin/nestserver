@@ -69,6 +69,7 @@ public class HostelController {
 		logger.info("IN::POST::/hostels::saveHostel::" + hostel);
 
 		Hostel responseHostel = hostelRepository.save(hostel);
+		
 
 		// SAVE Database stuff here
 
@@ -103,6 +104,31 @@ public class HostelController {
 		logger.info("OUT::POST:://hostels/uploadImage/{cat}/{id}::uploadHostelImages::" + id + "::" + cat);
 
 	}
+	
+	@GetMapping("/hostels/{id}")
+	public Hostel getHostel(@PathVariable(value = "id") Long id) {
+		
+		Hostel responseHostel=hostelRepository.getOne(id);
+		
+		responseHostel.getfloors().forEach(floor -> {
+			Floor resFloor = floorRepository.getOne(floor.getId());
+			  resFloor.getRooms().forEach(room ->{
+				  Room resRoom=roomRepository.getOne(room.getId());
+				    resRoom.getBeds().forEach(bed ->{
+				    	bedRepository.getOne(bed.getId());
+				    
+				    });
+				    
+				  
+				  
+			  });
+			
+		
+		});
+		
+
+		return hostelRepository.findById(id).orElse(null);
+	}
 
 	@GetMapping("/hostels/{id}/retrive/{cat}")
 	public ResponseEntity<InputStreamResource> retriveHostelImage(@PathVariable("id") Long id,
@@ -134,11 +160,7 @@ public class HostelController {
 		}).orElseThrow(() -> new ResourceNotFoundException("HostelId " + id + " not found"));
 	}
 
-	@GetMapping("/hostels/{id}")
-	public Hostel getHostel(@PathVariable(value = "id") Long id) {
-
-		return hostelRepository.findById(id).orElse(null);
-	}
+	
 
 	@GetMapping("/hostels/{id}/floor")
 	public List<Floor> getAllFloorsByHostelid(@PathVariable(value = "id") Long id) {

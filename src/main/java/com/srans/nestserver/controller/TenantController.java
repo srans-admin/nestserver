@@ -62,7 +62,7 @@ public class TenantController {
 		
 		responsetenant.getTenantBooking().forEach(tenantbooking->{
 			tenantbooking.setTenantId(responsetenant.getUserId());
-		          tenantBookRepository.save(tenantbooking);
+			tenantbooking  =  tenantBookRepository.save(tenantbooking);
 			
 		});
 		logger.info("OUT::POST::/hostels::saveHostel::" + tenant);
