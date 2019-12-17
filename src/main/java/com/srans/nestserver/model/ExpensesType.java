@@ -1,6 +1,5 @@
 package com.srans.nestserver.model;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,13 +16,20 @@ import org.hibernate.annotations.OnDeleteAction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "Expense")
-public class Expense extends AuditModel {
+@Table(name = "expensetype")
+public class ExpensesType extends AuditModel {
+
+	/**
+	 * @author Manish
+	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long typeId;
+
+	@Column
+	private String expenseType;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "hostel_id", nullable = false)
@@ -31,39 +37,32 @@ public class Expense extends AuditModel {
 	@JsonIgnore
 	private Hostel hostel;
 
-	@Column
-	private String typeOfExpenses;
-
-	@Column
-	private Long ammount;
-
-	public Expense() {
+	public ExpensesType() {
 		super();
 
 	}
 
-	public Expense(Long id, Hostel hostel, String typeOfExpenses, Long ammount) {
+	public ExpensesType(Long typeId, String expenseType, Hostel hostel) {
 		super();
-		this.id = id;
+		this.typeId = typeId;
+		this.expenseType = expenseType;
 		this.hostel = hostel;
-		this.typeOfExpenses = typeOfExpenses;
-		this.ammount = ammount;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getTypeId() {
+		return typeId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setTypeId(Long typeId) {
+		this.typeId = typeId;
 	}
 
-	public String getTypeOfExpenses() {
-		return typeOfExpenses;
+	public String getExpenseType() {
+		return expenseType;
 	}
 
-	public void setTypeOfExpenses(String typeOfExpenses) {
-		this.typeOfExpenses = typeOfExpenses;
+	public void setExpenseType(String expenseType) {
+		this.expenseType = expenseType;
 	}
 
 	public Hostel getHostel() {
@@ -74,23 +73,15 @@ public class Expense extends AuditModel {
 		this.hostel = hostel;
 	}
 
-	public Long getAmmount() {
-		return ammount;
-	}
-
-	public void setAmmount(Long ammount) {
-		this.ammount = ammount;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Expense [id=");
-		builder.append(id);
-		builder.append(", typeOfExpenses=");
-		builder.append(typeOfExpenses);
-		builder.append(", cost=");
-		builder.append(ammount);
+		builder.append("ExpensesType [typeId=");
+		builder.append(typeId);
+		builder.append(", expenseType=");
+		builder.append(expenseType);
+		builder.append(", hostel=");
+		builder.append(hostel);
 		builder.append("]");
 		return builder.toString();
 	}

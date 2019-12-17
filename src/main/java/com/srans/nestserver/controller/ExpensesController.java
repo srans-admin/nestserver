@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Expense;
 import com.srans.nestserver.repository.ExpenseRepository;
+import com.srans.nestserver.repository.HostelRepository;
+import com.srans.nestserver.repository.TenantRepository;
 
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RestController
@@ -31,6 +33,12 @@ public class ExpensesController {
 	// Logger logger = LoggerFactory.getLogger(ExpensesController.class);
 	@Autowired
 	private ExpenseRepository expensesRepository;
+	
+	@Autowired
+	private HostelRepository hostelRepository;
+	
+	@Autowired
+	private TenantRepository tenantRepository;
 
 	@GetMapping("/expenses")
 	public List<Expense> getAllExpenses() {
@@ -38,18 +46,34 @@ public class ExpensesController {
 		return expensesRepository.findAll();
 	}
 
-	@GetMapping("/expenses/{id}")
-	public ResponseEntity<Expense> getExpensesById(@PathVariable(value = "id") Long ExpensesId)
-			throws ResourceNotFoundException {
-		Expense expenses = expensesRepository.findById(ExpensesId)
-				.orElseThrow(() -> new ResourceNotFoundException(" Expenses not found for this id :: " + ExpensesId));
-		return ResponseEntity.ok().body(expenses);
+	/*
+	 * @GetMapping("/expenses/{id}") public ResponseEntity<Expense>
+	 * getExpensesById(@PathVariable(value = "id") Long ExpensesId) throws
+	 * ResourceNotFoundException { Expense expenses =
+	 * expensesRepository.findById(ExpensesId) .orElseThrow(() -> new
+	 * ResourceNotFoundException(" Expenses not found for this id :: " +
+	 * ExpensesId)); return ResponseEntity.ok().body(expenses); }
+	 */
+	
+	@GetMapping("expenses/hostelName")
+	public List<String> findAll() {
+		return tenantRepository.getAllHostelName();
+	}
+	
+	@GetMapping("expenses/{id}")
+	public List<Object[]> getExpensesData(@PathVariable(value="id") Long id){
+		
+		return expensesRepository.getExpenses(id);
 	}
 
-	@PostMapping("/expenses")
-	public Expense createExpenses(@Valid @RequestBody Expense expenses) {
+	
+	@PostMapping("/expenses/{id}")
+	public Expense createExpense(@PathVariable(value = "id") Long id, @Valid @RequestBody Expense expense) {
+		return hostelRepository.findById(id).map(hostel -> {
+			expense.setHostel(hostel);
 
-		return expensesRepository.save(expenses);
+			return expensesRepository.save(expense);
+		}).orElseThrow(() -> new ResourceNotFoundException("PostId " + id + " not found"));
 	}
 
 	@PutMapping("/expenses/{id}")
@@ -59,7 +83,7 @@ public class ExpensesController {
 				.orElseThrow(() -> new ResourceNotFoundException("Expenses not found for this id :: " + ExpensesId));
 
 		expenses.setTypeOfExpenses(ExpensesDetails.getTypeOfExpenses());
-		expenses.setCost(ExpensesDetails.getCost());
+		expenses.setAmmount(ExpensesDetails.getAmmount());
 		final Expense updatedExpenses = expensesRepository.save(expenses);
 		return ResponseEntity.ok(updatedExpenses);
 	}

@@ -2,17 +2,13 @@ package com.srans.nestserver.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import javax.persistence.CascadeType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -48,9 +44,6 @@ public class Hostel {
 	private boolean parking;
 	@Column
 	private boolean gym;
-	
-	@OneToMany(mappedBy = "hostel", cascade = CascadeType.ALL)
-	private Set<Expense> expense;
 
 	@Transient
 	private List<Floor> floors;
@@ -79,8 +72,7 @@ public class Hostel {
 		this.parking = parking;
 		this.gym = gym;
 		this.floors = floors;
-		this.expense = Stream.of(expense).collect(Collectors.toSet());
-        this.expense.forEach(x -> x.setHostel(this));
+		
 	}
 
 	public Long getId() {

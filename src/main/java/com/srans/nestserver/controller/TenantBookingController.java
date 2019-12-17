@@ -28,7 +28,6 @@ public class TenantBookingController {
 	@GetMapping("hostels/hostelName")
 	public List<String> findAll() {
 		return tenantRepository.getAllHostelName();
-
 	}
 
 	@GetMapping("hostels/{hostelname}/bed")
