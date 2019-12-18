@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 
+
 @Entity
 @Table(name = "room")
 
@@ -25,7 +26,7 @@ public class Room implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column
+	@Column 
 	private Long hostelId;
 	@Column
 	private Long floorId;

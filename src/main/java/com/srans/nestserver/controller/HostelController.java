@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Floor;
 import com.srans.nestserver.model.Hostel;
@@ -60,10 +59,10 @@ public class HostelController {
 	@Autowired
 	private StorageService storageService;
 
-	@GetMapping("/hostels")
-	public List<Hostel> getAllPosts() {
-		return hostelRepository.findAll();
-	}
+	/*
+	 * @GetMapping("/hostels") public List<Hostel> getAllPosts() { return
+	 * hostelRepository.findAll(); }
+	 */
 
 	@PostMapping("/hostels")
 	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) throws NSException {
@@ -71,7 +70,6 @@ public class HostelController {
 		logger.info("IN::POST::/hostels::saveHostel::" + hostel);
 
 		Hostel responseHostel = hostelRepository.save(hostel);
-		
 
 		// SAVE Database stuff here
 
@@ -106,31 +104,38 @@ public class HostelController {
 		logger.info("OUT::POST:://hostels/uploadImage/{cat}/{id}::uploadHostelImages::" + id + "::" + cat);
 
 	}
-	
-	@GetMapping("/hostels/{id}")
-	public Hostel getHostel(@PathVariable(value = "id") Long id) throws IOException {
-		
-		Hostel responseHostel=hostelRepository.getOne(id);
-			
-		responseHostel.getfloors().forEach(floor -> {
-			Floor resFloor = floorRepository.getOne(floor.getId());
-			  resFloor.getRooms().forEach(room ->{
-				  Room resRoom=roomRepository.getOne(room.getId());
-				    resRoom.getBeds().forEach(bed ->{
-				    	bedRepository.getOne(bed.getId());
-				    
-				    });
-				    
-				  
-				  
-			  });
-			
-		
-		});
-		
 
-		return responseHostel ;
+	@GetMapping(value = "/hostels/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Hostel> getHosteldetails(@PathVariable(value = "id") Long id) {
+
+		Hostel resHostel;
+
+		{
+			 resHostel = hostelRepository.getOne(id);
+
+			resHostel.getfloors().stream().forEach(floor -> {
+
+				Floor resFloor = floorRepository.getFloordetails(id);
+				resFloor.getRooms().stream().forEach(room -> {
+					Room resRoom = roomRepository.getOne(id);
+
+					resRoom.getBeds().stream().forEach(bed -> {
+
+						bedRepository.getOne(id);
+
+					});
+
+				});
+
+			});
+
+		}
+		return ResponseEntity.ok().body(resHostel);
+
 	}
+	
+	
+	
 
 	@GetMapping("/hostels/{id}/retrive/{cat}")
 	public ResponseEntity<InputStreamResource> retriveHostelImage(@PathVariable("id") Long id,
@@ -161,8 +166,6 @@ public class HostelController {
 			return ResponseEntity.ok().build();
 		}).orElseThrow(() -> new ResourceNotFoundException("HostelId " + id + " not found"));
 	}
-
-	
 
 	@GetMapping("/hostels/{id}/floor")
 	public List<Floor> getAllFloorsByHostelid(@PathVariable(value = "id") Long id) {
