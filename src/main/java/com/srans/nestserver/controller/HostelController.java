@@ -105,34 +105,7 @@ public class HostelController {
 
 	}
 
-	@GetMapping(value = "/hostels/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Hostel> getHosteldetails(@PathVariable(value = "id") Long id) {
-
-		Hostel resHostel;
-
-		{
-			 resHostel = hostelRepository.getOne(id);
-
-			resHostel.getfloors().stream().forEach(floor -> {
-
-				Floor resFloor = floorRepository.getFloordetails(id);
-				resFloor.getRooms().stream().forEach(room -> {
-					Room resRoom = roomRepository.getOne(id);
-
-					resRoom.getBeds().stream().forEach(bed -> {
-
-						bedRepository.getOne(id);
-
-					});
-
-				});
-
-			});
-
-		}
-		return ResponseEntity.ok().body(resHostel);
-
-	}
+	
 	
 	
 	

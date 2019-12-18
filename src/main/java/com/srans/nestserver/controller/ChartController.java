@@ -1,9 +1,13 @@
 package com.srans.nestserver.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +54,18 @@ public class ChartController {
 
 				bedRepository.totalNumberOfBeds3(hostelId), bedRepository.totalEmptyBeds3(hostelId),
 				bedRepository.totalFilledBeds3(hostelId));
+	}
+	
+	@GetMapping(value= "hostels/{id}/chart")
+	public ResponseEntity<Map<String[], List<Object>>> chart(@PathVariable(value="id", required=false)Long hostelId ){
+		Map<String[],List<Object>> result=new HashMap<String[],List<Object>>();
+		result.put(bedRepository.getRoomType(hostelId), Arrays.asList(bedRepository.totalNumberOfBeds(hostelId),
+				
+				bedRepository.totalFilledBeds(hostelId)
+				
+				
+				));
+		return ResponseEntity.ok().body(result);
 	}
 
 }
