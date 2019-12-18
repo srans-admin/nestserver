@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Floor;
@@ -106,10 +108,10 @@ public class HostelController {
 	}
 	
 	@GetMapping("/hostels/{id}")
-	public Hostel getHostel(@PathVariable(value = "id") Long id) {
+	public Hostel getHostel(@PathVariable(value = "id") Long id) throws IOException {
 		
 		Hostel responseHostel=hostelRepository.getOne(id);
-		
+			
 		responseHostel.getfloors().forEach(floor -> {
 			Floor resFloor = floorRepository.getOne(floor.getId());
 			  resFloor.getRooms().forEach(room ->{
@@ -127,7 +129,7 @@ public class HostelController {
 		});
 		
 
-		return hostelRepository.findById(id).orElse(null);
+		return responseHostel ;
 	}
 
 	@GetMapping("/hostels/{id}/retrive/{cat}")
@@ -307,7 +309,7 @@ public class HostelController {
 
 	@GetMapping("hostels/{id}/roomdetail")
 
-	public Object[] getRoomdetails(@PathVariable(value = "id") Long hostelId) {
+	public List<Object[]> getRoomdetails(@PathVariable(value = "id") Long hostelId) {
 		return hostelRepository.getRoomDetails(hostelId);
 	}
 

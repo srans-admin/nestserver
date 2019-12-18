@@ -19,8 +19,8 @@ public interface TenantRepository extends JpaRepository<Tenant, Long> {
 	public Long getHostelId(String hostelname);
 
 	@Query(value = "select t1.hostel_id, t1.floor_name, t2.id ,t2.room_name, t2.room_rent,t2.room_type, t3.alloted,t3.bed_no,t3.position\n"
-			+ "from floor t1 inner join room t2 on t1.hostel_id = t2.hostel_id\n"
-			+ "inner join bed t3 on t2.hostel_id=t3.hostel_id where t1.hostel_id=?1", nativeQuery = true)
+			+ "from floor t1 inner join room t2 on t1.id = t2.floor_id\n"
+			+ "inner join bed t3 on t2.id=t3.room_id where t1.hostel_id=?1", nativeQuery = true)
 	public List<Object[]> getBedInfo(Long hostelId);
 	
 	@Autowired

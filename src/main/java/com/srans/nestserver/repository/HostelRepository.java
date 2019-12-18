@@ -39,7 +39,7 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 	public List<Object[]> getHostelInfo(Long hostelId);
 	
 	@Query(value = "select room_name,room_type from room where room.hostel_id=?1", nativeQuery=true)
-	public Object[] getRoomDetails(Long hostelId);
+	public List<Object[]> getRoomDetails(Long hostelId);
 	
 
 	public default Hostel saveWholeObject(Hostel hostel){

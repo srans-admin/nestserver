@@ -1,5 +1,6 @@
 package com.srans.nestserver.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,10 +12,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+
 @Entity
 @Table(name = "room")
-public class Room {
 
+public class Room implements Serializable{
+
+	/**
+	 * @author Manish
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
