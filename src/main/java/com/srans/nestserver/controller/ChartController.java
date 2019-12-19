@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,44 +23,46 @@ public class ChartController {
 	@Autowired
 	private BedRepository bedRepository;
 
-	@GetMapping("hostels/{id}/singlebedinfo")
+	@GetMapping("hostels/{id}/singlebed-info")
 	public List<Object> getHostelInfo(@PathVariable(value = "id") Long hostelId) {
 		return Arrays.asList(
 
-				bedRepository.totalNumberOfBeds(hostelId), bedRepository.totalEmptyBeds(hostelId),
-				bedRepository.totalFilledBeds(hostelId));
+				bedRepository.totalSingleBeds(hostelId), bedRepository.totalEmptySingleBeds(hostelId),
+				bedRepository.totalFilledSingleBeds(hostelId));
 	}
 
-	@GetMapping("hostels/{id}/doublebedinfo")
+	@GetMapping("hostels/{id}/doublebed-info")
 	public List<Object> getHostelInfo1(@PathVariable(value = "id") Long hostelId) {
 		return Arrays.asList(
 
-				bedRepository.totalNumberOfBeds1(hostelId), bedRepository.totalEmptyBeds1(hostelId),
-				bedRepository.totalFilledBeds1(hostelId));
+				bedRepository.totalDoubleBeds(hostelId), bedRepository.totalEmptyDoubleBeds(hostelId),
+				bedRepository.totalFilledDoubleBeds(hostelId));
 	}
 
-	@GetMapping("hostels/{id}/triplebedinfo")
+	@GetMapping("hostels/{id}/triplebed-info")
 	public List<Object> getHostelInfo2(@PathVariable(value = "id") Long hostelId) {
 		return Arrays.asList(
 
-				bedRepository.totalNumberOfBeds2(hostelId), bedRepository.totalEmptyBeds2(hostelId),
-				bedRepository.totalFilledBeds2(hostelId));
+				bedRepository.totalTripleBeds(hostelId), bedRepository.totalEmptyTripleBeds(hostelId),
+				bedRepository.totalFilledTripleBeds(hostelId));
 	}
 
-	@GetMapping("hostels/{id}/miscbedinfo")
+	@GetMapping("hostels/{id}/bed-info")
 	public List<Object> getHostelInfo3(@PathVariable(value = "id") Long hostelId) {
 		return Arrays.asList(
 
-				bedRepository.totalNumberOfBeds3(hostelId), bedRepository.totalEmptyBeds3(hostelId),
-				bedRepository.totalFilledBeds3(hostelId));
+				bedRepository.totalMiscBeds(hostelId), bedRepository.totalFilleMiscdBeds(hostelId),
+				bedRepository.totalEmptyMiscBeds(hostelId));
 	}
+	
+	//======New Api=========
 	
 	@GetMapping(value= "hostels/{id}/chart")
 	public ResponseEntity<Map<String[], List<Object>>> chart(@PathVariable(value="id", required=false)Long hostelId ){
 		Map<String[],List<Object>> result=new HashMap<String[],List<Object>>();
-		result.put(bedRepository.getRoomType(hostelId), Arrays.asList(bedRepository.totalNumberOfBeds(hostelId),
+		result.put(bedRepository.getRoomType(hostelId), Arrays.asList(bedRepository.totalSingleBeds(hostelId),
 				
-				bedRepository.totalFilledBeds(hostelId)
+				bedRepository.totalFilledSingleBeds(hostelId)
 				
 				
 				));
