@@ -1,5 +1,7 @@
 package com.srans.nestserver.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "bed")
-public class Bed extends AuditModel {
+public class Bed extends AuditModel implements Serializable{
 
 	/**
 	 * @author Manish
@@ -44,6 +46,15 @@ public class Bed extends AuditModel {
 
 	public Bed() {
 		super();
+		this.hostelId = -1L;
+		this.floorId= -1L;
+		this.roomId=-1L;
+		this.alloted='N';
+		this.position="L";
+		this.vacatedDate="";
+		this.bedNo=1;
+		
+		
 
 	}
 

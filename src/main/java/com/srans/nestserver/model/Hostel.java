@@ -1,5 +1,6 @@
 package com.srans.nestserver.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "hostel")
-public class Hostel {
+public class Hostel implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
