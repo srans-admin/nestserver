@@ -1,5 +1,6 @@
 package com.srans.nestserver.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "room")
-public class Room {
+public class Room implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +36,11 @@ public class Room {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Room() {
 		super();
+		this.hostelId=-1L;
+		this.floorId =-1L;
+		this.roomName="";
+		this.roomType="";
+		this.roomRent=0;
 		this.beds = new ArrayList();
 	}
 

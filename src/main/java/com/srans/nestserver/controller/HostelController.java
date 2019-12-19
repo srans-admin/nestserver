@@ -134,10 +134,23 @@ public class HostelController {
 		}).orElseThrow(() -> new ResourceNotFoundException("HostelId " + id + " not found"));
 	}
 
+	 
 	@GetMapping("/hostels/{id}")
-	public Hostel getHostel(@PathVariable(value = "id") Long id) {
+	public Hostel getHostel(@PathVariable(value = "id") Long hostelId) throws IOException {
 
-		return hostelRepository.findById(id).orElse(null);
+		Hostel responseHostel = hostelRepository.getOne(hostelId);
+
+		floorRepository.findByHostelId(hostelId).forEach(floor -> {
+			responseHostel.getfloors().add(floor);
+			roomRepository.findByFloorId(floor.getId()).forEach(room -> {
+				floor.getRooms().add(room);
+				bedRepository.findByRoomId(room.getId()).forEach(bed -> {
+					room.getBeds().add(bed);
+				});
+			});
+		});
+		
+		return responseHostel;
 	}
 
 	@GetMapping("/hostels/{id}/floor")
