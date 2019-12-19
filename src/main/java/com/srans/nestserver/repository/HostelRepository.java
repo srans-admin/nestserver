@@ -53,7 +53,7 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 
 		Hostel tmpHostel = new Hostel();
 
-		tmpHostel = this.save(hostel);
+		tmpHostel = this.save(hostel);	
 
 		hostel.getfloors().forEach(floor -> floorRepository.saveWholeObject(floor));
 
@@ -61,6 +61,14 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 
 		return tmpHostel;
 
+	}
+	
+	public default Hostel getWholeObject(Long hostelId) {
+		Hostel resHostel=new Hostel();
+		resHostel=this.getOne(hostelId);
+		resHostel.getfloors().forEach(floor -> floorRepository.getWholeObjectOfFloor(hostelId));
+
+		return resHostel;
 	}
 	
 

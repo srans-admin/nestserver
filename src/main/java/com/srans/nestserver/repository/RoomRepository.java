@@ -1,11 +1,13 @@
 package com.srans.nestserver.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
 import com.srans.nestserver.model.Room;
 
 @Repository
@@ -46,6 +48,9 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
 	@Query(value = "SELECT COUNT(id) FROM ROOM WHERE hostel_id=?1 AND room_type='Misc'", nativeQuery = true)
 	public Long countMiscSharing(Long hostel_id);
+	
+	@Query(value="Select room.room_type from room where hostel_id=?1",nativeQuery = true)
+	public Set<String> getRoomType(Long HostelId);
 
 }
 

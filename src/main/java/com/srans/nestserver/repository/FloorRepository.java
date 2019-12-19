@@ -41,4 +41,10 @@ public interface FloorRepository extends JpaRepository<Floor, Long> {
 		return tmpfloor;
 		
 	}
+	public default Floor getWholeObjectOfFloor(Long hostelId) {
+		Floor resFloor=new Floor();
+		resFloor=this.getOne(hostelId);
+		resFloor.getRooms().forEach(floor -> roomRepository.getOne(hostelId));
+		return resFloor;
+	}
 }

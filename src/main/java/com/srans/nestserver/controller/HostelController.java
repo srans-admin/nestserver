@@ -64,6 +64,37 @@ public class HostelController {
 	 * hostelRepository.findAll(); }
 	 */
 
+	@GetMapping(value = "/hostels/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Hostel> getHosteldetails(@PathVariable(value = "id") Long id) {
+
+//		Hostel resHostel;
+//
+//		{
+//			resHostel = hostelRepository.getOne(id);
+//
+//			resHostel.getfloors().stream().forEach(floor -> {
+//
+//				Floor resFloor = floorRepository.getFloordetails(id);
+//				resFloor.getRooms().stream().forEach(room -> {
+//					Room resRoom = roomRepository.getOne(id);
+//
+//					resRoom.getBeds().stream().forEach(bed -> {
+//
+//						bedRepository.getOne(id);
+//
+//					});
+//
+//				});
+//
+//			});
+//
+//		}
+		
+		Hostel resHostel=hostelRepository.getWholeObject(id);
+		return ResponseEntity.ok().body(resHostel);
+
+	}
+
 	@PostMapping("/hostels")
 	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) throws NSException {
 
@@ -104,11 +135,6 @@ public class HostelController {
 		logger.info("OUT::POST:://hostels/uploadImage/{cat}/{id}::uploadHostelImages::" + id + "::" + cat);
 
 	}
-
-	
-	
-	
-	
 
 	@GetMapping("/hostels/{id}/retrive/{cat}")
 	public ResponseEntity<InputStreamResource> retriveHostelImage(@PathVariable("id") Long id,

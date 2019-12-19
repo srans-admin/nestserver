@@ -37,10 +37,10 @@ public interface BedRepository extends JpaRepository<Bed, Long> {
 	public Long totalTripleBeds(Long hostel_id);
 
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Triple' AND bed.alloted='Y') AND room.hostel_id=?1", nativeQuery = true)
-	public Long totalFilledTrippleBeds(Long hostel_id);
+	public Long totalFilledTripleBeds(Long hostel_id);
 
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Triple' AND bed.alloted='N') AND room.hostel_id=?1", nativeQuery = true)
-	public Long totalEmptyTrippleBeds(Long hostel_id);
+	public Long totalEmptyTripleBeds(Long hostel_id);
 	
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where room.room_type='Misc' AND room.hostel_id=?1", nativeQuery = true)
 	public Long totalMiscBeds(Long hostel_id);
