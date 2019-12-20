@@ -38,12 +38,6 @@ public class ExpensesTypeController {
 	@Autowired
 	private HostelRepository hostelRepository;
 
-	@GetMapping("/expensestype")
-	public List<ExpensesType> getAllExpensesType() {
-
-		return expensesTypeRepository.findAll();
-	}
-
 	@PostMapping("/expensestype/{id}")
 	public ExpensesType createExpenseType(@PathVariable(value = "id") Long id,
 			@Valid @RequestBody ExpensesType expensestype) {
@@ -54,22 +48,29 @@ public class ExpensesTypeController {
 		}).orElseThrow(() -> new ResourceNotFoundException("PostId " + id + " not found"));
 	}
 
+	@GetMapping("/expensestype")
+	public List<ExpensesType> getAllExpensesType() {
+
+		return expensesTypeRepository.findAll();
+	}
+	
 	@PutMapping("/expensestype/{id}")
-	public ResponseEntity<ExpensesType> updateExpensesType(@PathVariable(value = "id") Long ExpensesId,
+	public ResponseEntity<ExpensesType> updateExpensesType(@PathVariable(value = "id") Long expensesId,
 			@Valid @RequestBody ExpensesType ExpensesDetails) throws ResourceNotFoundException {
-		ExpensesType expensestype = expensesTypeRepository.findById(ExpensesId).orElseThrow(
-				() -> new ResourceNotFoundException("ExpensesType not found for this id :: " + ExpensesId));
+		ExpensesType expensestype = expensesTypeRepository.findById(expensesId).orElseThrow(
+				() -> new ResourceNotFoundException("ExpensesType not found for this id :: " + expensesId));
 
 		expensestype.setExpenseType(ExpensesDetails.getExpenseType());
+		expensestype.setUpdatedAt(ExpensesDetails.getUpdatedAt());
 		final ExpensesType updatedExpensesType = expensesTypeRepository.save(expensestype);
 		return ResponseEntity.ok(updatedExpensesType);
 	}
 
 	@DeleteMapping("/expensestype/{id}")
-	public Map<String, Boolean> deleteExpensesType(@PathVariable(value = "id") Long ExpensesTypeId)
+	public Map<String, Boolean> deleteExpensesType(@PathVariable(value = "id") Long expensesTypeId)
 			throws ResourceNotFoundException {
-		ExpensesType expensestype = expensesTypeRepository.findById(ExpensesTypeId).orElseThrow(
-				() -> new ResourceNotFoundException("Expenses not found for this id :: " + ExpensesTypeId));
+		ExpensesType expensestype = expensesTypeRepository.findById(expensesTypeId).orElseThrow(
+				() -> new ResourceNotFoundException("Expenses not found for this id :: " + expensesTypeId));
 
 		expensesTypeRepository.delete(expensestype);
 		Map<String, Boolean> response = new HashMap<>();

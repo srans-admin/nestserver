@@ -11,27 +11,28 @@ import java.util.List;
  *
  */
 public class SharingTypeChartInfo {
-	
+
 	private String sharingType;
-	private List<Integer> bedsAvailibilty;// Order of Filled, Vaccant, Reserved
-	
-	
-	
+	private List<Integer> bedsAvailibilty;// Order of Reserved, Filled, Vaccant
+
 	public SharingTypeChartInfo() {
 		this.sharingType = "Single";
-		this.bedsAvailibilty = new ArrayList();
-		
+		this.bedsAvailibilty = new ArrayList<Integer>();
+
 	}
-	
+
 	public String getSharingType() {
 		return sharingType;
 	}
+
 	public void setSharingType(String sharingType) {
 		this.sharingType = sharingType;
 	}
+
 	public List<Integer> getBedsAvailibilty() {
 		return bedsAvailibilty;
 	}
+
 	public void setBedsAvailibilty(List<Integer> bedsAvailibilty) {
 		this.bedsAvailibilty = bedsAvailibilty;
 	}
@@ -45,8 +46,6 @@ public class SharingTypeChartInfo {
 		builder.append(bedsAvailibilty);
 		builder.append("]");
 		return builder.toString();
-	} 
-	
-	
+	}
 
 }
