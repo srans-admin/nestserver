@@ -8,8 +8,6 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.ExpensesType;
 import com.srans.nestserver.repository.ExpenseTypeRepository;
-import com.srans.nestserver.repository.HostelRepository;
 
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RestController
@@ -37,19 +34,19 @@ public class ExpensesTypeController {
 
 	
 
-	@PostMapping("/category")
+	@PostMapping("/expensetype")
 	public ExpensesType createExpenseType(@Valid @RequestBody ExpensesType expensestype) {
 		
 		return expensesTypeRepository.save(expensestype);
 	}
 
-	@GetMapping("/category")
+	@GetMapping("/expensetype")
 	public List<ExpensesType> getAllExpensesType() {
 
 		return expensesTypeRepository.findAll();
 	}
 	
-	@PutMapping("/category/{id}")
+	@PutMapping("/expensetype/{id}")
 	public ResponseEntity<ExpensesType> updateExpensesType(@PathVariable(value = "id") Long expensesId,
 			@Valid @RequestBody ExpensesType ExpensesDetails) throws ResourceNotFoundException {
 		ExpensesType expensestype = expensesTypeRepository.findById(expensesId).orElseThrow(
@@ -61,7 +58,7 @@ public class ExpensesTypeController {
 		return ResponseEntity.ok(updatedExpensesType);
 	}
 
-	@DeleteMapping("/category/{id}")
+	@DeleteMapping("/expensetype/{id}")
 	public Map<String, Boolean> deleteExpensesType(@PathVariable(value = "id") Long expensesTypeId)
 			throws ResourceNotFoundException {
 		ExpensesType expensestype = expensesTypeRepository.findById(expensesTypeId).orElseThrow(
