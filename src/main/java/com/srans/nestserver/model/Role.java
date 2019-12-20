@@ -20,10 +20,12 @@ public class Role implements Serializable {
 	private String name;
 	private String emailId;
 	
-	public Role() {
-		
-	}
 	
+	
+	public Role() {
+		super();
+	}
+
 	public Role(long id,String roleName, String name, String emailId) {
 		this.roleName = roleName;
 		this.name = name;

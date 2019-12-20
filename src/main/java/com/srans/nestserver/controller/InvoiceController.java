@@ -22,8 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Invoice;
+import com.srans.nestserver.model.Room;
 import com.srans.nestserver.model.Tenant;
+import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.InvoiceRepository;
+import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.repository.TenantRepository;
 
 @CrossOrigin(origins = "http://localhost:4200",allowedHeaders = "*")
@@ -37,8 +40,10 @@ private InvoiceRepository invoiceRepository;
 
 @Autowired
 private TenantRepository tenantRepository;
-
-
+@Autowired
+private FloorRepository floorRepository;
+@Autowired
+private RoomRepository roomRepository;
 
 
 @GetMapping("invoice/tenant/{Id}")
@@ -48,8 +53,6 @@ Tenant tenant = tenantRepository.findById(TenantId)
 .orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
 return ResponseEntity.ok().body(tenant);
 }
-
-
 
 
 
@@ -65,6 +68,27 @@ Invoice invoice = invoiceRepository.findById(invoiceId)
 .orElseThrow(() -> new ResourceNotFoundException("invoice not found for this id :: " + invoiceId));
 return ResponseEntity.ok().body(invoice);
 }
+
+
+
+
+
+
+@GetMapping("invoice/hostels/floor/{id}/room/{room_id}")
+public ResponseEntity<Room> getFloorById(@PathVariable(value = "id") Long floor_id,
+
+@PathVariable(value = "room_id") Long room_id) {
+if (!floorRepository.existsById(floor_id)) {
+throw new ResourceNotFoundException("FloorId " + floor_id + " not found");
+}
+
+Room room = roomRepository.findById(room_id).orElseThrow(() -> new ResourceNotFoundException(
+"Floor not found for this Floorid :: " + floor_id + "Floor not found for this Floor id::" + room_id));
+return ResponseEntity.ok().body(room);
+}
+
+
+
 
 @PostMapping("/invoice")
 public Invoice createinvoice(@Valid @RequestBody Invoice invoice) {
@@ -86,6 +110,10 @@ invoice.setCreatedBy(invoiceDetails.getCreatedBy());
 invoice.setCreatedDateTime(invoiceDetails.getCreatedDateTime());
 invoice.setInvoiceDescripition(invoiceDetails.getInvoiceDescripition());
 invoice.setInvoiceDate(invoiceDetails.getInvoiceDate());
+invoice.setRoomRent(invoiceDetails.getRoomRent());
+invoice.setDiscountAmount(invoiceDetails.getDiscountAmount());
+invoice.setDueAmount(invoiceDetails.getDueAmount());
+invoice.setTotalAmount(invoiceDetails.getTotalAmount());
 final Invoice updatedInvoice = invoiceRepository.save(invoice);
 return ResponseEntity.ok(updatedInvoice);
 }
