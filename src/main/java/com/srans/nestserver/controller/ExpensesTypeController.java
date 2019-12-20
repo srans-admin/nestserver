@@ -38,7 +38,7 @@ public class ExpensesTypeController {
 	@Autowired
 	private HostelRepository hostelRepository;
 
-	@PostMapping("/expensestype/{id}")
+	@PostMapping("/category/{id}")
 	public ExpensesType createExpenseType(@PathVariable(value = "id") Long id,
 			@Valid @RequestBody ExpensesType expensestype) {
 		return hostelRepository.findById(id).map(hostel -> {
@@ -48,13 +48,13 @@ public class ExpensesTypeController {
 		}).orElseThrow(() -> new ResourceNotFoundException("PostId " + id + " not found"));
 	}
 
-	@GetMapping("/expensestype")
+	@GetMapping("/category")
 	public List<ExpensesType> getAllExpensesType() {
 
 		return expensesTypeRepository.findAll();
 	}
 	
-	@PutMapping("/expensestype/{id}")
+	@PutMapping("/category/{id}")
 	public ResponseEntity<ExpensesType> updateExpensesType(@PathVariable(value = "id") Long expensesId,
 			@Valid @RequestBody ExpensesType ExpensesDetails) throws ResourceNotFoundException {
 		ExpensesType expensestype = expensesTypeRepository.findById(expensesId).orElseThrow(
@@ -66,7 +66,7 @@ public class ExpensesTypeController {
 		return ResponseEntity.ok(updatedExpensesType);
 	}
 
-	@DeleteMapping("/expensestype/{id}")
+	@DeleteMapping("/category/{id}")
 	public Map<String, Boolean> deleteExpensesType(@PathVariable(value = "id") Long expensesTypeId)
 			throws ResourceNotFoundException {
 		ExpensesType expensestype = expensesTypeRepository.findById(expensesTypeId).orElseThrow(

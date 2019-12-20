@@ -12,7 +12,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tenantbooking")
 
-public class TenantBooking {
+public class TenantBooking extends AuditModel  {
+
+	/**
+	 * @author Manish
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +26,6 @@ public class TenantBooking {
 
 	@Column
 	private Long tenantId;
-
-	@Column
-	private Date allotedFrom;
 
 	@Column
 	private String createdBy;
@@ -57,119 +59,133 @@ public class TenantBooking {
 		
 	}
 
-	public TenantBooking(Long bookingid, Long tenantId, Date allotedFrom, String createdBy, String modifiedBy,
-			Character active, Date allotedTill, Long roomBedId, String position, String roomType, String floorName,
-			Long floorId) {
+	
+	public TenantBooking(Long bookingid, Long tenantId, String createdBy, String modifiedBy, Character active,
+			Date allotedTill, Long roomBedId, String bedPosition, String roomType, String floorName, Long floorId) {
 		super();
 		this.bookingid = bookingid;
 		this.tenantId = tenantId;
-		this.allotedFrom = allotedFrom;
 		this.createdBy = createdBy;
 		this.modifiedBy = modifiedBy;
 		this.active = active;
 		this.allotedTill = allotedTill;
 		this.roomBedId = roomBedId;
-		this.bedPosition = position;
+		this.bedPosition = bedPosition;
 		this.roomType = roomType;
 		this.floorName = floorName;
 		this.floorId = floorId;
 	}
+
 
 	public Long getBookingid() {
 		return bookingid;
 	}
 
+
 	public void setBookingid(Long bookingid) {
 		this.bookingid = bookingid;
 	}
+
 
 	public Long getTenantId() {
 		return tenantId;
 	}
 
+
 	public void setTenantId(Long tenantId) {
 		this.tenantId = tenantId;
 	}
 
-	public Date getAllotedFrom() {
-		return allotedFrom;
-	}
-
-	public void setAllotedFrom(Date allotedFrom) {
-		this.allotedFrom = allotedFrom;
-	}
 
 	public String getCreatedBy() {
 		return createdBy;
 	}
 
+
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
+
 
 	public String getModifiedBy() {
 		return modifiedBy;
 	}
 
+
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
+
 
 	public Character getActive() {
 		return active;
 	}
 
+
 	public void setActive(Character active) {
 		this.active = active;
 	}
+
 
 	public Date getAllotedTill() {
 		return allotedTill;
 	}
 
+
 	public void setAllotedTill(Date allotedTill) {
 		this.allotedTill = allotedTill;
 	}
+
 
 	public Long getRoomBedId() {
 		return roomBedId;
 	}
 
+
 	public void setRoomBedId(Long roomBedId) {
 		this.roomBedId = roomBedId;
 	}
 
-	public String getPosition() {
+
+	public String getBedPosition() {
 		return bedPosition;
 	}
 
-	public void setPosition(String position) {
-		this.bedPosition = position;
+
+	public void setBedPosition(String bedPosition) {
+		this.bedPosition = bedPosition;
 	}
+
 
 	public String getRoomType() {
 		return roomType;
 	}
 
+
 	public void setRoomType(String roomType) {
 		this.roomType = roomType;
 	}
+
 
 	public String getFloorName() {
 		return floorName;
 	}
 
+
 	public void setFloorName(String floorName) {
 		this.floorName = floorName;
 	}
+
 
 	public Long getFloorId() {
 		return floorId;
 	}
 
+
 	public void setFloorId(Long floorId) {
 		this.floorId = floorId;
 	}
+
 
 	@Override
 	public String toString() {
@@ -178,8 +194,6 @@ public class TenantBooking {
 		builder.append(bookingid);
 		builder.append(", tenantId=");
 		builder.append(tenantId);
-		builder.append(", allotedFrom=");
-		builder.append(allotedFrom);
 		builder.append(", createdBy=");
 		builder.append(createdBy);
 		builder.append(", modifiedBy=");
@@ -190,7 +204,7 @@ public class TenantBooking {
 		builder.append(allotedTill);
 		builder.append(", roomBedId=");
 		builder.append(roomBedId);
-		builder.append(", position=");
+		builder.append(", bedPosition=");
 		builder.append(bedPosition);
 		builder.append(", roomType=");
 		builder.append(roomType);
@@ -201,5 +215,6 @@ public class TenantBooking {
 		builder.append("]");
 		return builder.toString();
 	}
+
 
 }
