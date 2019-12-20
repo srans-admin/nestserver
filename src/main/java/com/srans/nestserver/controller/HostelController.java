@@ -59,40 +59,27 @@ public class HostelController {
 	@Autowired
 	private StorageService storageService;
 
-	/*
-	 * @GetMapping("/hostels") public List<Hostel> getAllPosts() { return
-	 * hostelRepository.findAll(); }
-	 */
+	
+	@GetMapping("/hostels")
+	public List<Hostel> getAllPosts() {
+		return hostelRepository.findAll();
+	}
 
-	@GetMapping(value = "/hostels/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Hostel> getHosteldetails(@PathVariable(value = "id") Long id) {
-
-//		Hostel resHostel;
-//
-//		{
-//			resHostel = hostelRepository.getOne(id);
-//
-//			resHostel.getfloors().stream().forEach(floor -> {
-//
-//				Floor resFloor = floorRepository.getFloordetails(id);
-//				resFloor.getRooms().stream().forEach(room -> {
-//					Room resRoom = roomRepository.getOne(id);
-//
-//					resRoom.getBeds().stream().forEach(bed -> {
-//
-//						bedRepository.getOne(id);
-//
-//					});
-//
-//				});
-//
-//			});
-//
-//		}
+	@GetMapping("/hostels/{id}")
+	public Hostel getHostel(@PathVariable(value = "id") Long hostelId) throws IOException {
 		
-		Hostel resHostel=hostelRepository.getWholeObject(id);
-		return ResponseEntity.ok().body(resHostel);
+		Hostel responseHostel = hostelRepository.getOne(hostelId);
 
+		floorRepository.findByHostelId(hostelId).forEach(floor -> {
+			responseHostel.getfloors().add(floor);
+			roomRepository.findByFloorId(floor.getId()).forEach(room -> {
+				floor.getRooms().add(room);
+				bedRepository.findByRoomId(room.getId()).forEach(bed -> {
+					room.getBeds().add(bed); 
+				}); 
+			}); 
+		});
+       return responseHostel;
 	}
 
 	@PostMapping("/hostels")
