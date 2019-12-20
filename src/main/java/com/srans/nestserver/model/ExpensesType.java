@@ -2,18 +2,11 @@ package com.srans.nestserver.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "expensetype")
@@ -31,22 +24,16 @@ public class ExpensesType extends AuditModel {
 	@Column
 	private String expenseType;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "hostel_id", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JsonIgnore
-	private Hostel hostel;
-
 	public ExpensesType() {
 		super();
 
 	}
 
-	public ExpensesType(Long typeId, String expenseType, Hostel hostel) {
+	public ExpensesType(Long typeId, String expenseType) {
 		super();
 		this.typeId = typeId;
 		this.expenseType = expenseType;
-		this.hostel = hostel;
+		
 	}
 
 	public Long getTypeId() {
@@ -65,14 +52,6 @@ public class ExpensesType extends AuditModel {
 		this.expenseType = expenseType;
 	}
 
-	public Hostel getHostel() {
-		return hostel;
-	}
-
-	public void setHostel(Hostel hostel) {
-		this.hostel = hostel;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -80,10 +59,8 @@ public class ExpensesType extends AuditModel {
 		builder.append(typeId);
 		builder.append(", expenseType=");
 		builder.append(expenseType);
-		builder.append(", hostel=");
-		builder.append(hostel);
 		builder.append("]");
 		return builder.toString();
 	}
-
+	
 }

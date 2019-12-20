@@ -35,17 +35,12 @@ public class ExpensesTypeController {
 	@Autowired
 	private ExpenseTypeRepository expensesTypeRepository;
 
-	@Autowired
-	private HostelRepository hostelRepository;
+	
 
-	@PostMapping("/category/{id}")
-	public ExpensesType createExpenseType(@PathVariable(value = "id") Long id,
-			@Valid @RequestBody ExpensesType expensestype) {
-		return hostelRepository.findById(id).map(hostel -> {
-			expensestype.setHostel(hostel);
-
-			return expensesTypeRepository.save(expensestype);
-		}).orElseThrow(() -> new ResourceNotFoundException("PostId " + id + " not found"));
+	@PostMapping("/category")
+	public ExpensesType createExpenseType(@Valid @RequestBody ExpensesType expensestype) {
+		
+		return expensesTypeRepository.save(expensestype);
 	}
 
 	@GetMapping("/category")
