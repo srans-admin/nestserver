@@ -35,9 +35,9 @@ public class ExpensesCategoryController {
 	
 
 	@PostMapping("/category")
-	public ExpensesCategory createExpenseType(@Valid @RequestBody ExpensesCategory expensestype) {
+	public ExpensesCategory createExpenseType(@Valid @RequestBody ExpensesCategory expensescategory) {
 		
-		return expensesTypeRepository.save(expensestype);
+		return expensesTypeRepository.save(expensescategory);
 	}
 
 	@GetMapping("/category")
