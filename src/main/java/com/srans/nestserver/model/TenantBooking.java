@@ -17,6 +17,11 @@ import javax.persistence.Transient;
 
 public class TenantBooking extends AuditModel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bookingid;
@@ -69,6 +74,7 @@ public class TenantBooking extends AuditModel {
 	@Transient
 	private List<Payment> payment;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public TenantBooking() {
 		super();
 		this.tenantId = 0L;
