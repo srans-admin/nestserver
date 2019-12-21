@@ -9,7 +9,7 @@ import com.srans.nestserver.model.Bed;
 
 public interface BedRepository extends JpaRepository<Bed, Long> {
 
-	public List<Bed> findByRoomId(Long floor_id);
+	public List<Bed> findByRoomId(Long roomId);
 
 	public List<Bed> findByFloorId(Long id);
 	

@@ -123,6 +123,8 @@ public class HostelController {
 
 	}
 
+	
+
 	@GetMapping("/hostels/{id}/retrive/{cat}")
 	public ResponseEntity<InputStreamResource> retriveHostelImage(@PathVariable("id") Long id,
 			@PathVariable("cat") String cat) throws NSException, IOException {

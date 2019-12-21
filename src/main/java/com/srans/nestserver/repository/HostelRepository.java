@@ -49,27 +49,5 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 	@Query(value = "select * from Bed where id=?1 ", nativeQuery = true)
 	public Hostel getBeddetails(Long hostelId);
 
-	public default Hostel saveWholeObject(Hostel hostel) {
-
-		Hostel tmpHostel = new Hostel();
-
-		tmpHostel = this.save(hostel);	
-
-		hostel.getfloors().forEach(floor -> floorRepository.saveWholeObject(floor));
-
-		tmpHostel.setfloors(hostel.getfloors());
-
-		return tmpHostel;
-
-	}
-	
-	public default Hostel getWholeObject(Long hostelId) {
-		Hostel resHostel=new Hostel();
-		resHostel=this.getOne(hostelId);
-		resHostel.getfloors().forEach(floor -> floorRepository.getWholeObjectOfFloor(hostelId));
-
-		return resHostel;
-	}
-	
 
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,8 +34,8 @@ public class TenantBookingController {
 		return tenantRepository.getAllHostelName();
 	}
 
-	@GetMapping(value = "hostels/{hostelName}/bed-info", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<?> getNumOfFloor(@PathVariable(value = "hostelName") String hostelName) {
+	@GetMapping("hostels/{hostelName}/bed-availability")
+	public List<?> getBedAvailibilityReport(@PathVariable(value = "hostelName") String hostelName) {
 
 		Long HostelId = tenantRepository.getHostelId(hostelName);
 

@@ -40,124 +40,124 @@ import com.srans.nestserver.util.NSException;
 @RequestMapping("/api/v1")
 public class TenantController {
 
-	Logger logger = LoggerFactory.getLogger(TenantController.class);
+Logger logger = LoggerFactory.getLogger(TenantController.class);
 
-	@Autowired
-	private TenantRepository tenantRepository;
+@Autowired
+private TenantRepository tenantRepository;
 
-	@Autowired
-	private StorageService storageService;
-	
-	@Autowired
-	private TenantBookRepository tenantBookRepository;
-	
-	
+@Autowired
+private StorageService storageService;
+
+@Autowired
+private TenantBookRepository tenantBookRepository;
+
+
 @PostMapping("/tenant")
-	
-	public Tenant saveTenant(@Valid @RequestBody Tenant tenant) throws NSException {
-		
-		logger.info("IN::POST::/hostels::saveHostel::" + tenant);
 
-		Tenant responsetenant=tenantRepository.save(tenant);
-		
-		responsetenant.getTenantBooking().forEach(tenantbooking->{
-			tenantbooking.setTenantId(responsetenant.getUserId());
-			tenantbooking  =  tenantBookRepository.save(tenantbooking);
-			
-		});
-		logger.info("OUT::POST::/hostels::saveHostel::" + tenant);
-		return responsetenant;
-			
-		}
-	
-	
+public Tenant saveTenant(@Valid @RequestBody Tenant tenant) throws NSException {
 
-	@GetMapping("/tenant")
-	public List<Tenant> getAllTenant() {
-		return tenantRepository.findAll();
-	}
+logger.info("IN::POST::/tenant::saveTenant::" + tenant);
 
-	@GetMapping("/tenant/{Id}")
-	public ResponseEntity<Tenant> getTenantById(@PathVariable(value = "Id") Long TenantId)
-			throws ResourceNotFoundException {
-		Tenant tenant = tenantRepository.findById(TenantId)
-				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
-		return ResponseEntity.ok().body(tenant);
-	}
+Tenant responsetenant=tenantRepository.save(tenant);
 
-	@PostMapping("/tenant/{id}/upload/{cat}")
-	public void storeTenantImage(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file,
-			@PathVariable("cat") String cat) throws NSException {
+responsetenant.getTenantBooking().forEach(tenantbooking->{
+tenantbooking.setTenantId(responsetenant.getUserId());
+tenantbooking = tenantBookRepository.save(tenantbooking);
 
-		logger.info("In::POST::/tenant/{id}/upload/{cat}::uploadTenantImages::" + id + "::" + cat);
-		storageService.storeTenantImage(file, cat, id);
-		logger.info("OUT::POST:://tenant/uploadImage/{cat}/{id}::uploadTenantImages::" + id + "::" + cat);
+});
+logger.info("OUT::POST::/tenant::saveTenant::" + tenant);
+return responsetenant;
 
-	}
+}
 
-	@GetMapping("/tenant/{id}/retrive/{cat}")
-	public ResponseEntity<InputStreamResource> retriveHostelImage(@PathVariable("id") Long id,
-			@PathVariable("cat") String cat) throws NSException, IOException {
 
-		return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG)
-				.body(new InputStreamResource(storageService.retrivetenantImage(id, cat)));
 
-	}
+@GetMapping("/tenant")
+public List<Tenant> getAllTenant() {
+return tenantRepository.findAll();
+}
 
-	@GetMapping("/tenantidproof/{id}/retrive/{cat}")
-	public ResponseEntity<InputStreamResource> retriveIdproofImage(@PathVariable("id") Long id,
-			@PathVariable("cat") String cat) throws NSException, IOException {
+@GetMapping("/tenant/{Id}")
+public ResponseEntity<Tenant> getTenantById(@PathVariable(value = "Id") Long TenantId)
+throws ResourceNotFoundException {
+Tenant tenant = tenantRepository.findById(TenantId)
+.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
+return ResponseEntity.ok().body(tenant);
+}
 
-		return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG)
-				.body(new InputStreamResource(storageService.retriveIdproofImage(id, cat)));
+@PostMapping("/tenant/{id}/upload/{cat}")
+public void storeTenantImage(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file,
+@PathVariable("cat") String cat) throws NSException {
 
-	}
+logger.info("In::POST::/tenant/{id}/upload/{cat}::uploadTenantImages::" + id + "::" + cat);
+storageService.storeTenantImage(file, cat, id);
+logger.info("OUT::POST:://tenant/uploadImage/{cat}/{id}::uploadTenantImages::" + id + "::" + cat);
 
-	@PostMapping("/tenantidproof/{id}/upload/{cat}")
-	public void storeIdproofImage(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file,
-			@PathVariable("cat") String cat) throws NSException {
+}
 
-		logger.info("In::POST::/tenant/{id}/upload/{cat}::uploadIdproofImages::" + id + "::" + cat);
-		storageService.storeIdproofImage(file, cat, id);
-		logger.info("OUT::POST:://tenant/uploadImage/{cat}/{id}::uploadIdproofImage::" + id + "::" + cat);
+@GetMapping("/tenant/{id}/retrive/{cat}")
+public ResponseEntity<InputStreamResource> retriveHostelImage(@PathVariable("id") Long id,
+@PathVariable("cat") String cat) throws NSException, IOException {
 
-	}
+return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG)
+.body(new InputStreamResource(storageService.retrivetenantImage(id, cat)));
 
-	/*
-	 * @PostMapping("/tenant") public Tenant createUser(@RequestBody Tenant tenant)
-	 * { System.out.println("User : " + tenant); return
-	 * tenantRepository.save(tenant); }
-	 */
+}
 
-	@PutMapping("/tenant/{Id}")
-	public ResponseEntity<Tenant> updateUser(@PathVariable(value = "Id") Long TenantId,
-			@Valid @RequestBody Tenant tenantDetails) throws ResourceNotFoundException {
-		Tenant tenant = tenantRepository.findById(TenantId)
-				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
+@GetMapping("/tenantidproof/{id}/retrive/{cat}")
+public ResponseEntity<InputStreamResource> retriveIdproofImage(@PathVariable("id") Long id,
+@PathVariable("cat") String cat) throws NSException, IOException {
 
-		tenant.setUserId(tenant.getUserId());
-		tenant.setBloodGroup(tenant.getBloodGroup());
-		tenant.setContactNumber(tenant.getContactNumber());
-		tenant.setDob(tenant.getDob());
-		tenant.setEmailId(tenant.getEmailId());
-		
-		final Tenant updatedTenant = tenantRepository.save(tenant);
-		return ResponseEntity.ok(updatedTenant);
-	}
+return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG)
+.body(new InputStreamResource(storageService.retriveIdproofImage(id, cat)));
 
-	@DeleteMapping("/tenant/{Id}")
-	public <tenantRepository> Map<String, Boolean> deleteUser(@PathVariable(value = "Id") Long TenantId)
-			throws ResourceNotFoundException {
-		@SuppressWarnings("unused")
-		Tenant tenant = tenantRepository.findById(TenantId)
-				.orElseThrow(() -> new ResourceNotFoundException("SransUser not found for this id :: " + TenantId));
+}
 
-		tenantRepository.deleteById(TenantId);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return response;
-	}
-	
-	
+@PostMapping("/tenantidproof/{id}/upload/{cat}")
+public void storeIdproofImage(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file,
+@PathVariable("cat") String cat) throws NSException {
+
+logger.info("In::POST::/tenant/{id}/upload/{cat}::uploadIdproofImages::" + id + "::" + cat);
+storageService.storeIdproofImage(file, cat, id);
+logger.info("OUT::POST:://tenant/uploadImage/{cat}/{id}::uploadIdproofImage::" + id + "::" + cat);
+
+}
+
+/*
+* @PostMapping("/tenant") public Tenant createUser(@RequestBody Tenant tenant)
+* { System.out.println("User : " + tenant); return
+* tenantRepository.save(tenant); }
+*/
+
+@PutMapping("/tenant/{Id}")
+public ResponseEntity<Tenant> updateUser(@PathVariable(value = "Id") Long TenantId,
+@Valid @RequestBody Tenant tenantDetails) throws ResourceNotFoundException {
+Tenant tenant = tenantRepository.findById(TenantId)
+.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
+
+tenant.setUserId(tenant.getUserId());
+tenant.setBloodGroup(tenant.getBloodGroup());
+tenant.setContactNumber(tenant.getContactNumber());
+tenant.setDob(tenant.getDob());
+tenant.setEmailId(tenant.getEmailId());
+
+final Tenant updatedTenant = tenantRepository.save(tenant);
+return ResponseEntity.ok(updatedTenant);
+}
+
+@DeleteMapping("/tenant/{Id}")
+public <tenantRepository> Map<String, Boolean> deleteUser(@PathVariable(value = "Id") Long TenantId)
+throws ResourceNotFoundException {
+@SuppressWarnings("unused")
+Tenant tenant = tenantRepository.findById(TenantId)
+.orElseThrow(() -> new ResourceNotFoundException("SransUser not found for this id :: " + TenantId));
+
+tenantRepository.deleteById(TenantId);
+Map<String, Boolean> response = new HashMap<>();
+response.put("deleted", Boolean.TRUE);
+return response;
+}
+
+
 
 }
