@@ -62,6 +62,24 @@ public class HostelController {
 		return hostelRepository.findAll();
 	}
 
+	@GetMapping("/hostels/{id}")
+	public Hostel getHostel(@PathVariable(value = "id") Long hostelId) throws IOException {
+
+		Hostel responseHostel = hostelRepository.getOne(hostelId);
+
+		floorRepository.findByHostelId(hostelId).forEach(floor -> {
+			responseHostel.getfloors().add(floor);
+			roomRepository.findByFloorId(floor.getId()).forEach(room -> {
+				floor.getRooms().add(room);
+				bedRepository.findByRoomId(room.getId()).forEach(bed -> {
+					room.getBeds().add(bed);
+				});
+			});
+		});
+
+		return responseHostel;
+	}
+
 	/**
 	 * This method will save Hostel from UI
 	 * 
@@ -138,25 +156,6 @@ public class HostelController {
 			hostelRepository.delete(hostel);
 			return ResponseEntity.ok().build();
 		}).orElseThrow(() -> new ResourceNotFoundException("HostelId " + id + " not found"));
-	}
-
-	 
-	@GetMapping("/hostels/{id}")
-	public Hostel getHostel(@PathVariable(value = "id") Long hostelId) throws IOException {
-
-		Hostel responseHostel = hostelRepository.getOne(hostelId);
-
-		floorRepository.findByHostelId(hostelId).forEach(floor -> {
-			responseHostel.getfloors().add(floor);
-			roomRepository.findByFloorId(floor.getId()).forEach(room -> {
-				floor.getRooms().add(room);
-				bedRepository.findByRoomId(room.getId()).forEach(bed -> {
-					room.getBeds().add(bed);
-				});
-			});
-		});
-		
-		return responseHostel;
 	}
 
 	@GetMapping("/hostels/{id}/floor")
@@ -271,16 +270,10 @@ public class HostelController {
 
 	@GetMapping("/hostels/{id}/extendingviews")
 	public List<Object> getTestMap(@PathVariable(value = "id") Long hostelId) {
-		
-		return Arrays.asList(hostelRepository.numOfFloor(hostelId),
-				             roomRepository.countRoomByHostelId(hostelId),
-				             roomRepository.countSingleSharing(hostelId),
-				             roomRepository.countDoubleSharing(hostelId),
-				             roomRepository.countTripleSharing(hostelId),
-				             roomRepository.countMiscSharing(hostelId)		
-				);
-	}
 
-	 
+		return Arrays.asList(hostelRepository.numOfFloor(hostelId), roomRepository.countRoomByHostelId(hostelId),
+				roomRepository.countSingleSharing(hostelId), roomRepository.countDoubleSharing(hostelId),
+				roomRepository.countTripleSharing(hostelId), roomRepository.countMiscSharing(hostelId));
+	}
 
 }

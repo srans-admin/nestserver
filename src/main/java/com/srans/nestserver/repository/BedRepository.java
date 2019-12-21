@@ -9,46 +9,52 @@ import com.srans.nestserver.model.Bed;
 
 public interface BedRepository extends JpaRepository<Bed, Long> {
 
-	public List<Bed> findByRoomId(Long floor_id);
+	public List<Bed> findByRoomId(Long roomId);
 
 	public List<Bed> findByFloorId(Long id);
 	
 	
-
-	@Query(value = "select count(bed.id) from bed inner join room on bed.room_id=room.id where room.room_type='Single' AND room.hostel_id=?1", nativeQuery = true)
-	public Long totalNumberOfBeds(Long hostel_id);
+     //---------------------- Single Beds Info
+	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Single' AND bed.alloted='R') AND room.hostel_id=?1", nativeQuery = true)
+	public Integer totalReservedSingleBeds(Long hostel_id);
 
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Single' AND bed.alloted='Y') AND room.hostel_id=?1", nativeQuery = true)
-	public Long totalFilledBeds(Long hostel_id);
+	public Integer totalFilledSingleBeds(Long hostel_id);
 
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Single' AND bed.alloted='N') AND room.hostel_id=?1", nativeQuery = true)
-	public Long totalEmptyBeds(Long hostel_id);
+	public Integer totalEmptySingleBeds(Long hostel_id);
 
-	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where room.room_type='Double' AND room.hostel_id=?1", nativeQuery = true)
-	public Long totalNumberOfBeds1(Long hostel_id);
+	//------------------------ Double Beds Info
+	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Double' AND bed.alloted='R') AND room.hostel_id=?1", nativeQuery = true)
+	public Integer totalReservedDoubleBeds(Long hostel_id);
 
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Double' AND bed.alloted='Y') AND room.hostel_id=?1", nativeQuery = true)
-	public Long totalFilledBeds1(Long hostel_id);
+	public Integer totalFilledDoubleBeds(Long hostel_id);
 
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Double' AND bed.alloted='N') AND room.hostel_id=?1", nativeQuery = true)
-	public Long totalEmptyBeds1(Long hostel_id);
+	public Integer totalEmptyDoubleBeds(Long hostel_id);
 
-	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where room.room_type='Triple' AND room.hostel_id=?1", nativeQuery = true)
-	public Long totalNumberOfBeds2(Long hostel_id);
+	//----------------------- Triple Beds Info
+	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Triple' AND bed.alloted='R') AND room.hostel_id=?1", nativeQuery = true)
+	public Integer totalReservedTripleBeds(Long hostel_id);
 
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Triple' AND bed.alloted='Y') AND room.hostel_id=?1", nativeQuery = true)
-	public Long totalFilledBeds2(Long hostel_id);
+	public Integer totalFilledTripleBeds(Long hostel_id);
 
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Triple' AND bed.alloted='N') AND room.hostel_id=?1", nativeQuery = true)
-	public Long totalEmptyBeds2(Long hostel_id);
+	public Integer totalEmptyTripleBeds(Long hostel_id);
 	
-	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where room.room_type='Misc' AND room.hostel_id=?1", nativeQuery = true)
-	public Long totalNumberOfBeds3(Long hostel_id);
+	//----------------------- Misc Beds Info
+	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Misc' AND bed.alloted='R') AND room.hostel_id=?1", nativeQuery = true)
+	public Integer totalReservedMiscBeds(Long hostel_id);
 
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Misc' AND bed.alloted='Y') AND room.hostel_id=?1", nativeQuery = true)
-	public Long totalFilledBeds3(Long hostel_id);
+	public Integer totalFilledMiscBeds(Long hostel_id);
 
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Misc' AND bed.alloted='N') AND room.hostel_id=?1", nativeQuery = true)
-	public Long totalEmptyBeds3(Long hostel_id);
+	public Integer totalEmptyMiscBeds(Long hostel_id);
+	
+
+	
 
 }
