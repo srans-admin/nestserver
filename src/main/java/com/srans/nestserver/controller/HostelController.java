@@ -62,6 +62,13 @@ public class HostelController {
 		return hostelRepository.findAll();
 	}
 
+	/**
+	 * This method will save Hostel from UI
+	 * 
+	 * @param hostel
+	 * @return
+	 * @throws NSException
+	 */
 	@PostMapping("/hostels")
 	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) throws NSException {
 
