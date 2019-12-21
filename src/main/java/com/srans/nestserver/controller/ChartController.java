@@ -113,11 +113,11 @@ public class ChartController<T> {
 	@GetMapping(value = "hostels/bed-booking-type-chart-info")
 	public List<BedBookingTypeChartInfo> getBedBookingTypeChartInfo() {
 
-		List<BedBookingTypeChartInfo> bedBookingTypeChartInfos = new LinkedList<>();
+		List<BedBookingTypeChartInfo> bedBookingTypeChartInfos = new ArrayList<>();
 		String month = "";
-		for (int i = 1; i <= 12; i++) {
+		for (int i = 0; i < 12; i++) {
 			BedBookingTypeChartInfo bedBookingTypeChartInfo = new BedBookingTypeChartInfo();
-			switch (i) {
+			switch (i+1) {
 			case 1:
 				month = "JANUARY";
 				bedBookingTypeChartInfo.setMonthType(month);
