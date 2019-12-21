@@ -2,9 +2,8 @@ package com.srans.nestserver.controller;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -63,6 +62,13 @@ public class HostelController {
 		return hostelRepository.findAll();
 	}
 
+	/**
+	 * This method will save Hostel from UI
+	 * 
+	 * @param hostel
+	 * @return
+	 * @throws NSException
+	 */
 	@PostMapping("/hostels")
 	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) throws NSException {
 
@@ -275,19 +281,6 @@ public class HostelController {
 				);
 	}
 
-	@GetMapping("hostels/{id}/getName")
-
-	public Map<String, Object> getHostelMap(@PathVariable(value = "id") Long hostelId) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("Total Floor : ", hostelRepository.numOfFloor(hostelId));
-		map.put("Hostel Name ", hostelRepository.hosteName(hostelId));
-		return map;
-	}
-
-	@GetMapping("hostels/{id}/getHostelType")
-
-	public Iterable<String> findAll(@PathVariable(value = "id") Long id) {
-		return hostelRepository.findType(id);
-	}
+	 
 
 }
