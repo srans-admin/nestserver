@@ -12,6 +12,10 @@ import com.srans.nestserver.model.Tenant;
 @Repository
 public interface TenantRepository extends JpaRepository<Tenant, Long> {
 
+	@Autowired
+	TenantBookRepository tenantBookRepository = null;
+	
+	
 	@Query(value = "SELECT hostel_name FROM Hostel", nativeQuery = true)
 	public List<String> getAllHostelName();
 
@@ -23,10 +27,10 @@ public interface TenantRepository extends JpaRepository<Tenant, Long> {
 			+ "inner join bed t3 on t2.hostel_id=t3.hostel_id where t1.hostel_id=?1", nativeQuery = true)
 	public List<Object[]> getBedInfo(Long hostelId);
 	
-	@Autowired
-	TenantBookRepository tenantBookRepository = null;
 	
-	public default Tenant saveWholeObject(Tenant tenant){
+	
+	
+	/*public default Tenant saveWholeObject(Tenant tenant){
 		
 		Tenant tmpTenant = null;
 		
@@ -38,5 +42,5 @@ public interface TenantRepository extends JpaRepository<Tenant, Long> {
 		
 		return tmpTenant;
 		
-	}
+	}*/
  }

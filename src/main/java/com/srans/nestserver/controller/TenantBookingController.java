@@ -62,11 +62,11 @@ public class TenantBookingController {
 		
 		// SAVE Database stuff here
 		
-		responsetenant.getTenantBooking().forEach(tenantbooking->{
+		/*responsetenant.getTenantBooking().forEach(tenantbooking->{
 			tenantbooking.setTenantId(responsetenant.getUserId());
 		          tenantBookRepository.save(tenantbooking);
 			
-		});
+		});*/
 		return responsetenant;
 			
 		}

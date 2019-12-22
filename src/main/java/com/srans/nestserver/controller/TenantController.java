@@ -1,6 +1,7 @@
 package com.srans.nestserver.controller;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +30,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
+import com.srans.nestserver.model.Bed;
 import com.srans.nestserver.model.Room;
 import com.srans.nestserver.model.Tenant;
 import com.srans.nestserver.model.TenantBooking;
+import com.srans.nestserver.repository.BedRepository;
 import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.TenantRepository;
@@ -56,6 +59,10 @@ public class TenantController {
 
 	@Autowired
 	private PaymentRepository paymentRepository;
+	
+	@Autowired
+	private BedRepository bedRepository;
+	 
 
 	@PostMapping("/tenant")
 	public Tenant saveTenant(@Valid @RequestBody Tenant tenant) throws NSException {
@@ -63,25 +70,31 @@ public class TenantController {
 		logger.info("IN::POST::/tenant::savetenant::" + tenant);
 
 		Tenant responseTenant = tenantRepository.save(tenant);
-
-		// SAVE Database stuff here
-
-		responseTenant.getTenantBooking().forEach(tenantBooking -> {
-			tenantBooking.setTenantId(responseTenant.getUserId());
-			tenantBooking.setTenantName(responseTenant.getName());
-			TenantBooking resTenantBooking = tenantBookRepository.saveAndFlush(tenantBooking);
-
-			tenantBooking.getPayment().forEach(payment -> {
-				payment.setBookingid(resTenantBooking.getBookingid());
-				payment.setName(resTenantBooking.getTenantName());
-				payment.setRoomName(resTenantBooking.getRoomName());
-				payment.setRoomRent(resTenantBooking.getRoomRent());
-				payment.setRoomType(resTenantBooking.getRoomType());
-				paymentRepository.saveAndFlush(payment);
-
-			});
-
-		});
+		
+		if(responseTenant.getUserId() != -1){ 
+			
+			tenant.getTenantBooking().setTenantId(responseTenant.getUserId()); 
+			TenantBooking tenantBooking = tenantBookRepository.save(tenant.getTenantBooking());
+			
+			//Update Bed with alloted_state as N
+			Bed bed = new Bed();
+			bed.setId(tenantBooking.getRoomBedId());
+			bed.setHostelId(tenantBooking.getHostelId());
+			bed.setFloorId(tenantBooking.getFloorId());
+			bed.setRoomId(tenantBooking.getRoomId());
+			bed.setAlloted('Y');
+			bed.setUpdatedAt(new Date()); 
+			
+			responseTenant.setTenantBooking(tenantBooking); 
+			responseTenant.setBed( bedRepository.saveAndFlush(bed));  
+			
+			
+			//Save Payment Information 
+			responseTenant.setPayment( paymentRepository.save(tenant.getPayment()));
+			
+		}else{
+			throw new NSException("Unable to save tenant ");
+		} 
 
 		logger.info("OUT::POST::/tenant::saveTenant::" + tenant);
 		return responseTenant;
