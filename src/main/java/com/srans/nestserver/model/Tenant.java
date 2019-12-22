@@ -1,8 +1,6 @@
 package com.srans.nestserver.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -65,7 +63,13 @@ public class Tenant implements Serializable {
 	private String permanetAddress;
 
 	@Transient
-	private List<TenantBooking> tenantBooking;
+	private  TenantBooking tenantBooking;
+	
+	@Transient
+	private Payment payment;
+	
+	@Transient
+	private Bed bed;
 
 	public Tenant() {
 		super();
@@ -80,14 +84,16 @@ public class Tenant implements Serializable {
 		this.officeAddress = "";
 		this.bloodGroup = "";
 		this.dob = "";
-		this.tenantBooking = new ArrayList<>();
+		this.tenantBooking = new TenantBooking();
+		this.payment = new Payment();
+		this.bed = new Bed();
 
 	}
 
 	public Tenant(Long userId, String name, Long contactNumber, String fatherName, Long fatherphoneNumber,
 			String motherName, long motherphoneNumber, String dob, long emergencyContactNumber,
 			String nameOfTheEmployer, String bloodGroup, String officeAddress, Long mobileNumber, String emailId,
-			String permanetAddress, List<TenantBooking> tenantBooking) {
+			String permanetAddress, TenantBooking tenantBooking) {
 		super();
 		this.userId = userId;
 		this.name = name;
@@ -226,28 +232,74 @@ public class Tenant implements Serializable {
 	public void setPermanetAddress(String permanetAddress) {
 		this.permanetAddress = permanetAddress;
 	}
+ 
 
-	public List<TenantBooking> getTenantBooking() {
+	public TenantBooking getTenantBooking() {
 		return tenantBooking;
 	}
 
-	public void setTenantBooking(List<TenantBooking> tenantBooking) {
+	public void setTenantBooking(TenantBooking tenantBooking) {
 		this.tenantBooking = tenantBooking;
+	}
+
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
+	
+	
+
+	public Bed getBed() {
+		return bed;
+	}
+
+	public void setBed(Bed bed) {
+		this.bed = bed;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Tenant [userId=").append(userId).append(", name=").append(name).append(", contactNumber=")
-				.append(contactNumber).append(", fatherName=").append(fatherName).append(", fatherphoneNumber=")
-				.append(fatherphoneNumber).append(", motherName=").append(motherName).append(", motherphoneNumber=")
-				.append(motherphoneNumber).append(", dob=").append(dob).append(", emergencyContactNumber=")
-				.append(emergencyContactNumber).append(", nameOfTheEmployer=").append(nameOfTheEmployer)
-				.append(", bloodGroup=").append(bloodGroup).append(", officeAddress=").append(officeAddress)
-				.append(", mobileNumber=").append(mobileNumber).append(", emailId=").append(emailId)
-				.append(", permanetAddress=").append(permanetAddress).append(", tenantBooking=").append(tenantBooking)
-				.append("]");
+		builder.append("Tenant [userId=");
+		builder.append(userId);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", contactNumber=");
+		builder.append(contactNumber);
+		builder.append(", fatherName=");
+		builder.append(fatherName);
+		builder.append(", fatherphoneNumber=");
+		builder.append(fatherphoneNumber);
+		builder.append(", motherName=");
+		builder.append(motherName);
+		builder.append(", motherphoneNumber=");
+		builder.append(motherphoneNumber);
+		builder.append(", dob=");
+		builder.append(dob);
+		builder.append(", emergencyContactNumber=");
+		builder.append(emergencyContactNumber);
+		builder.append(", nameOfTheEmployer=");
+		builder.append(nameOfTheEmployer);
+		builder.append(", bloodGroup=");
+		builder.append(bloodGroup);
+		builder.append(", officeAddress=");
+		builder.append(officeAddress);
+		builder.append(", mobileNumber=");
+		builder.append(mobileNumber);
+		builder.append(", emailId=");
+		builder.append(emailId);
+		builder.append(", permanetAddress=");
+		builder.append(permanetAddress);
+		builder.append(", tenantBooking=");
+		builder.append(tenantBooking);
+		builder.append(", payment=");
+		builder.append(payment);
+		builder.append("]");
 		return builder.toString();
-	}
+	} 
+	 
 
 }
