@@ -1,14 +1,14 @@
+
 package com.srans.nestserver.controller;
 
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,54 +22,64 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
-import com.srans.nestserver.model.Expenses;
-import com.srans.nestserver.repository.ExpensesRepository;
+import com.srans.nestserver.model.Expense;
+import com.srans.nestserver.repository.ExpenseRepository;
+import com.srans.nestserver.repository.HostelRepository;
 
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1")
 public class ExpensesController {
-	//Logger logger = LoggerFactory.getLogger(ExpensesController.class);
+	Logger logger = LoggerFactory.getLogger(ExpensesController.class);
 	@Autowired
-	private  ExpensesRepository  expensesRepository;
-	
+	private ExpenseRepository expensesRepository;
+
+	@Autowired
+	private HostelRepository hostelRepository;
+
+	@PostMapping("/expenses/{id}")
+	public Expense createExpense(@PathVariable(value = "id") Long id, @Valid @RequestBody Expense expense) {
+		logger.info("IN::POST::/expenses::saveExpense::" + expense);
+		return hostelRepository.findById(id).map(hostel -> {
+			expense.setHostel(hostel);
+
+			logger.info("OUT::POST::/expenses::saveExpense::" + expense);
+			return expensesRepository.save(expense);
+		}).orElseThrow(() -> new ResourceNotFoundException("PostId " + id + " not found"));
+	}
+
 	@GetMapping("/expenses")
-	public List<Expenses>getAllExpenses() {
+	public List<Expense> getAllExpenses() {
+
 		return expensesRepository.findAll();
 	}
 
-	@GetMapping("/expenses/{id}")
-	public ResponseEntity<Expenses> getExpensesById(@PathVariable(value = "id") Long  ExpensesId)
-			throws ResourceNotFoundException {
-		 Expenses  expenses =  expensesRepository.findById(ExpensesId)
-				.orElseThrow(() -> new ResourceNotFoundException(" Expenses not found for this id :: " + ExpensesId));
-		return ResponseEntity.ok().body(expenses);
-	}
+	@GetMapping("expenses/{id}")
+	public List<Expense> getExpensesData(@PathVariable(value = "id") Long hostelId) {
 
-	@PostMapping("/expenses")
-	public  Expenses createExpenses(@Valid @RequestBody Expenses expenses) {
-		return  expensesRepository.save(expenses);
+		return expensesRepository.getExpenses(hostelId);
 	}
 
 	@PutMapping("/expenses/{id}")
-	public ResponseEntity<Expenses> updateExpenses(@PathVariable(value = "id") Long  ExpensesId,
-			@Valid @RequestBody  Expenses  ExpensesDetails) throws ResourceNotFoundException {
-		 Expenses  expenses =  expensesRepository.findById(ExpensesId)
-				.orElseThrow(() -> new ResourceNotFoundException("Expenses not found for this id :: " +  ExpensesId));
+	public ResponseEntity<Expense> updateExpenses(@PathVariable(value = "id") Long expensesId,
+			@Valid @RequestBody Expense expensesDetails) throws ResourceNotFoundException {
+		Expense expenses = expensesRepository.findById(expensesId)
+				.orElseThrow(() -> new ResourceNotFoundException("Expenses not found for this id :: " + expensesId));
 
-		 expenses.setTypeOfExpenses(ExpensesDetails.getTypeOfExpenses());
-		 expenses.setcost(ExpensesDetails.getcost());
-		final  Expenses updatedExpenses = expensesRepository.save(expenses);
+		expenses.setExpenseType(expensesDetails.getExpenseType());
+		expenses.setAmount(expensesDetails.getAmount());
+		expenses.setUpdatedAt(expensesDetails.getUpdatedAt());
+		final Expense updatedExpenses = expensesRepository.save(expenses);
 		return ResponseEntity.ok(updatedExpenses);
 	}
 
 	@DeleteMapping("/expenses/{id}")
-	public Map<String, Boolean> deleteExpenses(@PathVariable(value = "id") Long ExpensesId)
+	public Map<String, Boolean> deleteExpenses(@PathVariable(value = "id") Long expensesId)
 			throws ResourceNotFoundException {
-	Expenses expenses =  expensesRepository.findById(ExpensesId)
-				.orElseThrow(() -> new ResourceNotFoundException("Expenses not found for this id :: " + ExpensesId));
+		Expense expenses = expensesRepository.findById(expensesId)
+				.orElseThrow(() -> new ResourceNotFoundException("Expenses not found for this id :: " + expensesId));
 
-		 expensesRepository.delete(expenses);
+		expensesRepository.delete(expenses);
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
 		return response;

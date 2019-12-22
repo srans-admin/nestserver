@@ -22,7 +22,7 @@ public class ChartController<T> {
 
 	@Autowired
 	private BedRepository bedRepository;
-	
+
 	@Autowired
 	private TenantBookRepository tenantBookingRepository;
 
@@ -114,88 +114,80 @@ public class ChartController<T> {
 
 		List<BedBookingBarChartInfo> bedBookingBarChartInfos = new ArrayList<>();
 		String month = "";
-		for (int i = 1; i <=12; i++) {
+		for (int i = 1; i <= 12; i++) {
 			BedBookingBarChartInfo bedBookingBarChartInfo = new BedBookingBarChartInfo();
 			switch (i) {
 			case 1:
 				month = "JANUARY";
 				bedBookingBarChartInfo.setMonthType(month);
-				bedBookingBarChartInfo.setTotalbookedbed(tenantBookingRepository.getTotalBookedBed(i));			
+				bedBookingBarChartInfo.setTotalBookedbed(tenantBookingRepository.getTotalBookedBed(i));
 
 				break;
 			case 2:
 				month = "FEBRUARY";
 				bedBookingBarChartInfo.setMonthType(month);
-				bedBookingBarChartInfo.setTotalbookedbed(tenantBookingRepository.getTotalBookedBed(i));			
+				bedBookingBarChartInfo.setTotalBookedbed(tenantBookingRepository.getTotalBookedBed(i));
 
 				break;
 			case 3:
 				month = "MARCH";
 				bedBookingBarChartInfo.setMonthType(month);
-				bedBookingBarChartInfo.setTotalbookedbed(tenantBookingRepository.getTotalBookedBed(i));			
+				bedBookingBarChartInfo.setTotalBookedbed(tenantBookingRepository.getTotalBookedBed(i));
 
 				break;
 			case 4:
 				month = "APRIL";
 				bedBookingBarChartInfo.setMonthType(month);
-				bedBookingBarChartInfo.setTotalbookedbed(tenantBookingRepository.getTotalBookedBed(i));			
+				bedBookingBarChartInfo.setTotalBookedbed(tenantBookingRepository.getTotalBookedBed(i));
 
 				break;
 			case 5:
 				month = "MAY";
 				bedBookingBarChartInfo.setMonthType(month);
-				bedBookingBarChartInfo.setTotalbookedbed(tenantBookingRepository.getTotalBookedBed(i));			
-
+				bedBookingBarChartInfo.setTotalBookedbed(tenantBookingRepository.getTotalBookedBed(i));
 
 				break;
 			case 6:
 				month = "JUNE";
 				bedBookingBarChartInfo.setMonthType(month);
-				bedBookingBarChartInfo.setTotalbookedbed(tenantBookingRepository.getTotalBookedBed(i));			
-
+				bedBookingBarChartInfo.setTotalBookedbed(tenantBookingRepository.getTotalBookedBed(i));
 
 				break;
 			case 7:
 				month = "JULY";
 				bedBookingBarChartInfo.setMonthType(month);
-				bedBookingBarChartInfo.setTotalbookedbed(tenantBookingRepository.getTotalBookedBed(i));			
-
+				bedBookingBarChartInfo.setTotalBookedbed(tenantBookingRepository.getTotalBookedBed(i));
 
 				break;
 			case 8:
 				month = "AUGUST";
 				bedBookingBarChartInfo.setMonthType(month);
-				bedBookingBarChartInfo.setTotalbookedbed(tenantBookingRepository.getTotalBookedBed(i));			
-
+				bedBookingBarChartInfo.setTotalBookedbed(tenantBookingRepository.getTotalBookedBed(i));
 
 				break;
 			case 9:
 				month = "SEPTEMBER";
 				bedBookingBarChartInfo.setMonthType(month);
-				bedBookingBarChartInfo.setTotalbookedbed(tenantBookingRepository.getTotalBookedBed(i));			
-
+				bedBookingBarChartInfo.setTotalBookedbed(tenantBookingRepository.getTotalBookedBed(i));
 
 				break;
 			case 10:
 				month = "OCTOBER";
 				bedBookingBarChartInfo.setMonthType(month);
-				bedBookingBarChartInfo.setTotalbookedbed(tenantBookingRepository.getTotalBookedBed(i));			
-
+				bedBookingBarChartInfo.setTotalBookedbed(tenantBookingRepository.getTotalBookedBed(i));
 
 				break;
 			case 11:
 				month = "NOVEMBER";
 				bedBookingBarChartInfo.setMonthType(month);
-				bedBookingBarChartInfo.setTotalbookedbed(tenantBookingRepository.getTotalBookedBed(i));			
-
+				bedBookingBarChartInfo.setTotalBookedbed(tenantBookingRepository.getTotalBookedBed(i));
 
 				break;
 
 			default:
 				month = "DECEMBER";
 				bedBookingBarChartInfo.setMonthType(month);
-				bedBookingBarChartInfo.setTotalbookedbed(tenantBookingRepository.getTotalBookedBed(i));			
-
+				bedBookingBarChartInfo.setTotalBookedbed(tenantBookingRepository.getTotalBookedBed(i));
 
 				break;
 

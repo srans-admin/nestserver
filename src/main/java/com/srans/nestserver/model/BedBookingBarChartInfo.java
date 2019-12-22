@@ -3,11 +3,11 @@ package com.srans.nestserver.model;
 public class BedBookingBarChartInfo {
 
 	private String monthType;
-	private Integer totalbookedbed;
+	private Integer totalBookedbed;
 
 	public BedBookingBarChartInfo() {
 		this.monthType = "";
-		this.totalbookedbed = 0;
+		this.totalBookedbed = 0;
 
 	}
 
@@ -19,12 +19,12 @@ public class BedBookingBarChartInfo {
 		this.monthType = monthType;
 	}
 
-	public Integer getTotalbookedbed() {
-		return totalbookedbed;
+	public Integer getTotalBookedbed() {
+		return totalBookedbed;
 	}
 
-	public void setTotalbookedbed(Integer totalbookedbed) {
-		this.totalbookedbed = totalbookedbed;
+	public void setTotalBookedbed(Integer totalBookedbed) {
+		this.totalBookedbed = totalBookedbed;
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class BedBookingBarChartInfo {
 		builder.append("BedBookingTypeChartInfo [monthType=");
 		builder.append(monthType);
 		builder.append(", totalbookingbed=");
-		builder.append(totalbookedbed);
+		builder.append(totalBookedbed);
 		builder.append("]");
 		return builder.toString();
 	}
