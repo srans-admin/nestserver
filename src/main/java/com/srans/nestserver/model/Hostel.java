@@ -15,6 +15,11 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "hostel")
 public class Hostel implements Serializable {
+	/**
+	 * @author manish
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

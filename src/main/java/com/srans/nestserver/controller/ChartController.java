@@ -27,10 +27,10 @@ public class ChartController<T> {
 	private TenantBookRepository tenantBookingRepository;
 
 	@GetMapping(value = "hostels/{id}/sharing-type-chart-info")
-	public List<SharingTypeChartInfo> getSharingTypeChartInfo(
-			@PathVariable(value = "id", required = false) Long hostelId) {
-
-		List<SharingTypeChartInfo> sharingTypeChartInfos = new ArrayList<>();
+	
+	public List<SharingTypeChartInfo> getSharingTypeChartInfo( @PathVariable(value = "id", required = false) Long hostelId) {
+		
+	List<SharingTypeChartInfo> sharingTypeChartInfos = new ArrayList<>();
 
 		for (int i = 0; i < 4; i++) {
 

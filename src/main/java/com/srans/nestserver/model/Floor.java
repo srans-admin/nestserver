@@ -16,6 +16,11 @@ import javax.persistence.Transient;
 @Table(name = "floor")
 public class Floor implements Serializable{
 
+	/**
+	 * @author manish
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
