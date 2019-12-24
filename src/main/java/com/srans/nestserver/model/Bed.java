@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "bed")
-public class Bed extends AuditModel implements Serializable{
+public class Bed extends AuditModel implements Serializable {
 
 	/**
 	 * @author Manish
@@ -21,22 +21,22 @@ public class Bed extends AuditModel implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
-	Long id;
+	long id;
 
 	@Column
-	Long hostelId;
+	long hostelId;
 
 	@Column
-	Long floorId;
+	long floorId;
 
 	@Column
-	Long roomId;
-
-	@Column
-	Character alloted;
+	long roomId;
 
 	@Column
 	String position;
+
+	@Column
+	Character alloted;
 
 	@Column
 	String vacatedDate;
@@ -45,70 +45,62 @@ public class Bed extends AuditModel implements Serializable{
 	Integer bedNo;
 
 	public Bed() {
+
 		super();
-		this.hostelId = -1L;
-		this.floorId= -1L;
-		this.roomId=-1L;
-		this.alloted='N';
-		this.position="L";
-		this.vacatedDate="";
-		this.bedNo=1;
-		
-		
+		this.id = 0L;
+		this.hostelId = 0L;
+		this.floorId = 0L;
+		this.roomId = 0L;
+		this.alloted = ' ';
+		this.position = "";
+		this.vacatedDate = "";
+		this.bedNo = 0;
 
 	}
 
-	public Bed(Long id, Long hostelId, Long floorId, Long roomId, Character alloted, String position,
-			String vacatedDate, Integer bedNo, String roomType) {
+	public Bed(long id, long hostelId, long floorId, long roomId, String position, Character alloted,
+			String vacatedDate, Integer bedNo) {
 		super();
 		this.id = id;
 		this.hostelId = hostelId;
 		this.floorId = floorId;
 		this.roomId = roomId;
-		this.alloted = alloted;
 		this.position = position;
+		this.alloted = alloted;
 		this.vacatedDate = vacatedDate;
 		this.bedNo = bedNo;
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public Long getHostelId() {
+	public long getHostelId() {
 		return hostelId;
 	}
 
-	public void setHostelId(Long hostelId) {
+	public void setHostelId(long hostelId) {
 		this.hostelId = hostelId;
 	}
 
-	public Long getFloorId() {
+	public long getFloorId() {
 		return floorId;
 	}
 
-	public void setFloorId(Long floorId) {
+	public void setFloorId(long floorId) {
 		this.floorId = floorId;
 	}
 
-	public Long getRoomId() {
+	public long getRoomId() {
 		return roomId;
 	}
 
-	public void setRoomId(Long roomId) {
+	public void setRoomId(long roomId) {
 		this.roomId = roomId;
-	}
-
-	public Character getAlloted() {
-		return alloted;
-	}
-
-	public void setAlloted(Character alloted) {
-		this.alloted = alloted;
 	}
 
 	public String getPosition() {
@@ -119,6 +111,14 @@ public class Bed extends AuditModel implements Serializable{
 		this.position = position;
 	}
 
+	public Character getAlloted() {
+		return alloted;
+	}
+
+	public void setAlloted(Character alloted) {
+		this.alloted = alloted;
+	}
+
 	public String getVacatedDate() {
 		return vacatedDate;
 	}
@@ -127,37 +127,21 @@ public class Bed extends AuditModel implements Serializable{
 		this.vacatedDate = vacatedDate;
 	}
 
-	public Integer getRoomNo() {
+	public Integer getBedNo() {
 		return bedNo;
 	}
 
-	public void setRoomNo(Integer bedNo) {
+	public void setBedNo(Integer bedNo) {
 		this.bedNo = bedNo;
 	}
-
-	
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Bed [id=");
-		builder.append(id);
-		builder.append(", hostelId=");
-		builder.append(hostelId);
-		builder.append(", floorId=");
-		builder.append(floorId);
-		builder.append(", roomId=");
-		builder.append(roomId);
-		builder.append(", alloted=");
-		builder.append(alloted);
-		builder.append(", position=");
-		builder.append(position);
-		builder.append(", vacatedDate=");
-		builder.append(vacatedDate);
-		builder.append(", bedNo=");
-		builder.append(bedNo);
-		builder.append(", roomType=");
-		builder.append("]");
+		builder.append("Bed [id=").append(id).append(", hostelId=").append(hostelId).append(", floorId=")
+				.append(floorId).append(", roomId=").append(roomId).append(", position=").append(position)
+				.append(", alloted=").append(alloted).append(", vacatedDate=").append(vacatedDate).append(", bedNo=")
+				.append(bedNo).append("]");
 		return builder.toString();
 	}
 

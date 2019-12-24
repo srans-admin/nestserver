@@ -3,9 +3,7 @@ package com.srans.nestserver.controller;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
+import com.srans.nestserver.model.Bed;
 import com.srans.nestserver.model.Floor;
 import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.Room;
@@ -274,6 +273,22 @@ public class HostelController {
 		return Arrays.asList(hostelRepository.numOfFloor(hostelId), roomRepository.countRoomByHostelId(hostelId),
 				roomRepository.countSingleSharing(hostelId), roomRepository.countDoubleSharing(hostelId),
 				roomRepository.countTripleSharing(hostelId), roomRepository.countMiscSharing(hostelId));
+	}
+
+	@PostMapping("/hostels/{id1}/floor/{id2}/room/{id3}/bed")
+	public Bed bed(@PathVariable(value = "id1") Long hostelId, @PathVariable(value = "id2") Long floorId,
+
+			@PathVariable(value = "id3") Long roomId, @Valid @RequestBody Bed bed) {
+
+		if ((hostelRepository.findById(hostelId) != null && floorRepository.findById(floorId) != null)
+				&& roomRepository.findById(roomId) != null) {
+			bed.setHostelId(hostelId);
+			bed.setFloorId(floorId);
+			bed.setRoomId(roomId);
+		}
+
+		return bedRepository.save(bed);
+
 	}
 
 }

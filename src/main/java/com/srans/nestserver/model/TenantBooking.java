@@ -239,10 +239,7 @@ public class TenantBooking extends AuditModel {
 		this.floorId = floorId;
 	}
 
-	 
-
-
-
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
