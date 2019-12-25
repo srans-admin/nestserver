@@ -58,10 +58,11 @@ public class TenantBookingController {
 		
 		logger.info("IN::POST::/tenantbooking::bookTenant::" + tenant);
 
-		Tenant responsetenant=tenantRepository.save(tenant);
-		
+		Tenant responsetenant=tenantRepository.save(tenant); 
+ 
 		// SAVE Database stuff here 
 		responsetenant.getTenantBooking().forEach(tenantbooking->{
+ 
 			tenantbooking.setTenantId(responsetenant.getUserId());
 		          tenantBookRepository.save(tenantbooking);
 			
