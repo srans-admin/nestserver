@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,10 +65,12 @@ public class TenantController {
 	private BedRepository bedRepository;
 	 
 
-	@PostMapping("/tenant")
+	
+	@PostMapping("/tenants")
+	@PreAuthorize("permitAll()")
 	public Tenant saveTenant(@Valid @RequestBody Tenant tenant) throws NSException {
 
-		logger.info("IN::POST::/tenant::savetenant::" + tenant);
+		logger.info("IN::POST::/tenants::savetenant::" + tenant);
 
 		Tenant responseTenant = tenantRepository.save(tenant);
 		
@@ -96,34 +99,46 @@ public class TenantController {
 			throw new NSException("Unable to save tenant ");
 		} 
 
-		logger.info("OUT::POST::/tenant::saveTenant::" + tenant);
+		logger.info("OUT::POST::/tenants::saveTenant::" + tenant);
 		return responseTenant;
 	}
 
-	@GetMapping("/tenant")
-	public List<Tenant> getAllTenant() {
+	@GetMapping("/tenants")
+	@PreAuthorize("permitAll()")
+	public List<Tenant> getAllTenants() {
 		return tenantRepository.findAll();
 	}
-
-	@GetMapping("/tenant/{Id}")
-	public ResponseEntity<Tenant> getTenantById(@PathVariable(value = "Id") Long TenantId)
+	/*
+	@GetMapping("/tenants/{id}")
+	@PreAuthorize("permitAll()")
+	public ResponseEntity<Tenant> getTenantById(@PathVariable(value = "id") Long TenantId)
 			throws ResourceNotFoundException {
 		Tenant tenant = tenantRepository.findById(TenantId)
 				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
 		return ResponseEntity.ok().body(tenant);
+	}*/
+	
+	@GetMapping("/tenants/{name}")
+	@PreAuthorize("permitAll()")
+	public ResponseEntity<Tenant> getTenantByName(@PathVariable(value = "name") String name)
+			throws ResourceNotFoundException {
+		Tenant tenant = tenantRepository.findByName(name); 
+		return ResponseEntity.ok().body(tenant);
 	}
 
-	@PostMapping("/tenant/{id}/upload/{cat}")
+	@PostMapping("/tenants/{id}/upload/{cat}")
+	@PreAuthorize("permitAll()")
 	public void storeTenantImage(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file,
 			@PathVariable("cat") String cat) throws NSException {
 
-		logger.info("In::POST::/tenant/{id}/upload/{cat}::uploadTenantImages::" + id + "::" + cat);
+		logger.info("In::POST::/tenants/{id}/upload/{cat}::uploadTenantImages::" + id + "::" + cat);
 		storageService.storeTenantImage(file, cat, id);
-		logger.info("OUT::POST:://tenant/uploadImage/{cat}/{id}::uploadTenantImages::" + id + "::" + cat);
+		logger.info("OUT::POST:://tenants/uploadImage/{cat}/{id}::uploadTenantImages::" + id + "::" + cat);
 
 	}
 
-	@GetMapping("/tenant/{id}/retrive/{cat}")
+	@GetMapping("/tenants/{id}/retrive/{cat}")
+	@PreAuthorize("permitAll()")
 	public ResponseEntity<InputStreamResource> retriveHostelImage(@PathVariable("id") Long id,
 			@PathVariable("cat") String cat) throws NSException, IOException {
 
@@ -132,7 +147,8 @@ public class TenantController {
 
 	}
 
-	@GetMapping("/tenantidproof/{id}/retrive/{cat}")
+	@GetMapping("/tenantsidproof/{id}/retrive/{cat}")
+	@PreAuthorize("permitAll()")
 	public ResponseEntity<InputStreamResource> retriveIdproofImage(@PathVariable("id") Long id,
 			@PathVariable("cat") String cat) throws NSException, IOException {
 
@@ -141,23 +157,25 @@ public class TenantController {
 
 	}
 
-	@PostMapping("/tenantidproof/{id}/upload/{cat}")
+	@PostMapping("/tenantsidproof/{id}/upload/{cat}")
+	@PreAuthorize("permitAll()")
 	public void storeIdproofImage(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file,
 			@PathVariable("cat") String cat) throws NSException {
 
-		logger.info("In::POST::/tenant/{id}/upload/{cat}::uploadIdproofImages::" + id + "::" + cat);
+		logger.info("In::POST::/tenants/{id}/upload/{cat}::uploadIdproofImages::" + id + "::" + cat);
 		storageService.storeIdproofImage(file, cat, id);
-		logger.info("OUT::POST:://tenant/uploadImage/{cat}/{id}::uploadIdproofImage::" + id + "::" + cat);
+		logger.info("OUT::POST:://tenants/uploadImage/{cat}/{id}::uploadIdproofImage::" + id + "::" + cat);
 
 	}
 
 	/*
-	 * @PostMapping("/tenant") public Tenant createUser(@RequestBody Tenant tenant)
+	 * @PostMapping("/tenants") public Tenant createUser(@RequestBody Tenant tenant)
 	 * { System.out.println("User : " + tenant); return
 	 * tenantRepository.save(tenant); }
 	 */
 
-	@PutMapping("/tenant/{Id}")
+	@PutMapping("/tenants/{Id}")
+	@PreAuthorize("permitAll()")
 	public ResponseEntity<Tenant> updateUser(@PathVariable(value = "Id") Long TenantId,
 			@Valid @RequestBody Tenant tenantDetails) throws ResourceNotFoundException {
 		Tenant tenant = tenantRepository.findById(TenantId)
@@ -173,7 +191,8 @@ public class TenantController {
 		return ResponseEntity.ok(updatedTenant);
 	}
 
-	@DeleteMapping("/tenant/{Id}")
+	@DeleteMapping("/tenants/{Id}")
+	@PreAuthorize("permitAll()")
 	public <tenantRepository> Map<String, Boolean> deleteUser(@PathVariable(value = "Id") Long TenantId)
 			throws ResourceNotFoundException {
 		@SuppressWarnings("unused")

@@ -7,9 +7,9 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +32,7 @@ public class TenantBookingController {
 	
 	@Autowired
 	private TenantBookRepository tenantBookRepository; 
-
+/*
 	
 	@GetMapping("tenantbooking/hostelName")
 	public List<String> findAll() {
@@ -50,23 +50,23 @@ public class TenantBookingController {
 
 		return tenantRepository.getBedInfo(HostelId);
 
-	}
+	}*/
 	
 	@PostMapping("/tenantbooking")
-	
-	public Tenant saveTenant(@Valid @RequestBody Tenant tenant) throws NSException {
+	@PreAuthorize("permitAll()")
+	public Tenant bookTenant(@Valid @RequestBody Tenant tenant) throws NSException {
 		
-		logger.info("IN::POST::/hostels::saveHostel::" + tenant);
+		logger.info("IN::POST::/tenantbooking::bookTenant::" + tenant);
 
-		Tenant responsetenant=tenantRepository.save(tenant);
-		
-		// SAVE Database stuff here
-		
-		/*responsetenant.getTenantBooking().forEach(tenantbooking->{
+		Tenant responsetenant=tenantRepository.save(tenant); 
+ 
+		// SAVE Database stuff here 
+		responsetenant.getTenantBooking().forEach(tenantbooking->{
+ 
 			tenantbooking.setTenantId(responsetenant.getUserId());
 		          tenantBookRepository.save(tenantbooking);
 			
-		});*/
+		});
 		return responsetenant;
 			
 		}
