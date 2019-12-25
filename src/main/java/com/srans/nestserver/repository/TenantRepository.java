@@ -17,7 +17,7 @@ public interface TenantRepository extends JpaRepository<Tenant, Long> {
 	@Query(value="SELECT t FROM Tenant t WHERE t.name=?1") 
 	public Tenant findByName(String name);
   
-	
+	/*
 	@Query(value = "SELECT hostel_name FROM Hostel", nativeQuery = true)
 	public List<String> getAllHostelName();
 
@@ -28,7 +28,7 @@ public interface TenantRepository extends JpaRepository<Tenant, Long> {
 			+ "from floor t1 inner join room t2 on t1.hostel_id = t2.hostel_id\n"
 			+ "inner join bed t3 on t2.hostel_id=t3.hostel_id where t1.hostel_id=?1", nativeQuery = true)
 	public List<Object[]> getBedInfo(Long hostelId);
-	
+	*/
 	
 	
 	
