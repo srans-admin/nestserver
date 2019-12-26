@@ -59,15 +59,15 @@ public class HostelController {
 	private StorageService storageService;
 
 	@GetMapping("/hostels")
-	//@PreAuthorize("hasRole('ROLE_SYSTEMADMIN') OR hasRole('ROLE_ADMIN')")
-	@PreAuthorize("permitAll()")
-	public List<Hostel> getAllPosts() {
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("permitAll()")
+	public List<Hostel> getAllHostels() {
 		return hostelRepository.findAll();
 	}
 
 	@GetMapping("/hostels/{id}")
-	//@PreAuthorize("hasRole('ROLE_SYSTEMADMIN') OR hasRole('ROLE_ADMIN')")
-	@PreAuthorize("permitAll()")
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("permitAll()")
 	public Hostel getHostel(@PathVariable(value = "id") Long hostelId) throws IOException {
 
 		Hostel responseHostel = hostelRepository.getOne(hostelId);
@@ -93,8 +93,8 @@ public class HostelController {
 	 * @throws NSException
 	 */
 	@PostMapping("/hostels")
-	//@PreAuthorize("hasRole('ROLE_SYSTEMADMIN') OR hasRole('ROLE_ADMIN')")
-	@PreAuthorize("permitAll()")
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("permitAll()")
 	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) throws NSException {
 
 		logger.info("IN::POST::/hostels::saveHostel::" + hostel);

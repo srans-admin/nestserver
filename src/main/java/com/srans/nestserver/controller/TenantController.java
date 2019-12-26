@@ -104,7 +104,8 @@ public class TenantController {
 	}
 
 	@GetMapping("/tenants")
-	@PreAuthorize("permitAll()")
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("permitAll()")
 	public List<Tenant> getAllTenants() {
 		return tenantRepository.findAll();
 	}
@@ -119,7 +120,8 @@ public class TenantController {
 	}*/
 	
 	@GetMapping("/tenants/{name}")
-	@PreAuthorize("permitAll()")
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("permitAll()")
 	public ResponseEntity<Tenant> getTenantByName(@PathVariable(value = "name") String name)
 			throws ResourceNotFoundException {
 		Tenant tenant = tenantRepository.findByName(name); 
