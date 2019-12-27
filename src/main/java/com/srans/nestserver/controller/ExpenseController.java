@@ -24,28 +24,23 @@ import org.springframework.web.bind.annotation.RestController;
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Expense;
 import com.srans.nestserver.repository.ExpenseRepository;
-import com.srans.nestserver.repository.HostelRepository;
 
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1")
-public class ExpensesController {
-	Logger logger = LoggerFactory.getLogger(ExpensesController.class);
+public class ExpenseController {
+	Logger logger = LoggerFactory.getLogger(ExpenseController.class);
 	@Autowired
 	private ExpenseRepository expensesRepository;
 
-	@Autowired
-	private HostelRepository hostelRepository;
-
-	@PostMapping("/expenses/{id}")
-	public Expense createExpense(@PathVariable(value = "id") Long id, @Valid @RequestBody Expense expense) {
+	@PostMapping("/expenses")
+	public Expense createExpense( @Valid @RequestBody Expense expense) {
 		logger.info("IN::POST::/expenses::saveExpense::" + expense);
-		return hostelRepository.findById(id).map(hostel -> {
-			expense.setHostel(hostel);
-
-			logger.info("OUT::POST::/expenses::saveExpense::" + expense);
-			return expensesRepository.save(expense);
-		}).orElseThrow(() -> new ResourceNotFoundException("PostId " + id + " not found"));
+		
+		expense = expensesRepository.save(expense);
+		
+		logger.info("OUT::POST::/expenses::saveExpense::" + expense);
+		return expense;
 	}
 
 	@GetMapping("/expenses")
@@ -68,7 +63,7 @@ public class ExpensesController {
 
 		expenses.setExpenseType(expensesDetails.getExpenseType());
 		expenses.setAmount(expensesDetails.getAmount());
-		expenses.setUpdatedAt(expensesDetails.getUpdatedAt());
+		//expenses.setHostelName(expensesDetails.getHostelName());
 		final Expense updatedExpenses = expensesRepository.save(expenses);
 		return ResponseEntity.ok(updatedExpenses);
 	}
