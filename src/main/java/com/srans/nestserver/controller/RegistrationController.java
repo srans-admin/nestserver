@@ -1,9 +1,13 @@
 package com.srans.nestserver.controller;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,9 +15,8 @@ import com.srans.nestserver.model.User;
 import com.srans.nestserver.service.MailService;
 
 /**
- * This class contains a Mail API developed using Spring Boot
- * 
- * @author ManishKumar
+ *
+ * @author Manish
  *
  */
 @RestController
@@ -24,22 +27,18 @@ public class RegistrationController {
 
 	@Autowired
 	private User user;
-
-	/**
-	 * 
-	 * @return
-	 */
+	
 	@RequestMapping("send-mail")
-	public String send() {
+	//@Scheduled(fixedRate = 1000)
+	@Scheduled(cron = "* * * * * *")
+	public String send() throws MessagingException {
 
-		/*
-		 * Creating a User with the help of User class that we have declared and setting
-		 * Email address of the sender.
-		 */
-		user.setEmailAddress("kapiljaiswal82@gmail.com");  //Receiver's email address
-		/*
-		 * Here we will call sendEmail() for Sending mail to the sender.
-		 */
+		List<String> list = new LinkedList<>();
+
+		list.add("manishk219009@gmail.com");
+		list.add("manish.p@srans.in");
+
+		user.setEmailAddress(list);
 		try {
 			notificationService.sendEmail(user);
 		} catch (MailException mailException) {
@@ -48,24 +47,18 @@ public class RegistrationController {
 		return "Congratulations!.";
 	}
 
-	/**
-	 * 
-	 * @return
-	 * @throws MessagingException
-	 */
 	@RequestMapping("send-mail-attachment")
+	//@Scheduled(cron = "0 0 0 26–31 * ?")
+	//@Scheduled(fixedRate = 1000)
 	public String sendWithAttachment() throws MessagingException {
 
-		/*
-		 * Creating a User with the help of User class that we have declared and setting
-		 * Email address of the sender.
-		 */
-		user.setEmailAddress("kapiljaiswal82@gmail.com"); //Receiver's email address
+		List<String> list = new LinkedList<>();
 
-		/*
-		 * Here we will call sendEmailWithAttachment() for Sending mail to the sender
-		 * that contains a attachment.
-		 */
+		list.add("manishk219009@gmail.com");
+		list.add("manish.p@srans.in");
+
+		user.setEmailAddress(list); // Receiver's email address
+
 		try {
 			notificationService.sendEmailWithAttachment(user);
 		} catch (MailException mailException) {
@@ -73,4 +66,5 @@ public class RegistrationController {
 		}
 		return "Congratulations! Your mail has been send to the user.";
 	}
+
 }

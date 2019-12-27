@@ -1,23 +1,24 @@
 package com.srans.nestserver.model;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
-/**
-	 * Date :24-December-2019
-	 * @author ManishKumar
-	 * @version 1.0
-	 *
-	 */
+
 	@Component
 	public class User {
 
-		private String emailAddress;
+		private List<String> emailAddress;
 
-		public String getEmailAddress() {
+		public List<String> getEmailAddress() {
 			return emailAddress;
 		}
-		public void setEmailAddress(String emailAddress) {
+
+		public void setEmailAddress(List<String> emailAddress) {
 			this.emailAddress = emailAddress;
 		}
+
+	
+
 	}
 
