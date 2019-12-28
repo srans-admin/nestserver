@@ -1,5 +1,5 @@
 ##--no-cache 
-git checkout -f sprint6
+git checkout -f $1
 git pull 
 docker build -t nest-server .
 docker stop nest-server-container
