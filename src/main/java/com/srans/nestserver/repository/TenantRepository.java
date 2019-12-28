@@ -1,7 +1,5 @@
 package com.srans.nestserver.repository;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +10,14 @@ import com.srans.nestserver.model.Tenant;
 @Repository
 public interface TenantRepository extends JpaRepository<Tenant, Long> {
 
+	@Autowired 
+	TenantBookRepository tenantBookRepository = null; 
+	
+	
+	@Query(value="SELECT t FROM Tenant t WHERE t.name=?1") 
+	public Tenant findByName(String name);
+  
+	/*
 	@Query(value = "SELECT hostel_name FROM Hostel", nativeQuery = true)
 	public List<String> getAllHostelName();
 
@@ -22,11 +28,11 @@ public interface TenantRepository extends JpaRepository<Tenant, Long> {
 			+ "from floor t1 inner join room t2 on t1.hostel_id = t2.hostel_id\n"
 			+ "inner join bed t3 on t2.hostel_id=t3.hostel_id where t1.hostel_id=?1", nativeQuery = true)
 	public List<Object[]> getBedInfo(Long hostelId);
+	*/
 	
-	@Autowired
-	TenantBookRepository tenantBookRepository = null;
 	
-	public default Tenant saveWholeObject(Tenant tenant){
+	
+	/*public default Tenant saveWholeObject(Tenant tenant){
 		
 		Tenant tmpTenant = null;
 		
@@ -38,5 +44,5 @@ public interface TenantRepository extends JpaRepository<Tenant, Long> {
 		
 		return tmpTenant;
 		
-	}
+	}*/ 
  }

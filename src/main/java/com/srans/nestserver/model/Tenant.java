@@ -1,8 +1,6 @@
 package com.srans.nestserver.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -61,33 +59,27 @@ public class Tenant implements Serializable {
 	@Column(name = "emailId")
 	private String emailId;
 
-	@Column(name = "permanetAddress")
-	private String permanetAddress;
+	@Column(name = "permanentAddress")
+	private String permanentAddress;
 
 	@Transient
-	private List<TenantBooking> tenantBooking;
+	private  TenantBooking tenantBooking;
+	
+	@Transient
+	private Payment payment;
+	
+	@Transient
+	private Bed bed;
 
 	public Tenant() {
 		super();
-		this.userId = 0L;
-		this.name = "";
-		this.contactNumber = 0L;
-		this.fatherName = "";
-		this.fatherphoneNumber = 0L;
-		this.permanetAddress = "";
-		this.emailId = "";
-		this.mobileNumber = 0L;
-		this.officeAddress = "";
-		this.bloodGroup = "";
-		this.dob = "";
-		this.tenantBooking = new ArrayList<>();
-
+		// TODO Auto-generated constructor stub
 	}
 
 	public Tenant(Long userId, String name, Long contactNumber, String fatherName, Long fatherphoneNumber,
 			String motherName, long motherphoneNumber, String dob, long emergencyContactNumber,
 			String nameOfTheEmployer, String bloodGroup, String officeAddress, Long mobileNumber, String emailId,
-			String permanetAddress, List<TenantBooking> tenantBooking) {
+			String permanentAddress, TenantBooking tenantBooking, Payment payment, Bed bed) {
 		super();
 		this.userId = userId;
 		this.name = name;
@@ -103,8 +95,10 @@ public class Tenant implements Serializable {
 		this.officeAddress = officeAddress;
 		this.mobileNumber = mobileNumber;
 		this.emailId = emailId;
-		this.permanetAddress = permanetAddress;
+		this.permanentAddress = permanentAddress;
 		this.tenantBooking = tenantBooking;
+		this.payment = payment;
+		this.bed = bed;
 	}
 
 	public Long getUserId() {
@@ -219,20 +213,40 @@ public class Tenant implements Serializable {
 		this.emailId = emailId;
 	}
 
-	public String getPermanetAddress() {
-		return permanetAddress;
+	public String getPermanentAddress() {
+		return permanentAddress;
 	}
 
-	public void setPermanetAddress(String permanetAddress) {
-		this.permanetAddress = permanetAddress;
+	public void setPermanentAddress(String permanentAddress) {
+		this.permanentAddress = permanentAddress;
 	}
 
-	public List<TenantBooking> getTenantBooking() {
+	public TenantBooking getTenantBooking() {
 		return tenantBooking;
 	}
 
-	public void setTenantBooking(List<TenantBooking> tenantBooking) {
+	public void setTenantBooking(TenantBooking tenantBooking) {
 		this.tenantBooking = tenantBooking;
+	}
+
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
+
+	public Bed getBed() {
+		return bed;
+	}
+
+	public void setBed(Bed bed) {
+		this.bed = bed;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	@Override
@@ -245,9 +259,12 @@ public class Tenant implements Serializable {
 				.append(emergencyContactNumber).append(", nameOfTheEmployer=").append(nameOfTheEmployer)
 				.append(", bloodGroup=").append(bloodGroup).append(", officeAddress=").append(officeAddress)
 				.append(", mobileNumber=").append(mobileNumber).append(", emailId=").append(emailId)
-				.append(", permanetAddress=").append(permanetAddress).append(", tenantBooking=").append(tenantBooking)
-				.append("]");
+				.append(", permanentAddress=").append(permanentAddress).append(", tenantBooking=").append(tenantBooking)
+				.append(", payment=").append(payment).append(", bed=").append(bed).append("]");
 		return builder.toString();
 	}
 
 }
+	
+
+	

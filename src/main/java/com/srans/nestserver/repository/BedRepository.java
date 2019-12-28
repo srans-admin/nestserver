@@ -13,7 +13,6 @@ public interface BedRepository extends JpaRepository<Bed, Long> {
 
 	public List<Bed> findByFloorId(Long id);
 	
-	
      //---------------------- Single Beds Info
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Single' AND bed.alloted='R') AND room.hostel_id=?1", nativeQuery = true)
 	public Integer totalReservedSingleBeds(Long hostel_id);

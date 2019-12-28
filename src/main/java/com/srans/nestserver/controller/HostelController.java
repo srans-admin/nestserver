@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,11 +59,15 @@ public class HostelController {
 	private StorageService storageService;
 
 	@GetMapping("/hostels")
-	public List<Hostel> getAllPosts() {
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("permitAll()")
+	public List<Hostel> getAllHostels() {
 		return hostelRepository.findAll();
 	}
 
 	@GetMapping("/hostels/{id}")
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("permitAll()")
 	public Hostel getHostel(@PathVariable(value = "id") Long hostelId) throws IOException {
 
 		Hostel responseHostel = hostelRepository.getOne(hostelId);
@@ -88,6 +93,8 @@ public class HostelController {
 	 * @throws NSException
 	 */
 	@PostMapping("/hostels")
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("permitAll()")
 	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) throws NSException {
 
 		logger.info("IN::POST::/hostels::saveHostel::" + hostel);
@@ -119,6 +126,7 @@ public class HostelController {
 	}
 
 	@PostMapping("/hostels/{id}/upload/{cat}")
+	@PreAuthorize("permitAll()")
 	public void storeHostelImage(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file,
 			@PathVariable("cat") String cat) throws NSException {
 
@@ -129,6 +137,7 @@ public class HostelController {
 	}
 
 	@GetMapping("/hostels/{id}/retrive/{cat}")
+	@PreAuthorize("permitAll()")
 	public ResponseEntity<InputStreamResource> retriveHostelImage(@PathVariable("id") Long id,
 			@PathVariable("cat") String cat) throws NSException, IOException {
 
@@ -138,6 +147,7 @@ public class HostelController {
 	}
 
 	@PutMapping("/hostels/{id}")
+	@PreAuthorize("permitAll()")
 	public Hostel updateHostel(@PathVariable Long id, @Valid @RequestBody Hostel hostelRequest) {
 
 		return hostelRepository.findById(id).map(hostel -> {
@@ -151,6 +161,7 @@ public class HostelController {
 	}
 
 	@DeleteMapping("/hostels/{id}")
+	@PreAuthorize("permitAll()")
 	public ResponseEntity<?> deleteHostel(@PathVariable Long id) {
 		return hostelRepository.findById(id).map(hostel -> {
 			hostelRepository.delete(hostel);
@@ -159,12 +170,14 @@ public class HostelController {
 	}
 
 	@GetMapping("/hostels/{id}/floor")
+	@PreAuthorize("permitAll()")
 	public List<Floor> getAllFloorsByHostelid(@PathVariable(value = "id") Long id) {
 		logger.info("All Floor Getting");
 		return floorRepository.findByHostelId(id);
 	}
 
 	@GetMapping("/hostels/{id}/floor/{floor_id}")
+	@PreAuthorize("permitAll()")
 	public ResponseEntity<Floor> getHostelById(@PathVariable(value = "id") Long hostelsId,
 
 			@PathVariable(value = "floor_id") Long floor_id) {
@@ -179,6 +192,7 @@ public class HostelController {
 	}
 
 	@PostMapping("/hostels/{id}/floor")
+	@PreAuthorize("permitAll()")
 	public Floor createFloor(@PathVariable(value = "id") Long id, @Valid @RequestBody Floor floor) {
 
 		return hostelRepository.findById(id).map(hostel -> {
@@ -190,6 +204,7 @@ public class HostelController {
 	}
 
 	@PutMapping("/hostels/{id}/floors/{floor_id}")
+	@PreAuthorize("permitAll()")
 	public Floor updateFloor(@PathVariable(value = "id") Long id, @PathVariable(value = "floor_id") Long floor_id,
 
 			@Valid @RequestBody Floor floorRequest) {
@@ -206,6 +221,7 @@ public class HostelController {
 	}
 
 	@DeleteMapping("/hostels/{id}/floors/{floor_id}")
+	@PreAuthorize("permitAll()")
 	public ResponseEntity<?> deleteFloor(@PathVariable(value = "id") Long id,
 
 			@PathVariable(value = "floor_id") Long floor_id) {
@@ -217,11 +233,13 @@ public class HostelController {
 	}
 
 	@GetMapping("/hostels/floor/{id}/room")
+	@PreAuthorize("permitAll()")
 	public List<Room> getAllFloorsByHostelid1(@PathVariable(value = "id") Long id) {
 		return roomRepository.findByFloorId(id);
 	}
 
 	@GetMapping("/hostels/floor/{id}/room/{room_id}")
+	@PreAuthorize("permitAll()")
 	public ResponseEntity<Room> getFloorById(@PathVariable(value = "id") Long floor_id,
 
 			@PathVariable(value = "room_id") Long room_id) {
@@ -235,6 +253,7 @@ public class HostelController {
 	}
 
 	@PostMapping("/hostels/floor/{id}/room")
+	@PreAuthorize("permitAll()")
 	public Room createRoom(@PathVariable(value = "id") Long id, @Valid @RequestBody Room room) {
 		return floorRepository.findById(id).map(floor -> {
 			room.setFloorId(id);
@@ -244,6 +263,7 @@ public class HostelController {
 	}
 
 	@PutMapping("/hostels/floor/{id}/room/{room_id}")
+	@PreAuthorize("permitAll()")
 	public Room updateRoom(@PathVariable(value = "id") Long id, @PathVariable(value = "room_id") Long room_id,
 
 			@Valid @RequestBody Room roomRequest) {
@@ -261,6 +281,7 @@ public class HostelController {
 	}
 
 	@DeleteMapping("/hostels/floor/room/{id}")
+	@PreAuthorize("permitAll()")
 	public ResponseEntity<?> deleteRoom(@PathVariable Long id) {
 		return roomRepository.findById(id).map(hostel -> {
 			roomRepository.delete(hostel);
@@ -269,6 +290,7 @@ public class HostelController {
 	}
 
 	@GetMapping("/hostels/{id}/extendingviews")
+	@PreAuthorize("permitAll()")
 	public List<Object> getTestMap(@PathVariable(value = "id") Long hostelId) {
 
 		return Arrays.asList(hostelRepository.numOfFloor(hostelId), roomRepository.countRoomByHostelId(hostelId),

@@ -10,6 +10,7 @@ import javax.validation.Valid;
 //import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -107,7 +108,7 @@ Payment payment = paymentRepository.findById(paymentId)
 return ResponseEntity.ok().body(payment);
 }
 
-
+@PreAuthorize("permitAll()")
 @PostMapping("/payment")
 public Payment createPayment(@Valid @RequestBody Payment payment) {
 return paymentRepository.save(payment);

@@ -2,18 +2,10 @@ package com.srans.nestserver.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "expense")
@@ -24,29 +16,42 @@ public class Expense extends AuditModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "hostelId", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JsonIgnore
-	private Hostel hostel;
+	//@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	//@JoinColumn(name = "hostelId", nullable = false)
+	//@OnDelete(action = OnDeleteAction.CASCADE)
+	//@JsonIgnore
+	//private Hostel hostel;
+	
+	@Column
+	private Long hostelId;
 
 	@Column
-	private String expenseType;
+	private Long expenseType;
 
 	@Column
-	private Long amount;
+	private Long amount; 
 
 	public Expense() {
 		super();
-
+		
 	}
 
-	public Expense(Long id, Hostel hostel, String expenseType, Long amount) {
+	
+	public Long getHostelId() {
+		return hostelId;
+	}
+
+
+	public void setHostelId(Long hostelId) {
+		this.hostelId = hostelId;
+	}
+
+
+	public Expense(Long id, Long expenseType, Long amount) {
 		super();
-		this.id = id;
-		this.hostel = hostel;
+		this.id = id; 
 		this.expenseType = expenseType;
-		this.amount = amount;
+		this.amount = amount; 
 	}
 
 	public Long getId() {
@@ -57,19 +62,13 @@ public class Expense extends AuditModel {
 		this.id = id;
 	}
 
-	public Hostel getHostel() {
-		return hostel;
-	}
+ 
 
-	public void setHostel(Hostel hostel) {
-		this.hostel = hostel;
-	}
-
-	public String getExpenseType() {
+	public Long getExpenseType() {
 		return expenseType;
 	}
 
-	public void setExpenseType(String expenseType) {
+	public void setExpenseType(Long expenseType) {
 		this.expenseType = expenseType;
 	}
 
@@ -80,14 +79,20 @@ public class Expense extends AuditModel {
 	public void setAmount(Long amount) {
 		this.amount = amount;
 	}
+ 
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Expense [id=");
 		builder.append(id);
-		builder.append(", hostel=");
-		builder.append(hostel);
+		builder.append(", hostelId=");
+		builder.append(hostelId);
 		builder.append(", expenseType=");
 		builder.append(expenseType);
 		builder.append(", amount=");
@@ -96,4 +101,7 @@ public class Expense extends AuditModel {
 		return builder.toString();
 	}
 
+	 
+ 
 }
+	

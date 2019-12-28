@@ -25,7 +25,7 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 	@Query(value="SELECT hostel_name FROM HOSTEL WHERE id=?1", nativeQuery=true)
 	public String hostelName(Long hostel_id);
 	
-	@Query(value="SELECT hostel_type FROM HOSTEL WHfERE  id=?1", nativeQuery=true)
+	@Query(value="SELECT hostel_type FROM HOSTEL WHERE  id=?1", nativeQuery=true)
 	public String hostelType(Long hostel_id);
 	
 	@Query(value="SELECT hostel_address FROM HOSTEL WHERE id=?1", nativeQuery=true)
