@@ -96,10 +96,11 @@ public class TenantController {
 			
 			
 			//Save Payment Information 
-			responseTenant.setPayment( paymentRepository.save(tenant.getPayment()));
-			
+			responseTenant.setPayment( paymentRepository.save(tenant.getPayment())); 
+
 			//Now drop an email to tenant 
 			tenantService.triggerAlertEmail(responseTenant);
+
 			
 		}else{
 			throw new NSException("Unable to save tenant ");
@@ -115,7 +116,7 @@ public class TenantController {
 	public List<Tenant> getAllTenants() {
 		return tenantRepository.findAll();
 	}
-	/*
+	
 	@GetMapping("/tenants/{id}")
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<Tenant> getTenantById(@PathVariable(value = "id") Long TenantId)
@@ -123,9 +124,9 @@ public class TenantController {
 		Tenant tenant = tenantRepository.findById(TenantId)
 				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
 		return ResponseEntity.ok().body(tenant);
-	}*/
+	}
 	
-	@GetMapping("/tenants/{name}")
+	@GetMapping("/tenants/byname/{name}")
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
 	//@PreAuthorize("permitAll()")
 	public ResponseEntity<Tenant> getTenantByName(@PathVariable(value = "name") String name)
@@ -194,7 +195,7 @@ public class TenantController {
 		tenant.setContactNumber(tenant.getContactNumber());
 		tenant.setDob(tenant.getDob());
 		tenant.setEmailId(tenant.getEmailId());
-
+      tenant.setPermanentAddress(tenant.getPermanentAddress());
 		final Tenant updatedTenant = tenantRepository.save(tenant);
 		return ResponseEntity.ok(updatedTenant);
 	}
