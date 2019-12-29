@@ -31,17 +31,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-<!-- 
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-		</dependency>
-		https://mvnrepository.com/artifact/org.javassist/javassist
-		<dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>3.25.0-GA</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>javax.xml.bind</groupId> <artifactId>jaxb-api</artifactId> 
+			</dependency> https://mvnrepository.com/artifact/org.javassist/javassist 
+			<dependency> <groupId>org.javassist</groupId> <artifactId>javassist</artifactId> 
+			<version>3.25.0-GA</version> </dependency> -->
 
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -65,7 +58,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
-<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-hibernate5 -->
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-hibernate5 -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-hibernate5</artifactId>
@@ -83,17 +76,38 @@
 			<version>3.25.0-GA</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+		
+		<dependency>
+
+			<groupId>org.freemarker</groupId>
+
+			<artifactId>freemarker</artifactId>
+
+		</dependency>
+
+		
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/org.springframework.security.oauth.boot/spring-security-oauth2-autoconfigure -->
 		<dependency>
-		    <groupId>org.springframework.security.oauth.boot</groupId>
-		    <artifactId>spring-security-oauth2-autoconfigure</artifactId>
-		    <version>2.0.5.RELEASE</version>
+			<groupId>org.springframework.security.oauth.boot</groupId>
+			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
+			<version>2.0.5.RELEASE</version>
 		</dependency>
 
 

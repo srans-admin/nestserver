@@ -32,7 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Bed;
-import com.srans.nestserver.model.Room;
 import com.srans.nestserver.model.Tenant;
 import com.srans.nestserver.model.TenantBooking;
 import com.srans.nestserver.repository.BedRepository;
@@ -40,6 +39,7 @@ import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.TenantRepository;
 import com.srans.nestserver.service.StorageService;
+import com.srans.nestserver.service.TenantService;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
@@ -63,6 +63,9 @@ public class TenantController {
 	
 	@Autowired
 	private BedRepository bedRepository;
+	
+	@Autowired
+	private TenantService tenantService;
 	 
 
 	
@@ -93,9 +96,11 @@ public class TenantController {
 			
 			
 			//Save Payment Information 
-			responseTenant.setPayment( paymentRepository.save(tenant.getPayment()));
-			
-			
+			responseTenant.setPayment( paymentRepository.save(tenant.getPayment())); 
+
+			//Now drop an email to tenant 
+			tenantService.triggerAlertEmail(responseTenant);
+
 			
 		}else{
 			throw new NSException("Unable to save tenant ");
