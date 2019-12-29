@@ -36,7 +36,7 @@ import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.util.NSException;
 
-@CrossOrigin(origins = "*:4200", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api/v1")
 @RestController
 public class HostelController {
