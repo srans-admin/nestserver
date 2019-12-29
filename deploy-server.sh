@@ -9,4 +9,4 @@ git pull
 docker build -t nest-server .
 docker stop nest-server-container
 docker rm nest-server-container
-docker run -p 8080:8080 -d -it  --name nest-server-container nest-server
+docker run -p 8080:8080 -d -it -v /home/ec2-user/srans/nest-server/uploads:/app/uploads/ --name nest-server-container nest-server
