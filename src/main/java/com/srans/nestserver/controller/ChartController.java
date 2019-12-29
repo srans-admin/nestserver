@@ -15,7 +15,7 @@ import com.srans.nestserver.model.SharingTypeChartInfo;
 import com.srans.nestserver.repository.BedRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
 
-@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("api/v1")
 @RestController
 public class ChartController<T> {

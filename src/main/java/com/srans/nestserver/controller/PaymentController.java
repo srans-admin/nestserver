@@ -34,7 +34,7 @@ import com.srans.nestserver.repository.RoleRepository;
 import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.repository.TenantRepository;
 
-@CrossOrigin(origins = "http://localhost:4200",allowedHeaders = "*") 
+@CrossOrigin(origins = "*",allowedHeaders = "*") 
 @RestController
 @RequestMapping("/api/v1")
 public class PaymentController {

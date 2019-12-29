@@ -24,7 +24,7 @@ import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.ExpensesType;
 import com.srans.nestserver.repository.ExpenseCategoryRepository;
 
-@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1")
 public class ExpensesCategoryController {

@@ -25,7 +25,7 @@ import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Complaints;
 
 
-@CrossOrigin(origins = "http://localhost:4200",allowedHeaders = "*") 
+@CrossOrigin(origins = "*",allowedHeaders = "*") 
 @RestController
 @RequestMapping("/api/v1")
 public class ComplaintsController {

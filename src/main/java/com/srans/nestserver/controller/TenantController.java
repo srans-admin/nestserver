@@ -42,7 +42,7 @@ import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.service.TenantService;
 import com.srans.nestserver.util.NSException;
 
-@CrossOrigin(origins = "http://dev.nidos.in:4200", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1")
 public class TenantController {
