@@ -34,6 +34,7 @@ import com.srans.nestserver.repository.TenantRepository;
 @RequestMapping("/api/v1")
 public class InvoiceController {
 
+	private static final String ids = null;
 	Logger logger = LoggerFactory.getLogger(InvoiceController.class);
 	@Autowired
 	private InvoiceRepository invoiceRepository;
@@ -44,18 +45,37 @@ public class InvoiceController {
 	private FloorRepository floorRepository;
 	@Autowired
 	private RoomRepository roomRepository;
+	
+	  @GetMapping("invoice/tenant/{Id}")
+	  public ResponseEntity<Tenant> getTenantById(@PathVariable(value = "Id") Long TenantId) 
+			  throws ResourceNotFoundException 
+	  { logger.info("In::TenantId::"+TenantId);
+	  Tenant tenant = tenantRepository.findById(TenantId) 
+			  .orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
+	 
+	  logger.info("Out::tenant::"+tenant); return ResponseEntity.ok().body(tenant);
+	  }
+	 
 
-	@GetMapping("invoice/tenant/{Id}")
-	public ResponseEntity<Tenant> getTenantById(@PathVariable(value = "Id") Long TenantId)
-			throws ResourceNotFoundException {
-		logger.info("In::TenantId::"+TenantId);
-		Tenant tenant = tenantRepository.findById(TenantId)
-				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
-		
-		logger.info("Out::tenant::"+tenant);
-		return ResponseEntity.ok().body(tenant);
-	}
-
+	/*
+	 * 
+	 * @GetMapping(value = ("invoice/tenant/{ids}")) public ResponseEntity<Tenant>
+	 * getTenantByIds(@PathVariable (value="Ids")Long TenantIds){ throws
+	 * ResourceNotFoundException { logger.info("In::TenantIds:"+TenantIds); Tenant
+	 * tenant = tenantRepository.findAllByIds(TenantIds) .orElseThrow(()->new
+	 * ResourceNot
+	 * 
+	 * } }
+	 */
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@GetMapping("/invoice")
 	public List<Invoice> getAllInvoice() {
 		return invoiceRepository.findAll();

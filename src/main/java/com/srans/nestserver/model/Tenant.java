@@ -61,7 +61,32 @@ public class Tenant implements Serializable {
 
 	@Column(name = "permanetAddress")
 	private String permanetAddress;
+	
+	@Column(name="roomtpe")
+	private String roomType;
+	
+	@Column(name="hostelName")
+	private String hostelname;
+	
+	@Column(name="floor")
+	private String floorName;
+	
+	@Column(name="roomName")
+	private String roomName;
+	
+	@Column(name="date")
+	private String date;
+	
+	
+	@Column(name="depositAmount")
+	private String depositAmount;
 
+	@Column(name="roomRent")
+	private String roomRent;
+	
+	@Column(name="paymentThrough")
+	private String paymentThrough;
+	
 	@Transient
 	private  TenantBooking tenantBooking;
 	
@@ -73,27 +98,16 @@ public class Tenant implements Serializable {
 
 	public Tenant() {
 		super();
-		this.userId = 0L;
-		this.name = "";
-		this.contactNumber = 0L;
-		this.fatherName = "";
-		this.fatherphoneNumber = 0L;
-		this.permanetAddress = "";
-		this.emailId = "";
-		this.mobileNumber = 0L;
-		this.officeAddress = "";
-		this.bloodGroup = "";
-		this.dob = "";
-		this.tenantBooking = new TenantBooking();
-		this.payment = new Payment();
-		this.bed = new Bed();
-
+		
 	}
+	
 
 	public Tenant(Long userId, String name, Long contactNumber, String fatherName, Long fatherphoneNumber,
 			String motherName, long motherphoneNumber, String dob, long emergencyContactNumber,
 			String nameOfTheEmployer, String bloodGroup, String officeAddress, Long mobileNumber, String emailId,
-			String permanetAddress, TenantBooking tenantBooking) {
+			String permanetAddress, String roomType, String hostelname, String floorName, String roomName, String date,
+			String depositAmount, String roomRent, String paymentThrough, TenantBooking tenantBooking, Payment payment,
+			Bed bed) {
 		super();
 		this.userId = userId;
 		this.name = name;
@@ -110,8 +124,22 @@ public class Tenant implements Serializable {
 		this.mobileNumber = mobileNumber;
 		this.emailId = emailId;
 		this.permanetAddress = permanetAddress;
-		this.tenantBooking = tenantBooking;
+		
+		
+		 this.roomType = roomType; 
+		 this.hostelname = hostelname;
+		 this.floorName =floorName; 
+		 this.roomName = roomName; 
+		 this.date = date;
+		 this.depositAmount =depositAmount; 
+		 this.roomRent = roomRent;
+		 this.paymentThrough = paymentThrough; 
+		 this.tenantBooking = tenantBooking; 
+		 this.payment = payment;
+		 this.bed = bed;
+		
 	}
+
 
 	public Long getUserId() {
 		return userId;
@@ -232,7 +260,70 @@ public class Tenant implements Serializable {
 	public void setPermanetAddress(String permanetAddress) {
 		this.permanetAddress = permanetAddress;
 	}
- 
+
+	public String getRoomType() {
+		return roomType;
+	}
+
+	public void setRoomType(String roomType) {
+		this.roomType = roomType;
+	}
+
+	public String getHostelname() {
+		return hostelname;
+	}
+
+	public void setHostelname(String hostelname) {
+		this.hostelname = hostelname;
+	}
+
+	public String getFloorName() {
+		return floorName;
+	}
+
+	public void setFloorName(String floorName) {
+		this.floorName = floorName;
+	}
+
+	public String getRoomName() {
+		return roomName;
+	}
+
+	public void setRoomName(String roomName) {
+		this.roomName = roomName;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getDepositAmount() {
+		return depositAmount;
+	}
+
+	public void setDepositAmount(String depositAmount) {
+		this.depositAmount = depositAmount;
+	}
+
+	public String getRoomRent() {
+		return roomRent;
+	}
+
+	public void setRoomRent(String roomRent) {
+		this.roomRent = roomRent;
+	}
+
+	public String getPaymentThrough() {
+		return paymentThrough;
+	}
+
+	public void setPaymentThrough(String paymentThrough) {
+		this.paymentThrough = paymentThrough;
+	}
 
 	public TenantBooking getTenantBooking() {
 		return tenantBooking;
@@ -249,8 +340,6 @@ public class Tenant implements Serializable {
 	public void setPayment(Payment payment) {
 		this.payment = payment;
 	}
-	
-	
 
 	public Bed getBed() {
 		return bed;
@@ -260,46 +349,28 @@ public class Tenant implements Serializable {
 		this.bed = bed;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Tenant [userId=");
-		builder.append(userId);
-		builder.append(", name=");
-		builder.append(name);
-		builder.append(", contactNumber=");
-		builder.append(contactNumber);
-		builder.append(", fatherName=");
-		builder.append(fatherName);
-		builder.append(", fatherphoneNumber=");
-		builder.append(fatherphoneNumber);
-		builder.append(", motherName=");
-		builder.append(motherName);
-		builder.append(", motherphoneNumber=");
-		builder.append(motherphoneNumber);
-		builder.append(", dob=");
-		builder.append(dob);
-		builder.append(", emergencyContactNumber=");
-		builder.append(emergencyContactNumber);
-		builder.append(", nameOfTheEmployer=");
-		builder.append(nameOfTheEmployer);
-		builder.append(", bloodGroup=");
-		builder.append(bloodGroup);
-		builder.append(", officeAddress=");
-		builder.append(officeAddress);
-		builder.append(", mobileNumber=");
-		builder.append(mobileNumber);
-		builder.append(", emailId=");
-		builder.append(emailId);
-		builder.append(", permanetAddress=");
-		builder.append(permanetAddress);
-		builder.append(", tenantBooking=");
-		builder.append(tenantBooking);
-		builder.append(", payment=");
-		builder.append(payment);
-		builder.append("]");
+		builder.append("Tenant [userId=").append(userId).append(", name=").append(name).append(", contactNumber=")
+				.append(contactNumber).append(", fatherName=").append(fatherName).append(", fatherphoneNumber=")
+				.append(fatherphoneNumber).append(", motherName=").append(motherName).append(", motherphoneNumber=")
+				.append(motherphoneNumber).append(", dob=").append(dob).append(", emergencyContactNumber=")
+				.append(emergencyContactNumber).append(", nameOfTheEmployer=").append(nameOfTheEmployer)
+				.append(", bloodGroup=").append(bloodGroup).append(", officeAddress=").append(officeAddress)
+				.append(", mobileNumber=").append(mobileNumber).append(", emailId=").append(emailId)
+				.append(", permanetAddress=").append(permanetAddress).append(", roomType=").append(roomType)
+				.append(", hostelname=").append(hostelname).append(", floorName=").append(floorName)
+				.append(", roomName=").append(roomName).append(", date=").append(date).append(", depositAmount=")
+				.append(depositAmount).append(", roomRent=").append(roomRent).append(", paymentThrough=")
+				.append(paymentThrough).append(", tenantBooking=").append(tenantBooking).append(", payment=")
+				.append(payment).append(", bed=").append(bed).append("]");
 		return builder.toString();
-	} 
-	 
+	}
 
 }

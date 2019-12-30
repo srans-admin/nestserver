@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Complaints;
+import com.srans.nestserver.repository.ComplaintsRepository;
 
 
 @CrossOrigin(origins = "http://localhost:4200",allowedHeaders = "*") 

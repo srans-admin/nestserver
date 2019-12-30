@@ -1,5 +1,6 @@
 package com.srans.nestserver.controller;
 
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,10 +15,14 @@ import org.slf4j.LoggerFactory;
 //import org.slf4j.LoggerFactory;
 //import org.hibernate.usertype.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.OAuth2AutoConfiguration;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.client.test.OAuth2ContextConfiguration.Password;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
@@ -64,7 +70,46 @@ public class TenantController {
 	@Autowired
 	private BedRepository bedRepository;
 	 
+	
+	
+	
+	/*
+	 * @Autowired private RestTemplate restTemplate;
+	 * 
+	 * 
+	 * private void doConnect(ActionEvent event) {
+	 * 
+	 * if(validate()){ Map<String,String> values = new HashMap<>();
+	 * values.put("username",username.getText());
+	 * values.put("password",password.getText()); restTemplate = new RestTemplate();
+	 * restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+	 * //https://localhost:9090/oauth/token?grant_type=password?username=user&
+	 * password=user ResponseEntity<String> request =
+	 * restTemplate.postForEntity("http://localhost:9090/uaa/login?username="+
+	 * username.getText()+"&password="+password.getText(), values, String.class);
+	 * request = restTemplate.getForEntity(
+	 * "http://localhost:9090/uaa/oauth/token?grant_type=password?username="+
+	 * username.getText()+"&password="+password.getText(), String.class , values);
+	 * //ResponseEntity<String> postForEntity = restTemplate.postForEntity(loginUrl,
+	 * values, String.class);
+	 * System.out.println("post response "+request.getStatusCode().getReasonPhrase()
+	 * ); System.out.println("post response "+request.toString());
+	 * System.out.println("post response "+request.getHeaders().values());
+	 * 
+	 * 
+	 * }
+	 * 
+	 * }
+	 * 
+	 * private boolean validate() { return true; }
+	 */
 
+	
+	
+	
+	
+	
+	 	
 	
 	@PostMapping("/tenants")
 	@PreAuthorize("permitAll()")
@@ -188,7 +233,13 @@ public class TenantController {
 		tenant.setContactNumber(tenant.getContactNumber());
 		tenant.setDob(tenant.getDob());
 		tenant.setEmailId(tenant.getEmailId());
-
+		tenant.setRoomName(tenant.getRoomName());
+		tenant.setRoomType(tenant.getRoomType());
+		tenant.setRoomRent(tenant.getRoomRent());
+        tenant.setPaymentThrough(tenant.getPaymentThrough());
+        tenant.setHostelname(tenant.getHostelname());
+        tenant.setDepositAmount(tenant.getDepositAmount());
+       
 		final Tenant updatedTenant = tenantRepository.save(tenant);
 		return ResponseEntity.ok(updatedTenant);
 	}
