@@ -69,6 +69,14 @@ public class TenantRegistrationController {
 		return ResponseEntity.ok(updatedTenantRegistration);
 	}
 
+	/*
+	 * @GetMapping("tenantbooking/hostelName") public List<String> findAll() {
+	 * return tenantRepository.getAllHostelName();
+	 * 
+	 * }
+	 */
+	
+	
 	@DeleteMapping("/tenantregistrations/{id}")
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
 	public Map<String, Boolean> deleteTenantRegistration(@PathVariable(value = "id") Long tenantregistrationId)

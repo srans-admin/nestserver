@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,12 +38,14 @@ public class HostelOwnerRegistrationController {
 	
 	
 	@GetMapping("/hostelownerregistrations")
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
 	public List<HostelOwnerRegistration> getAllHostelOwnerRegistration() {
 		return hostelownerregistrationRepository.findAll();
 	}
 	
 
 	@GetMapping("/hostelownerregistrations/{id}")
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
 	public ResponseEntity<HostelOwnerRegistration> getHostelOwnerRegistrationById(@PathVariable(value = "id") Long hostelownerregistrationId)
 			throws ResourceNotFoundException {
 		HostelOwnerRegistration hostelOwnerRegistration= hostelownerregistrationRepository.findById(hostelownerregistrationId)
@@ -51,11 +54,13 @@ public class HostelOwnerRegistrationController {
 	}
 
 	@PostMapping("/hostelownerregistrations")
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
 	public HostelOwnerRegistration createHostelOwnerRegistration(@Valid @RequestBody HostelOwnerRegistration hostelownerregistration) {
 		return hostelownerregistrationRepository.save(hostelownerregistration);
 	}
 
 	@PutMapping("/hostelownerregistrations/{id}")
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
 	public ResponseEntity<HostelOwnerRegistration> updateHostelOwnerRegistration(@PathVariable(value = "id") Long hostelownerregistration_Id,
 			@Valid @RequestBody HostelOwnerRegistration hostelownerDetails) throws ResourceNotFoundException {
 		HostelOwnerRegistration hostelownerregistration = hostelownerregistrationRepository.findById(hostelownerregistration_Id)
@@ -72,6 +77,7 @@ public class HostelOwnerRegistrationController {
 	}
 
 	@DeleteMapping("/hostelownerregistrations/{id}")
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
 	public Map<String, Boolean> deleteHostelOwnerRegistrartion(@PathVariable(value = "id") Long hostelownerregistrationId)
 			throws ResourceNotFoundException {
 		HostelOwnerRegistration hostelownerregistration = hostelownerregistrationRepository.findById(hostelownerregistrationId)
