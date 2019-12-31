@@ -40,8 +40,8 @@ import com.srans.nestserver.util.NSException;
 @RequestMapping("api/v1")
 @RestController
 public class HostelController {
-
 	private Logger logger = LoggerFactory.getLogger(HostelController.class);
+	
 
 	@Autowired
 	private HostelRepository hostelRepository;

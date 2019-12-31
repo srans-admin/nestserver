@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,18 +36,21 @@ public class ExpensesCategoryController {
 	
 
 	@PostMapping("/categories")
+	@PreAuthorize("permitAll()")
 	public ExpensesType createExpenseType(@Valid @RequestBody ExpensesType expensescategory) {
 		
 		return expensesTypeRepository.save(expensescategory);
 	}
 
 	@GetMapping("/categories")
+	@PreAuthorize("permitAll()")
 	public List<ExpensesType> getAllExpensesType() {
 
 		return expensesTypeRepository.findAll();
 	}
 	
 	@PutMapping("/categories/{id}")
+	@PreAuthorize("permitAll()")
 	public ResponseEntity<ExpensesType> updateExpensesType(@PathVariable(value = "id") Long expensesId,
 			@Valid @RequestBody ExpensesType expensesDetails) throws ResourceNotFoundException {
 		ExpensesType expensestype = expensesTypeRepository.findById(expensesId).orElseThrow(
@@ -60,6 +64,7 @@ public class ExpensesCategoryController {
 	}
 
 	@DeleteMapping("/categories/{id}")
+	@PreAuthorize("permitAll()")
 	public Map<String, Boolean> deleteExpensesType(@PathVariable(value = "id") Long expensesTypeId)
 			throws ResourceNotFoundException {
 		ExpensesType expensestype = expensesTypeRepository.findById(expensesTypeId).orElseThrow(

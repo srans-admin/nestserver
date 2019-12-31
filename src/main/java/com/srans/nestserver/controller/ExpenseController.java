@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,7 @@ public class ExpenseController {
 	private ExpenseRepository expensesRepository;
 
 	@PostMapping("/expenses")
+	@PreAuthorize("permitAll()")
 	public Expense createExpense( @Valid @RequestBody Expense expense) {
 		logger.info("IN::POST::/expenses::saveExpense::" + expense);
 		
@@ -44,18 +46,21 @@ public class ExpenseController {
 	}
 
 	@GetMapping("/expenses")
+	@PreAuthorize("permitAll()")
 	public List<Expense> getAllExpenses() {
 
 		return expensesRepository.findAll();
 	}
 
 	@GetMapping("expenses/{id}")
+	@PreAuthorize("permitAll()")
 	public List<Expense> getExpensesData(@PathVariable(value = "id") Long hostelId) {
 
 		return expensesRepository.getExpenses(hostelId);
 	}
 
 	@PutMapping("/expenses/{id}")
+	@PreAuthorize("permitAll()")
 	public ResponseEntity<Expense> updateExpenses(@PathVariable(value = "id") Long expensesId,
 			@Valid @RequestBody Expense expensesDetails) throws ResourceNotFoundException {
 		Expense expenses = expensesRepository.findById(expensesId)
@@ -69,6 +74,7 @@ public class ExpenseController {
 	}
 
 	@DeleteMapping("/expenses/{id}")
+	@PreAuthorize("permitAll()")
 	public Map<String, Boolean> deleteExpenses(@PathVariable(value = "id") Long expensesId)
 			throws ResourceNotFoundException {
 		Expense expenses = expensesRepository.findById(expensesId)
