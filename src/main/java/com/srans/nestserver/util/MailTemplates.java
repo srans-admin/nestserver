@@ -35,7 +35,7 @@ public class MailTemplates {
 			"<html>\r\n" + 
 			"<head>\r\n" + 
 			"    <meta charset=\"utf-8\">\r\n" + 
-			"    <title>A simple, clean, and responsive HTML invoice template</title>\r\n" + 
+			"    <title>Invoice Template</title>\r\n" + 
 			"    \r\n" + 
 			"    <style>\r\n" + 
 			"    .invoice-box {\r\n" + 
@@ -144,9 +144,9 @@ public class MailTemplates {
 			"                            </td>\r\n" + 
 			"                            \r\n" + 
 			"                            <td>\r\n" + 
-			"                                Invoice #: 123<br>\r\n" + 
+			"                                Invoice No. : 123<br>\r\n" + 
 			"                                Created: January 1, 2015<br>\r\n" + 
-			"                                Due: February 1, 2015\r\n" + 
+			"                            \r\n" + 
 			"                            </td>\r\n" + 
 			"                        </tr>\r\n" + 
 			"                    </table>\r\n" + 
@@ -158,15 +158,15 @@ public class MailTemplates {
 			"                    <table>\r\n" + 
 			"                        <tr>\r\n" + 
 			"                            <td>\r\n" + 
-			"                                Sparksuite, Inc.<br>\r\n" + 
+			"                                Nidos, Inc.<br>\r\n" + 
 			"                                12345 Sunny Road<br>\r\n" + 
-			"                                Sunnyville, CA 12345\r\n" + 
+			"                                Hyderabad, CA 12345\r\n" + 
 			"                            </td>\r\n" + 
 			"                            \r\n" + 
 			"                            <td>\r\n" + 
-			"                                Acme Corp.<br>\r\n" + 
-			"                                John Doe<br>\r\n" + 
-			"                                john@example.com\r\n" + 
+			"                                Srans Corp.<br>\r\n" + 
+			"                                Nest<br>\r\n" + 
+			"                                Srans@example.in\r\n" + 
 			"                            </td>\r\n" + 
 			"                        </tr>\r\n" + 
 			"                    </table>\r\n" + 
@@ -195,41 +195,21 @@ public class MailTemplates {
 			"            \r\n" + 
 			"            <tr class=\"heading\">\r\n" + 
 			"                <td>\r\n" + 
-			"                    Item\r\n" + 
+			"                    Invoice Item\r\n" + 
 			"                </td>\r\n" + 
 			"                \r\n" + 
 			"                <td>\r\n" + 
-			"                    Price\r\n" + 
+			"                    Amount\r\n" + 
 			"                </td>\r\n" + 
 			"            </tr>\r\n" + 
 			"            \r\n" + 
 			"            <tr class=\"item\">\r\n" + 
 			"                <td>\r\n" + 
-			"                    Website design\r\n" + 
+			"                    Monthly Rent\r\n" + 
 			"                </td>\r\n" + 
 			"                \r\n" + 
 			"                <td>\r\n" + 
-			"                    $300.00\r\n" + 
-			"                </td>\r\n" + 
-			"            </tr>\r\n" + 
-			"            \r\n" + 
-			"            <tr class=\"item\">\r\n" + 
-			"                <td>\r\n" + 
-			"                    Hosting (3 months)\r\n" + 
-			"                </td>\r\n" + 
-			"                \r\n" + 
-			"                <td>\r\n" + 
-			"                    $75.00\r\n" + 
-			"                </td>\r\n" + 
-			"            </tr>\r\n" + 
-			"            \r\n" + 
-			"            <tr class=\"item last\">\r\n" + 
-			"                <td>\r\n" + 
-			"                    Domain name (1 year)\r\n" + 
-			"                </td>\r\n" + 
-			"                \r\n" + 
-			"                <td>\r\n" + 
-			"                    $10.00\r\n" + 
+			"                    Rs. 5000.00\r\n" + 
 			"                </td>\r\n" + 
 			"            </tr>\r\n" + 
 			"            \r\n" + 
@@ -237,7 +217,7 @@ public class MailTemplates {
 			"                <td></td>\r\n" + 
 			"                \r\n" + 
 			"                <td>\r\n" + 
-			"                   Total: $385.00\r\n" + 
+			"                   Total: 5000.00\r\n" + 
 			"                </td>\r\n" + 
 			"            </tr>\r\n" + 
 			"        </table>\r\n" + 
