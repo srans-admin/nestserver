@@ -9,90 +9,133 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-public class Notification {
+@Entity
+@Table(name = "notification")
+public class Notification extends AuditModel implements Serializable {
 
-	@Entity
-	@Table(name = "notifiaction")
-	public class Bed extends AuditModel implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-		/**
-		 * @author Manish
-		 */
-		private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column
+	private Long id;
 
-		@Id
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		@Column
-		private long id;
+	@Column
+	private String userRole;
 
-		@Column
-		private String userRole;
+	@Column
+	private String selectedSubscriptionPlan;
 
-		@Column
-		private String selectedSubscriptionPlan;
+	@Column
+	private String message;
 
-		@Column
-		private String message;
+	@Column
+	private Character viewStatus;
 
-		@Column
-		private char viewStatus;
+	@Column
+	private String position;
+	
+	
 
-		@Column
-		String position;
-
-		public Bed() {
-			super();
-
-		}
-
-		public Bed(long id, String message, Character viewStatus, String position) {
-			super();
-			this.id = id;
-			this.message = message;
-			this.viewStatus = viewStatus;
-			this.position = position;
-		}
-
-		public long getId() {
-			return id;
-		}
-
-		public void setId(long id) {
-			this.id = id;
-		}
-
-		public String getMessage() {
-			return message;
-		}
-
-		public void setMessage(String message) {
-			this.message = message;
-		}
-
-		public Character getViewStatus() {
-			return viewStatus;
-		}
-
-		public void setViewStatus(Character viewStatus) {
-			this.viewStatus = viewStatus;
-		}
-
-		public String getPosition() {
-			return position;
-		}
-
-		public void setPosition(String position) {
-			this.position = position;
-		}
-
-		@Override
-		public String toString() {
-			StringBuilder builder = new StringBuilder();
-			builder.append("Bed [id=").append(id).append(", message=").append(message).append(", viewStatus=")
-					.append(viewStatus).append(", position=").append(position).append("]");
-			return builder.toString();
-		}
-
+	public Notification() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
+
+
+
+	public Notification(Long id, String userRole, String selectedSubscriptionPlan, String message, Character viewStatus,
+			String position) {
+		super();
+		this.id = id;
+		this.userRole = userRole;
+		this.selectedSubscriptionPlan = selectedSubscriptionPlan;
+		this.message = message;
+		this.viewStatus = viewStatus;
+		this.position = position;
+	}
+
+
+
+	public Long getId() {
+		return id;
+	}
+
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+
+	public String getUserRole() {
+		return userRole;
+	}
+
+
+
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
+	}
+
+
+
+	public String getSelectedSubscriptionPlan() {
+		return selectedSubscriptionPlan;
+	}
+
+
+
+	public void setSelectedSubscriptionPlan(String selectedSubscriptionPlan) {
+		this.selectedSubscriptionPlan = selectedSubscriptionPlan;
+	}
+
+
+
+	public String getMessage() {
+		return message;
+	}
+
+
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+
+
+	public Character getViewStatus() {
+		return viewStatus;
+	}
+
+
+
+	public void setViewStatus(Character viewStatus) {
+		this.viewStatus = viewStatus;
+	}
+
+
+
+	public String getPosition() {
+		return position;
+	}
+
+
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "Notification [id=" + id + ", userRole=" + userRole + ", selectedSubscriptionPlan="
+				+ selectedSubscriptionPlan + ", message=" + message + ", viewStatus=" + viewStatus + ", position="
+				+ position + "]";
+	}
+	
+	
 
 }
