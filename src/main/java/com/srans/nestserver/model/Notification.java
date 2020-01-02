@@ -33,7 +33,7 @@ public class Notification extends AuditModel implements Serializable {
 	private Character viewStatus;
 
 	@Column
-	private String position;
+	private String notificationCategory;
 	
 	
 
@@ -45,14 +45,14 @@ public class Notification extends AuditModel implements Serializable {
 
 
 	public Notification(Long id, String userRole, String selectedSubscriptionPlan, String message, Character viewStatus,
-			String position) {
+			String notificationCategory) {
 		super();
 		this.id = id;
 		this.userRole = userRole;
 		this.selectedSubscriptionPlan = selectedSubscriptionPlan;
 		this.message = message;
 		this.viewStatus = viewStatus;
-		this.position = position;
+		this.notificationCategory = notificationCategory;
 	}
 
 
@@ -117,14 +117,14 @@ public class Notification extends AuditModel implements Serializable {
 
 
 
-	public String getPosition() {
-		return position;
+	public String getnotificationCategory() {
+		return notificationCategory;
 	}
 
 
 
-	public void setPosition(String position) {
-		this.position = position;
+	public void setnotificationCategory(String notificationCategory) {
+		this.notificationCategory = notificationCategory;
 	}
 
 
@@ -132,8 +132,8 @@ public class Notification extends AuditModel implements Serializable {
 	@Override
 	public String toString() {
 		return "Notification [id=" + id + ", userRole=" + userRole + ", selectedSubscriptionPlan="
-				+ selectedSubscriptionPlan + ", message=" + message + ", viewStatus=" + viewStatus + ", position="
-				+ position + "]";
+				+ selectedSubscriptionPlan + ", message=" + message + ", viewStatus=" + viewStatus + ", notificationCategory="
+				+ notificationCategory + "]";
 	}
 	
 	
