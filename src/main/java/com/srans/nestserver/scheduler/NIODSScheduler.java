@@ -3,7 +3,15 @@
  */
 package com.srans.nestserver.scheduler;
 
-import org.springframework.beans.factory.annotation.Value;
+import java.nio.charset.StandardCharsets;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -13,17 +21,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class NIODSScheduler {
-	 
-	//@Scheduled(cron = "${nidos.cron.trigger}")
-	public void generateInvoiceOntime(){
-		
-		System.out.println("I am triggered here ...");
-		
-		//TODO Need to genrate Invoice for individual tenants and send an email
-		
 	
+	@Autowired
+	private JavaMailSender javaMailSender;
+
+	@Scheduled(cron = "${nidos.cron.trigger}")
+	public void generateInvoiceOntime() throws MessagingException {
+
 		
+
 	}
-	
 
 }

@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,12 +36,14 @@ public class ComplaintsController {
 	
 	
 	@GetMapping("/complaints")
+	@PreAuthorize("permitAll()")
 	public List<Complaints> getAllComplaints() {
 		return complaintsRepository.findAll();
 	}
 	
 
 	@GetMapping("/complaints/{id}")
+	@PreAuthorize("permitAll()")
 	public ResponseEntity<Complaints> getComplaintsById(@PathVariable(value = "id") Long complaintsId)
 			throws ResourceNotFoundException {
 		Complaints complaints = complaintsRepository.findById(complaintsId)
@@ -49,11 +52,13 @@ public class ComplaintsController {
 	}
 
 	@PostMapping("/complaints")
+	@PreAuthorize("permitAll()")
 	public Complaints createComplaints(@Valid @RequestBody Complaints complaints) {
 		return complaintsRepository.save(complaints);
 	}
 
 	@PutMapping("/complaints/{id}")
+	@PreAuthorize("permitAll()")
 	public ResponseEntity<Complaints> updateComplaints(@PathVariable(value = "id") Long complaints_Id,
 			@Valid @RequestBody Complaints complaintsDetails) throws ResourceNotFoundException {
 		Complaints complaints = complaintsRepository.findById(complaints_Id)
@@ -70,6 +75,7 @@ public class ComplaintsController {
 	}
 
 	@DeleteMapping("/complaints/{id}")
+	@PreAuthorize("permitAll()")
 	public Map<String, Boolean> deleteRole(@PathVariable(value = "id") Long complaintsId)
 			throws ResourceNotFoundException {
 		Complaints complaints = complaintsRepository.findById(complaintsId)

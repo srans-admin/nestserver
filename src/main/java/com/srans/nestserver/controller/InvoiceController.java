@@ -1,15 +1,21 @@
 package com.srans.nestserver.controller;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
@@ -28,6 +35,10 @@ import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.InvoiceRepository;
 import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.repository.TenantRepository;
+import com.srans.nestserver.util.MailTemplates;
+import com.srans.nestserver.util.NiodsMailer;
+
+import freemarker.template.TemplateException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -45,14 +56,17 @@ public class InvoiceController {
 	@Autowired
 	private RoomRepository roomRepository;
 
+	@Autowired
+	private NiodsMailer niodsMailer;
+
 	@GetMapping("invoice/tenant/{Id}")
-	public ResponseEntity<Tenant> getTenantById(@PathVariable(value = "Id") Long TenantId)
+	public ResponseEntity<Tenant> getTenantById(@PathVariable(value = "Id") long TenantId)
 			throws ResourceNotFoundException {
-		logger.info("In::TenantId::"+TenantId);
+		logger.info("In::TenantId::" + TenantId);
 		Tenant tenant = tenantRepository.findById(TenantId)
 				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
-		
-		logger.info("Out::tenant::"+tenant);
+
+		logger.info("Out::tenant::" + tenant);
 		return ResponseEntity.ok().body(tenant);
 	}
 
@@ -62,7 +76,7 @@ public class InvoiceController {
 	}
 
 	@GetMapping("/invoice/{id}")
-	public ResponseEntity<Invoice> getInvoicesById(@PathVariable(value = "id") Long invoiceId)
+	public ResponseEntity<Invoice> getInvoicesById(@PathVariable(value = "id") long invoiceId)
 			throws ResourceNotFoundException {
 		Invoice invoice = invoiceRepository.findById(invoiceId)
 				.orElseThrow(() -> new ResourceNotFoundException("invoice not found for this id :: " + invoiceId));
@@ -70,9 +84,9 @@ public class InvoiceController {
 	}
 
 	@GetMapping("invoice/hostels/floor/{id}/room/{room_id}")
-	public ResponseEntity<Room> getFloorById(@PathVariable(value = "id") Long floor_id,
+	public ResponseEntity<Room> getFloorById(@PathVariable(value = "id") long floor_id,
 
-			@PathVariable(value = "room_id") Long room_id) {
+			@PathVariable(value = "room_id") long room_id) {
 		if (!floorRepository.existsById(floor_id)) {
 			throw new ResourceNotFoundException("FloorId " + floor_id + " not found");
 		}
@@ -88,7 +102,8 @@ public class InvoiceController {
 	}
 
 	@PutMapping("/invoice/{id}")
-	public ResponseEntity<Invoice> updateInvoice(@PathVariable(value = "id") Long invoiceId,
+	public ResponseEntity<Invoice> updateInvoice(@PathVariable(value = "id") long invoiceId,
+
 			@Valid @RequestBody Invoice invoiceDetails) throws ResourceNotFoundException {
 		Invoice invoice = invoiceRepository.findById(invoiceId)
 				.orElseThrow(() -> new ResourceNotFoundException("invoice not found for this id :: " + invoiceId));
@@ -104,13 +119,13 @@ public class InvoiceController {
 		invoice.setRoomRent(invoiceDetails.getRoomRent());
 		invoice.setDiscountAmount(invoiceDetails.getDiscountAmount());
 		invoice.setDueAmount(invoiceDetails.getDueAmount());
-		invoice.setTotalAmount(invoiceDetails.getTotalAmount());
+
 		final Invoice updatedInvoice = invoiceRepository.save(invoice);
 		return ResponseEntity.ok(updatedInvoice);
 	}
 
 	@DeleteMapping("/invoice/{id}")
-	public Map<String, Boolean> deleteinvoice(@PathVariable(value = "id") Long invoiceId)
+	public Map<String, Boolean> deleteinvoice(@PathVariable(value = "id") long invoiceId)
 			throws ResourceNotFoundException {
 		Invoice invoice = invoiceRepository.findById(invoiceId)
 				.orElseThrow(() -> new ResourceNotFoundException("invoice not found for this id :: " + invoiceId));
@@ -119,5 +134,74 @@ public class InvoiceController {
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
 		return response;
+	}
+
+	// Invoice generate for multiple tenant...
+	@GetMapping(value = "/invoices/{ids}")
+	@ResponseBody
+	List<Invoice> getTenantById(@PathVariable long[] ids) {
+
+		List<Invoice> invoice = new ArrayList<>();
+
+		for (long id : ids) {
+			Invoice invoiceData = new Invoice();
+
+			System.out.println(id);
+			List<Object> invoiceInfo = invoiceRepository.invoiceData(id);
+			for (Iterator<Object> iterator = invoiceInfo.iterator(); iterator.hasNext();) {
+				Object[] object = (Object[]) iterator.next();
+
+				for (int i = 0; i < object.length; i++) {
+
+					switch (i) {
+					case 0:
+						invoiceData.setName((String) object[i]);
+
+						break;
+					case 1:
+						invoiceData.setEmailId((String) object[i]);
+						break;
+					case 2:
+						invoiceData.setRoomRent(((BigInteger) object[i]).longValue());
+						break;
+					case 3:
+						invoiceData.setRoomId(((BigInteger) object[i]).longValue());
+						break;
+					case 4:
+						invoiceData.setHostelId(((BigInteger) object[i]).longValue());
+						break;
+					case 5:
+						invoiceData.setFloorName((String) object[i]);
+						break;
+					case 6:
+						invoiceData.setBankName((String) object[i]);
+						break;
+					default:
+						break;
+					}
+
+				}
+
+			}
+
+			invoice.add(invoiceData);
+
+			String email = invoiceData.getEmailId();
+			String subject = "Invoice";
+			String ccMail = null;
+			String bccMail = null;
+			String message = MailTemplates.TENANT_INVOICE_TEMPLATE.replaceAll("##USER_NAME##", "rahul")
+					.replaceAll("##PASSWORD##", "1234").replaceAll("##HOSTEL_NAME##", "NIODS");
+
+			try {
+				niodsMailer.sendEmail(email, subject, ccMail, bccMail, message);
+			} catch (MailException | MessagingException | IOException | TemplateException e) {
+
+				e.printStackTrace();
+			}
+
+		}
+
+		return invoice;
 	}
 }
