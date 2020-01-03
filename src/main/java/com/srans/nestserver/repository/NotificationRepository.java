@@ -16,7 +16,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
 	@Query(value = "select n.message, n.notification_category, n.user_role, n.view_status, nu.notification_id from notification n  inner\r\n"
 			+ "JOIN notificationuser nu\r\n"
-			+ "on(n.id=nu.notification_id) where nu.super_admin_code=?1", nativeQuery = true)
+			+ "on(n.id=nu.notification_id) where n.view_status='N' and nu.super_admin_code=?1", nativeQuery = true)
 	public Set<Object> findNewNotification(Long superAdminUserCode);
 
 }
