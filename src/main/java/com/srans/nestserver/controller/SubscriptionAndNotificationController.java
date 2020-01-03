@@ -1,16 +1,19 @@
 package com.srans.nestserver.controller;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Notification;
 import com.srans.nestserver.model.NotificationUser;
@@ -30,8 +32,13 @@ import com.srans.nestserver.model.Subscription;
 import com.srans.nestserver.repository.NotificationRepository;
 import com.srans.nestserver.repository.NotificationUserRepository;
 import com.srans.nestserver.repository.SubscriptionRepository;
+import com.srans.nestserver.util.GenerateUniquePassword;
+import com.srans.nestserver.util.MailTemplates;
 import com.srans.nestserver.util.NSException;
+import com.srans.nestserver.util.NiodsMailer;
 import com.srans.nestserver.util.NotificationUtility;
+
+import freemarker.template.TemplateException;
 
 @CrossOrigin(value = "*", allowedHeaders = "*")
 @RestController
@@ -51,13 +58,18 @@ public class SubscriptionAndNotificationController {
 	@Autowired
 	private NotificationUserRepository notificationUserRepo;
 
+	@Autowired
+	private NiodsMailer niodsMailer;
+
 	@PostMapping(value = "/subscriptionandnotification")
 	@PreAuthorize("permitAll()")
-	public Subscription saveSubscription(@Valid @RequestBody Subscription subscription) throws NSException {
+	public Subscription saveSubscription(@Valid @RequestBody Subscription subscription)
+			throws NSException, MailException, MessagingException, IOException, TemplateException {
 
 		logger.info("IN::POST::/subscription::Savesubscription::" + subscription);
 
 		Subscription responseSubscribe = subscriptionRepo.save(subscription);
+		String rendomPassword;
 
 		if (responseSubscribe.getId() != -1) {
 
@@ -67,15 +79,23 @@ public class SubscriptionAndNotificationController {
 
 			responseSubscribe.setNotification(notification);
 
+			String emailId = responseSubscribe.getEmail();
+			rendomPassword = GenerateUniquePassword.Code();
+			String subject = "Subscription";
+			String ccMail = null;
+			String bccMail = null;
+			System.out.println(rendomPassword);
+			String message = MailTemplates.ADMIN_SUBSCRIPTION_TEMPLATE
+					.replaceAll("##USER_NAME##", responseSubscribe.getUserName())
+					.replaceAll("##PASSWORD##", rendomPassword).replaceAll("##NAME##", responseSubscribe.getName());
+
+			niodsMailer.sendEmail(emailId, subject, ccMail, bccMail, message);
+
 		} else {
 			throw new NSException("Unable to save subscription details");
 		}
-		
-		//Adding Email Stuff Here
-		
-		
 
-		
+		responseSubscribe.setPassword(rendomPassword);
 
 		String superAdminUserName = null;
 		Long superAdminCode = (long) 0;

@@ -36,6 +36,9 @@ public class Subscription extends AuditModel {
 	@Column
 	private Integer noOfSubscriptions;
 
+	@Column
+	private String password;
+
 	@Transient
 	private Notification notification;
 
@@ -48,8 +51,8 @@ public class Subscription extends AuditModel {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Subscription(Long id, String name, String email, String userName, Long phoneNo, Integer noOfSubscriptions,
-			Notification notification) {
+	public Subscription(Long id, String name, String email, String userName, String password, Long phoneNo,
+			Integer noOfSubscriptions, Notification notification) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -58,6 +61,7 @@ public class Subscription extends AuditModel {
 		this.phoneNo = phoneNo;
 		this.noOfSubscriptions = noOfSubscriptions;
 		this.notification = notification;
+		this.password = password;
 	}
 
 	public Long getId() {
@@ -116,13 +120,21 @@ public class Subscription extends AuditModel {
 		this.notification = notification;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Subscription [id=").append(id).append(", name=").append(name).append(", email=").append(email)
 				.append(", userName=").append(userName).append(", phoneNo=").append(phoneNo)
-				.append(", noOfSubscriptions=").append(noOfSubscriptions).append(", notification=").append(notification)
-				.append("]");
+				.append(", noOfSubscriptions=").append(noOfSubscriptions).append(", password=").append(password)
+				.append(", notification=").append(notification).append("]");
 		return builder.toString();
 	}
 

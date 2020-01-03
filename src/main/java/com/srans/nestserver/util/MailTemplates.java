@@ -224,5 +224,18 @@ public class MailTemplates {
 			"    </div>\r\n" + 
 			"</body>\r\n" + 
 			"</html>";
+	
+	
+	public static final String ADMIN_SUBSCRIPTION_TEMPLATE="<html><head><title></title>"
+			+ "<body>"
+			+"<div>"
+			+"Dear ##NAME##,"
+			+"</div>"
+			+ "  <div> <p style='font-size: 18px; text-align: center; '>Your subscription request has been submitted.<br> "
+			+ " You can login using this username- ##USER_NAME##  and temprory password- ##PASSWORD## ."
+			+ "</p>"
+			+ "</div>"
+			+ "</body>"
+			+ "</head></html>";
 
 }
