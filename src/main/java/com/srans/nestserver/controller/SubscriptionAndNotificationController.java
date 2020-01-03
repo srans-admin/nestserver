@@ -68,10 +68,14 @@ public class SubscriptionAndNotificationController {
 			responseSubscribe.setNotification(notification);
 
 		} else {
-			throw new NSException("Unable to save tenant ");
+			throw new NSException("Unable to save subscription details");
 		}
+		
+		//Adding Email Stuff Here
+		
+		
 
-		logger.info("OUT::POST::/tenants::saveTenant::" + subscription);
+		
 
 		String superAdminUserName = null;
 		Long superAdminCode = (long) 0;
@@ -99,17 +103,17 @@ public class SubscriptionAndNotificationController {
 			code++;
 		}
 
-		logger.info("Out::subscription::" + subscription);
+		logger.info("OUT::POST::/subscription::savesubscription::" + subscription);
 		return (responseSubscribe);
 
 	}
 
-	@GetMapping("/subscriptionandnotification/{codeid}/")
+	@GetMapping("/subscriptionandnotification/{username}/")
 	@PreAuthorize("permitAll()")
-	public Set<NotificationUtility> getSuperAdminUsername(@PathVariable(value = "codeid") Long superAdminCodeId)
+	public Set<NotificationUtility> getSuperAdminUsername(@PathVariable(value = "username") String superAdminUsername)
 			throws NSException {
 
-		Set<Object> notificationInfo = notificationRepo.findNewNotification(superAdminCodeId);
+		Set<Object> notificationInfo = notificationRepo.findNewNotification(superAdminUsername);
 
 		Set<NotificationUtility> notifydata = new HashSet<>();
 		for (Iterator<Object> iterator = notificationInfo.iterator(); iterator.hasNext();) {
