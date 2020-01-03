@@ -1,16 +1,19 @@
 package com.srans.nestserver.controller;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,20 +25,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Notification;
 import com.srans.nestserver.model.NotificationUser;
+import com.srans.nestserver.model.Subscription;
 import com.srans.nestserver.repository.NotificationRepository;
 import com.srans.nestserver.repository.NotificationUserRepository;
+import com.srans.nestserver.repository.SubscriptionRepository;
+import com.srans.nestserver.util.GenerateUniquePassword;
+import com.srans.nestserver.util.MailTemplates;
 import com.srans.nestserver.util.NSException;
+import com.srans.nestserver.util.NiodsMailer;
 import com.srans.nestserver.util.NotificationUtility;
+
+import freemarker.template.TemplateException;
 
 @CrossOrigin(value = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("api/v1")
-public class NotificationController {
+public class SubscriptionAndNotificationController {
 	Logger logger = LoggerFactory.getLogger(InvoiceController.class);
+
+	@Autowired
+	private SubscriptionRepository subscriptionRepo;
 
 	@Autowired
 	private NotificationRepository notificationRepo;
@@ -46,14 +58,46 @@ public class NotificationController {
 	@Autowired
 	private NotificationUserRepository notificationUserRepo;
 
-	@PostMapping(value = "/notification")
-	@PreAuthorize("permitAll()")
-	public Notification notify(@Valid @RequestBody Notification notify) throws NSException {
-		logger.info("In::notification::" + notify);
+	@Autowired
+	private NiodsMailer niodsMailer;
 
-		Notification notification = notificationRepo.save(notify);
-		
-	    String superAdminUserName = null;
+	@PostMapping(value = "/subscriptionandnotification")
+	@PreAuthorize("permitAll()")
+	public Subscription saveSubscription(@Valid @RequestBody Subscription subscription)
+			throws NSException, MailException, MessagingException, IOException, TemplateException {
+
+		logger.info("IN::POST::/subscription::Savesubscription::" + subscription);
+
+		Subscription responseSubscribe = subscriptionRepo.save(subscription);
+		String rendomPassword;
+
+		if (responseSubscribe.getId() != -1) {
+
+			subscription.getNotification().setAdminId(responseSubscribe.getId());
+			subscription.getNotification().setUserName(responseSubscribe.getUserName());
+			Notification notification = notificationRepo.save(subscription.getNotification());
+
+			responseSubscribe.setNotification(notification);
+
+			String emailId = responseSubscribe.getEmail();
+			rendomPassword = GenerateUniquePassword.Code();
+			String subject = "Subscription";
+			String ccMail = null;
+			String bccMail = null;
+			System.out.println(rendomPassword);
+			String message = MailTemplates.ADMIN_SUBSCRIPTION_TEMPLATE
+					.replaceAll("##USER_NAME##", responseSubscribe.getUserName())
+					.replaceAll("##PASSWORD##", rendomPassword).replaceAll("##NAME##", responseSubscribe.getName());
+
+			niodsMailer.sendEmail(emailId, subject, ccMail, bccMail, message);
+
+		} else {
+			throw new NSException("Unable to save subscription details");
+		}
+
+		responseSubscribe.setPassword(rendomPassword);
+
+		String superAdminUserName = null;
 		Long superAdminCode = (long) 0;
 		String url = "http://localhost:9090/uaa-server/v1/superAdminUserName";
 		Object[] object = restTemplate.getForObject(url, Object[].class);
@@ -78,18 +122,18 @@ public class NotificationController {
 
 			code++;
 		}
-		
-		logger.info("Out::notification::" + notify);
-		return (notification);
+
+		logger.info("OUT::POST::/subscription::savesubscription::" + subscription);
+		return (responseSubscribe);
 
 	}
 
-	@GetMapping("/notification/{codeId}/")
+	@GetMapping("/subscriptionandnotification/{username}/")
 	@PreAuthorize("permitAll()")
-	public Set<NotificationUtility> getSuperAdminUsername(@PathVariable(value = "codeId") Long superAdminCodeId)
+	public Set<NotificationUtility> getSuperAdminUsername(@PathVariable(value = "username") String superAdminUsername)
 			throws NSException {
 
-		Set<Object> notificationInfo = notificationRepo.findNewNotification(superAdminCodeId);
+		Set<Object> notificationInfo = notificationRepo.findNewNotification(superAdminUsername);
 
 		Set<NotificationUtility> notifydata = new HashSet<>();
 		for (Iterator<Object> iterator = notificationInfo.iterator(); iterator.hasNext();) {
@@ -122,28 +166,28 @@ public class NotificationController {
 
 	}
 
-	@PutMapping("/notification/{notificationId}")
+	@PutMapping("/subscriptionandnotification/{notificationid}")
 	@PreAuthorize("permitAll()")
 
-	public Notification updateNotification(@PathVariable Long notificationId,
+	public Notification updateNotification(@PathVariable Long notificationid,
 			@Valid @RequestBody Notification notificationRequest) {
 
-		return notificationRepo.findById(notificationId).map(notification -> {
+		return notificationRepo.findById(notificationid).map(notification -> {
 
 			notification.setViewStatus(notificationRequest.getViewStatus());
 
 			return notificationRepo.save(notification);
-		}).orElseThrow(() -> new ResourceNotFoundException("NotificationId " + notificationId + " not found"));
+		}).orElseThrow(() -> new ResourceNotFoundException("NotificationId " + notificationid + " not found"));
 	}
 
-	@DeleteMapping("/notification/{notificationId}")
+	@DeleteMapping("/subscriptionandnotification/{notificationid}")
 	@PreAuthorize("permitAll()")
 
-	public ResponseEntity<?> deleteNotification(@PathVariable Long notificationId) {
-		return notificationRepo.findById(notificationId).map(notification -> {
+	public ResponseEntity<?> deleteNotification(@PathVariable Long notificationid) {
+		return notificationRepo.findById(notificationid).map(notification -> {
 			notificationRepo.delete(notification);
 			return ResponseEntity.ok().build();
-		}).orElseThrow(() -> new ResourceNotFoundException("NotificationId " + notificationId + " not found"));
+		}).orElseThrow(() -> new ResourceNotFoundException("NotificationId " + notificationid + " not found"));
 	}
 
 }

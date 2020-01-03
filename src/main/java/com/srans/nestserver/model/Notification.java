@@ -34,18 +34,28 @@ public class Notification extends AuditModel implements Serializable {
 
 	@Column
 	private String notificationCategory;
+
+	@Column
+	private Long adminId;
+
+	@Column
+	private String userName;
 	
 	
 
 	public Notification() {
-		super();
-		// TODO Auto-generated constructor stub
+		this.id = 0L;
+		this.userRole = "";
+		this.selectedSubscriptionPlan = "";
+		this.message = "";
+		this.viewStatus = ' ';
+		this.notificationCategory = "";
+		this.adminId = 0L;
+		this.userName = "";
 	}
 
-
-
 	public Notification(Long id, String userRole, String selectedSubscriptionPlan, String message, Character viewStatus,
-			String notificationCategory) {
+			String notificationCategory, Long adminId, String userName) {
 		super();
 		this.id = id;
 		this.userRole = userRole;
@@ -53,89 +63,83 @@ public class Notification extends AuditModel implements Serializable {
 		this.message = message;
 		this.viewStatus = viewStatus;
 		this.notificationCategory = notificationCategory;
+		this.adminId = adminId;
+		this.userName = userName;
 	}
-
-
 
 	public Long getId() {
 		return id;
 	}
 
-
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-
 
 	public String getUserRole() {
 		return userRole;
 	}
 
-
-
 	public void setUserRole(String userRole) {
 		this.userRole = userRole;
 	}
-
-
 
 	public String getSelectedSubscriptionPlan() {
 		return selectedSubscriptionPlan;
 	}
 
-
-
 	public void setSelectedSubscriptionPlan(String selectedSubscriptionPlan) {
 		this.selectedSubscriptionPlan = selectedSubscriptionPlan;
 	}
-
-
 
 	public String getMessage() {
 		return message;
 	}
 
-
-
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
-
 
 	public Character getViewStatus() {
 		return viewStatus;
 	}
 
-
-
 	public void setViewStatus(Character viewStatus) {
 		this.viewStatus = viewStatus;
 	}
 
-
-
-	public String getnotificationCategory() {
+	public String getNotificationCategory() {
 		return notificationCategory;
 	}
 
-
-
-	public void setnotificationCategory(String notificationCategory) {
+	public void setNotificationCategory(String notificationCategory) {
 		this.notificationCategory = notificationCategory;
 	}
 
+	public Long getAdminId() {
+		return adminId;
+	}
 
+	public void setAdminId(Long adminId) {
+		this.adminId = adminId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
 	@Override
 	public String toString() {
-		return "Notification [id=" + id + ", userRole=" + userRole + ", selectedSubscriptionPlan="
-				+ selectedSubscriptionPlan + ", message=" + message + ", viewStatus=" + viewStatus + ", notificationCategory="
-				+ notificationCategory + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("Notification [id=").append(id).append(", userRole=").append(userRole)
+				.append(", selectedSubscriptionPlan=").append(selectedSubscriptionPlan).append(", message=")
+				.append(message).append(", viewStatus=").append(viewStatus).append(", notificationCategory=")
+				.append(notificationCategory).append(", adminId=").append(adminId).append(", userName=")
+				.append(userName).append("]");
+		return builder.toString();
 	}
-	
-	
 
 }
