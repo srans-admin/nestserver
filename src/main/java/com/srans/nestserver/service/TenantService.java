@@ -13,10 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
-import com.srans.nestserver.model.Tenant;
-import com.srans.nestserver.repository.HostelRepository;
+import com.srans.nestserver.communication.NiodsMailer;
+import com.srans.nestserver.communication.NiodsSmsGateway;
+import com.srans.nestserver.model.User;
 import com.srans.nestserver.util.MailTemplates;
-import com.srans.nestserver.util.NiodsMailer;
+import com.srans.nestserver.util.SMSTemplates;
 
 import freemarker.template.TemplateException;
 
@@ -29,13 +30,14 @@ public class TenantService {
 	
 	private Logger logger = LoggerFactory.getLogger(TenantService.class);
 
-	@Autowired
-	private HostelRepository hostelRepository;
-	
+  
 	@Autowired
 	private NiodsMailer niodsMailer; 
 	
-	public boolean triggerAlertEmail(Tenant responseTenant) {
+	@Autowired
+	private NiodsSmsGateway niodsSmsGateway; 
+	
+	public boolean triggerAlertEmail(User responseTenant) {
 		
 		boolean emailStatus = false;
 		
@@ -77,6 +79,39 @@ public class TenantService {
 		}
 		
 		return emailStatus;
+		
+	}
+	
+	
+	
+	public boolean triggerSMS(User responseTenant) {
+		
+		logger.debug("In::triggerSMS"); 
+		boolean smsStatus = false;
+		
+		try { 
+			
+			  
+			String message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE.replaceAll("##USER_NAME##",responseTenant.getName()) 
+																.replaceAll("##PASSWORD##", responseTenant.getName())
+																.replaceAll("##HOSTEL_NAME##",  "NIODS")//hostelRepository.getHostelName(responseTenant.getTenantBooking().getHostelId()) )
+																.replaceAll("##ROOM_NUMBER##", ""+responseTenant.getTenantBooking().getRoomName())
+																.replaceAll("##FLOOR_NUMBER##",  ""+responseTenant.getTenantBooking().getFloorName())
+																.replaceAll("##ROOM_RENT##", ""+responseTenant.getTenantBooking().getRoomRent()) ;
+																		 
+			
+			 niodsSmsGateway.sendSMS(""+responseTenant.getContactNumber(), message);
+			
+			smsStatus = true;
+			
+			logger.debug("Out::triggerAlertEmail");
+			
+		}  catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return smsStatus;
 		
 	}
 	

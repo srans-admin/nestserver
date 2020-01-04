@@ -18,54 +18,15 @@ public class Notification extends AuditModel implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
-	private Long id;
-
-	@Column
-	private String userRole;
-
-	@Column
-	private String selectedSubscriptionPlan;
+	private Long id; 
 
 	@Column
 	private String message;
 
-	@Column
-	private Character viewStatus;
-
-	@Column
-	private String notificationCategory;
-
-	@Column
-	private Long adminId;
-
-	@Column
-	private String userName;
-	
-	
-
 	public Notification() {
-		this.id = 0L;
-		this.userRole = "";
-		this.selectedSubscriptionPlan = "";
-		this.message = "";
-		this.viewStatus = ' ';
-		this.notificationCategory = "";
-		this.adminId = 0L;
-		this.userName = "";
-	}
-
-	public Notification(Long id, String userRole, String selectedSubscriptionPlan, String message, Character viewStatus,
-			String notificationCategory, Long adminId, String userName) {
-		super();
-		this.id = id;
-		this.userRole = userRole;
-		this.selectedSubscriptionPlan = selectedSubscriptionPlan;
-		this.message = message;
-		this.viewStatus = viewStatus;
-		this.notificationCategory = notificationCategory;
-		this.adminId = adminId;
-		this.userName = userName;
-	}
+		this.id = 0L; 
+		this.message = "";  
+	} 
 
 	public Long getId() {
 		return id;
@@ -75,22 +36,7 @@ public class Notification extends AuditModel implements Serializable {
 		this.id = id;
 	}
 
-	public String getUserRole() {
-		return userRole;
-	}
-
-	public void setUserRole(String userRole) {
-		this.userRole = userRole;
-	}
-
-	public String getSelectedSubscriptionPlan() {
-		return selectedSubscriptionPlan;
-	}
-
-	public void setSelectedSubscriptionPlan(String selectedSubscriptionPlan) {
-		this.selectedSubscriptionPlan = selectedSubscriptionPlan;
-	}
-
+	 
 	public String getMessage() {
 		return message;
 	}
@@ -99,47 +45,19 @@ public class Notification extends AuditModel implements Serializable {
 		this.message = message;
 	}
 
-	public Character getViewStatus() {
-		return viewStatus;
-	}
-
-	public void setViewStatus(Character viewStatus) {
-		this.viewStatus = viewStatus;
-	}
-
-	public String getNotificationCategory() {
-		return notificationCategory;
-	}
-
-	public void setNotificationCategory(String notificationCategory) {
-		this.notificationCategory = notificationCategory;
-	}
-
-	public Long getAdminId() {
-		return adminId;
-	}
-
-	public void setAdminId(Long adminId) {
-		this.adminId = adminId;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+	 
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Notification [id=").append(id).append(", userRole=").append(userRole)
-				.append(", selectedSubscriptionPlan=").append(selectedSubscriptionPlan).append(", message=")
-				.append(message).append(", viewStatus=").append(viewStatus).append(", notificationCategory=")
-				.append(notificationCategory).append(", adminId=").append(adminId).append(", userName=")
-				.append(userName).append("]");
+		builder.append("Notification [id=");
+		builder.append(id);
+		builder.append(", message=");
+		builder.append(message); 
+		builder.append("]");
 		return builder.toString();
 	}
-
+ 
+	
+	
 }

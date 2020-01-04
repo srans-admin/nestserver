@@ -10,11 +10,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.srans.nestserver.model.Tenant;
+import com.srans.nestserver.communication.NiodsSmsGateway;
 import com.srans.nestserver.model.UaaSubscription;
 import com.srans.nestserver.model.UaaUser;
+import com.srans.nestserver.model.User;
 import com.srans.nestserver.model.UserSubscription;
+import com.srans.nestserver.util.GenerateUniquePassword;
 import com.srans.nestserver.util.NSConstants;
+import com.srans.nestserver.util.SMSTemplates;
 
 /**
  * @author user
@@ -28,10 +31,17 @@ public class TenantToUaaService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
+	@Autowired
+	private NiodsSmsGateway niodsSmsGateway;
+	
+	
+	
 	@Value("${uaa-server-url:http://localhost:9090/uaa-server}")
 	private String UAA_SERVER_URL;
 	
-	public boolean postUserToUaa(Tenant tenant) {
+	
+	
+	public boolean postUserToUaa(User user) {
 		
 		boolean status = false;
 		
@@ -39,21 +49,35 @@ public class TenantToUaaService {
 			logger.debug("In::postUserToUaa");  
 			
 			String url = UAA_SERVER_URL+"/v1/users";
+			String randomPassword = GenerateUniquePassword.generateRamdomPassword();
 			
 			UserSubscription userSubscriptionWrapper = new UserSubscription();
 			
+			
 			UaaUser uaaUser = userSubscriptionWrapper.getUser();
-			uaaUser.setUsername(tenant.getName());
-			uaaUser.setPassword("ABCD");//TODO generate random password and email this
-			uaaUser.setRole(NSConstants.ROLE_USER); 
+			uaaUser.setUsername(user.getName()); 
+			uaaUser.setPassword(randomPassword);
+			uaaUser.setRole(user.getRole()); 
 			
 			UaaSubscription uaaSubscription = userSubscriptionWrapper.getSubscription();
 			uaaSubscription.setUserName(uaaUser.getUsername());
 			
+			if(uaaUser.getRole().equals(NSConstants.ROLE_ADMIN)){
+				//uaaSubscription.setType(type);
+				//uaaSubscription.setValidFrom(validFrom);
+				//uaaSubscription.setValidTo(validTo); 
+			}
 			 
 			userSubscriptionWrapper = restTemplate.postForObject(url, userSubscriptionWrapper, UserSubscription.class);
 			
-			tenant.setUserSubscriptionWrapper(userSubscriptionWrapper);
+			user.setUserSubscriptionWrapper(userSubscriptionWrapper);
+			
+			//if(user.getContactNumber() ==){
+			String message =	 SMSTemplates.TENANT_CREDETIALS.replaceAll("##USER_NAME##", user.getName())
+					.replaceAll("##USER_ID##", uaaUser.getUsername())
+					.replaceAll("##TEMP_PASSWORD##", uaaUser.getPassword());
+			//}
+			niodsSmsGateway.sendSMS(""+user.getContactNumber(),message);
 			
 			logger.debug("Out::postUserToUaa");
 			
