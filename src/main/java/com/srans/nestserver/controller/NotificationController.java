@@ -89,7 +89,7 @@ public class NotificationController {
 	public Set<NotificationUtility> getSuperAdminUsername(@PathVariable(value = "codeId") Long superAdminCodeId)
 			throws NSException {
 
-		Set<Object> notificationInfo = notificationRepo.findNewNotification(superAdminCodeId);
+		Set<Object> notificationInfo = notificationRepo.findNewNotification(""+superAdminCodeId);
 
 		Set<NotificationUtility> notifydata = new HashSet<>();
 		for (Iterator<Object> iterator = notificationInfo.iterator(); iterator.hasNext();) {
