@@ -76,6 +76,12 @@ public class User implements Serializable {
 	
 	@Transient
 	private Bed bed;
+	
+	@Column(name = "subscriptions")
+	private int subscriptions;
+	
+	@Column(name = "subscriptionType")
+	private String subscriptionType;
 	 
 	
 	@Transient

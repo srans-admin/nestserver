@@ -194,12 +194,35 @@ public class UserService {
 	}
 	
 	
-	private User processGuestOps(User responseGuest) {
+	private User processGuestOps(User user) {
 		logger.debug("In::processGuestOps");
 		User responseTenant = null;
 		
 		try {
-			  
+			
+			//STEP-1: Save User
+			responseTenant = userRepository.save(user); 
+			
+			if(responseTenant.getUserId() != -1){ 
+				
+				//STEP-4 : Now drop an email to tenant 
+				if(responseTenant.getEmailId() != null && !responseTenant.getEmailId().isEmpty()){
+					tenantService.triggerAlertEmail(responseTenant);
+				}
+				
+				//STEP-5 : Now drop an SMS to tenant
+				if(!(""+responseTenant.getContactNumber()).isEmpty()){
+					tenantService.triggerSMS(responseTenant);
+				}
+				
+				//STEP-6 : Post this info to UAA
+				tenantToUaaService.postUserToUaa(responseTenant);
+
+				
+			}else{
+				throw new NSException("Unable to save tenant ");
+			} 
+			
 			
 			
 		}  catch (Exception e) {

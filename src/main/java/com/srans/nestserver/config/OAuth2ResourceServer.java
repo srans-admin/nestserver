@@ -27,23 +27,15 @@ public class OAuth2ResourceServer extends ResourceServerConfigurerAdapter
 	
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests() 
-            
-	        .antMatchers(HttpMethod.GET, ROOT_PATTERN).access("#oauth2.hasScope('read')")
-            .antMatchers(HttpMethod.POST, ROOT_PATTERN).access("#oauth2.hasScope('write')")
-            .antMatchers(HttpMethod.PATCH, ROOT_PATTERN).access("#oauth2.hasScope('write')")
-            .antMatchers(HttpMethod.PUT, ROOT_PATTERN).access("#oauth2.hasScope('write')")
-            .antMatchers(HttpMethod.DELETE, ROOT_PATTERN).access("#oauth2.hasScope('write')")
-	        //.antMatchers("/api/**").authenticated()
-	        //.antMatchers("**/hostels/**").permitAll()
-	        //.antMatchers("**/tenant/**").permitAll() 
-	        //.antMatchers("/user/**").access("hasRole('USER') or hasRole('SYSTEMADMIN') ")
-	        //.antMatchers("**/hostels/**").access("hasRole('SYSTEMADMIN')") 
-	        //.antMatchers("**/hostels/**").access("#oauth2.hasRole('SYSTEMADMIN')") 
-            //.antMatchers("/user/**").and().authorizeRequests().anyRequest().access("#oauth2.hasScope('USER')")
-	        //.antMatchers("/admin/**").and().authorizeRequests().anyRequest().access("#oauth2.hasScope('ADMIN')")
-           
-	        .and().exceptionHandling().accessDeniedHandler(new MyOAuth2AccessDeniedHandler());
+    	
+    	http.authorizeRequests().antMatchers("**/registration/**").permitAll();
+    	
+    	http
+        .authorizeRequests()
+        //.antMatchers("/api/**").authenticated()
+        .antMatchers("**/registration/**").permitAll(); 
+        
+          
     	 
     }
 }

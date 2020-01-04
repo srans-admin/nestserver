@@ -17,6 +17,7 @@ import com.srans.nestserver.communication.NiodsMailer;
 import com.srans.nestserver.communication.NiodsSmsGateway;
 import com.srans.nestserver.model.User;
 import com.srans.nestserver.util.MailTemplates;
+import com.srans.nestserver.util.NSConstants;
 import com.srans.nestserver.util.SMSTemplates;
 
 import freemarker.template.TemplateException;
@@ -51,14 +52,23 @@ public class TenantService {
 			ccMail = null;
 			bccMail = null; 
 			 
-			message = MailTemplates.TENANT_REGISTRATION_TEMPLATE.replaceAll("##USER_NAME##",responseTenant.getName()) 
-																.replaceAll("##PASSWORD##", responseTenant.getName())
-																.replaceAll("##HOSTEL_NAME##",  "NIODS")//hostelRepository.getHostelName(responseTenant.getTenantBooking().getHostelId()) )
-																.replaceAll("##ROOM_NUMBER##", ""+responseTenant.getTenantBooking().getRoomName())
-																.replaceAll("##FLOOR_NUMBER##",  ""+responseTenant.getTenantBooking().getFloorName())
-																.replaceAll("##ROOM_RENT##", ""+responseTenant.getTenantBooking().getRoomRent()) ;
-																		 
+			if( responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT) ){
 			
+				message = MailTemplates.TENANT_REGISTRATION_TEMPLATE.replaceAll("##USER_NAME##",responseTenant.getName()) 
+							.replaceAll("##PASSWORD##", responseTenant.getName())
+							.replaceAll("##HOSTEL_NAME##",  "NIODS")//hostelRepository.getHostelName(responseTenant.getTenantBooking().getHostelId()) )
+							.replaceAll("##ROOM_NUMBER##", ""+responseTenant.getTenantBooking().getRoomName())
+							.replaceAll("##FLOOR_NUMBER##",  ""+responseTenant.getTenantBooking().getFloorName())
+							.replaceAll("##ROOM_RENT##", ""+responseTenant.getTenantBooking().getRoomRent()) ;
+									 
+			} else if( responseTenant.getRole().endsWith(NSConstants.ROLE_USER)){
+				message = MailTemplates.TENANT_REGISTRATION_TEMPLATE.replaceAll("##USER_NAME##",""+responseTenant.getName()) 
+						.replaceAll("##PASSWORD##", responseTenant.getName())
+						.replaceAll("##HOSTEL_NAME##",  "NIODS");
+					 
+			} else{
+				message = "User added ...";
+			}
 			niodsMailer.sendEmail(email, subject, ccMail, bccMail, message);
 			
 			emailStatus = true;
@@ -90,15 +100,22 @@ public class TenantService {
 		boolean smsStatus = false;
 		
 		try { 
+			String message ="";
 			
+			if( responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT) ){
 			  
-			String message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE.replaceAll("##USER_NAME##",responseTenant.getName()) 
+			 message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE.replaceAll("##USER_NAME##",responseTenant.getName()) 
 																.replaceAll("##PASSWORD##", responseTenant.getName())
-																.replaceAll("##HOSTEL_NAME##",  "NIODS")//hostelRepository.getHostelName(responseTenant.getTenantBooking().getHostelId()) )
+																.replaceAll("##HOSTEL_NAME##",  "NIODS") 
 																.replaceAll("##ROOM_NUMBER##", ""+responseTenant.getTenantBooking().getRoomName())
 																.replaceAll("##FLOOR_NUMBER##",  ""+responseTenant.getTenantBooking().getFloorName())
 																.replaceAll("##ROOM_RENT##", ""+responseTenant.getTenantBooking().getRoomRent()) ;
-																		 
+			} else if( responseTenant.getRole().endsWith(NSConstants.ROLE_USER)){
+				message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE;
+					 
+			} else{
+				message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE;
+			}	 
 			
 			 niodsSmsGateway.sendSMS(""+responseTenant.getContactNumber(), message);
 			

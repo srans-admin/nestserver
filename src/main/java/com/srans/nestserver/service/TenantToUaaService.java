@@ -15,7 +15,7 @@ import com.srans.nestserver.model.UaaSubscription;
 import com.srans.nestserver.model.UaaUser;
 import com.srans.nestserver.model.User;
 import com.srans.nestserver.model.UserSubscription;
-import com.srans.nestserver.util.GenerateUniquePassword;
+import com.srans.nestserver.util.PasswordGenerator;
 import com.srans.nestserver.util.NSConstants;
 import com.srans.nestserver.util.SMSTemplates;
 
@@ -49,7 +49,7 @@ public class TenantToUaaService {
 			logger.debug("In::postUserToUaa");  
 			
 			String url = UAA_SERVER_URL+"/v1/users";
-			String randomPassword = GenerateUniquePassword.generateRamdomPassword();
+			String randomPassword = PasswordGenerator.generateRamdomPassword();
 			
 			UserSubscription userSubscriptionWrapper = new UserSubscription();
 			
