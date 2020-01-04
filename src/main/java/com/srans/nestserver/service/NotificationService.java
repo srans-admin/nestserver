@@ -23,9 +23,9 @@ import com.srans.nestserver.util.NSConstants;
  *
  */
 @Service
-public class NotoficationService {
+public class NotificationService {
 	
-	private Logger logger = LoggerFactory.getLogger(NotoficationService.class);
+	private Logger logger = LoggerFactory.getLogger(NotificationService.class);
  
 	@Autowired
 	private UserRepository userRepository ;

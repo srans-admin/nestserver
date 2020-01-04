@@ -54,6 +54,9 @@ public class UserService {
 	
 	@Autowired
 	private TenantToUaaService tenantToUaaService;
+	
+	@Autowired
+	private NotificationService notificationService;
 	 
 	
 	/**
@@ -155,21 +158,30 @@ public class UserService {
 	}
 	
 	
-	private User processAdminOps(User responseAdmin) {
+	private User processAdminOps(User user) {
 		logger.debug("In::processAdminOps");
 		User responseTenant = null;
 		
 		try {
 			
-			//STEP-1: Save User
+			//STEP-1: Save User 
+			responseTenant = userRepository.save(user);
 			  
-			//STEP-2 : Now drop an email to admin 
+			//STEP-2 : Now drop an email to tenant 
+			if(responseTenant.getEmailId() != null && !responseTenant.getEmailId().isEmpty()){
+				tenantService.triggerAlertEmail(responseTenant);
+			}
 			
-			//STEP-3 : Now drop an SMS to admin
+			//STEP-3 : Now drop an SMS to tenant
+			if(!(""+responseTenant.getContactNumber()).isEmpty()){
+				tenantService.triggerSMS(responseTenant);
+			}
 			
 			//STEP-4 : Post this info to UAA
+			tenantToUaaService.postUserToUaa(responseTenant);
 			
 			//STEP-5 : Prepare one Notification to SuperAdmin(s)
+			notificationService.addAdminRequestNotifictaion(responseTenant);
 			
 			
 		}  catch (Exception e) {
