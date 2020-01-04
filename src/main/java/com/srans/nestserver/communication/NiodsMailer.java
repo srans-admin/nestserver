@@ -35,7 +35,7 @@ public class NiodsMailer {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage(); 
 		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
-	    helper.addAttachment("srans.jpg", new ClassPathResource("srans.jpg"));
+	    //helper.addAttachment("srans.jpg", new ClassPathResource("srans.jpg"));
 		helper.setTo(email);  
 		helper.setText( message, true); 
 		helper.setReplyTo("no-reply@srans.in");
