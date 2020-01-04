@@ -1,8 +1,9 @@
 package com.srans.nestserver.util;
 
+
 public class GenerateUniquePassword {
 
-	public static String Code() {
+	public static String generateRamdomPassword() {
 		long code = (long) ((Math.random() * 9 * Math.pow(10, 15)) + Math.pow(10, 15));
 		String unique_password = "";
 		for (long i = code; i != 0; i /= 100)

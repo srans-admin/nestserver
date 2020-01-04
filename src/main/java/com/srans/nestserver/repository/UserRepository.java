@@ -1,21 +1,28 @@
 package com.srans.nestserver.repository;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.srans.nestserver.model.Tenant;
+import com.srans.nestserver.model.User;
 
 @Repository
-public interface TenantRepository extends JpaRepository<Tenant, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Autowired 
 	TenantBookRepository tenantBookRepository = null; 
 	
 	
-	@Query(value="SELECT t FROM Tenant t WHERE t.name=?1") 
-	public Tenant findByName(String name);
+	@Query(value="SELECT u FROM User u WHERE u.name=?1") 
+	public User findByName(String name);
+	
+	@Query(value="SELECT u FROM User u WHERE u.role=?1") 
+	public List<User> getUsersByRole(String role);
+	
+	
   
 	/*
 	@Query(value = "SELECT hostel_name FROM Hostel", nativeQuery = true)

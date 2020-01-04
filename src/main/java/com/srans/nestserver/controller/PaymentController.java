@@ -26,13 +26,13 @@ import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Payment;
 import com.srans.nestserver.model.Role;
 import com.srans.nestserver.model.Room;
-import com.srans.nestserver.model.Tenant;
+import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.RoleRepository;
 import com.srans.nestserver.repository.RoomRepository;
-import com.srans.nestserver.repository.TenantRepository;
+import com.srans.nestserver.repository.UserRepository;
 
 @CrossOrigin(origins = "*",allowedHeaders = "*") 
 @RestController
@@ -53,7 +53,7 @@ private FloorRepository floorRepository;
 
 
 @Autowired
-private TenantRepository tenantRepository;
+private UserRepository userRepository;
 
 
 
@@ -142,11 +142,11 @@ return response;
 }
 
 @GetMapping("payment/tenant/{Id}")
-public ResponseEntity<Tenant> getTenantById(@PathVariable(value = "Id") Long TenantId)
+public ResponseEntity<User> getTenantById(@PathVariable(value = "Id") Long TenantId)
 		throws ResourceNotFoundException {
-	Tenant tenant = tenantRepository.findById(TenantId)
+	User user = userRepository.findById(TenantId)
 			.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
-	return ResponseEntity.ok().body(tenant);
+	return ResponseEntity.ok().body(user);
 }
 
 @GetMapping("payment/hostels/{id}/roomdetail")

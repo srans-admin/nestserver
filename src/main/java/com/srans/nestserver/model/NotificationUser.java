@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "notificationuser")
+@Table(name = "notificationUser")
 public class NotificationUser extends AuditModel implements Serializable {
 
 	/**
@@ -21,69 +21,90 @@ public class NotificationUser extends AuditModel implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
-	private Long id;
+	private long id;
 
 	@Column
-	private Long notificationId;
-
+	private long userId;
+	
 	@Column
-	private Long superAdminCode;
-
+	private long notificationId;
+	
 	@Column
-	private String superAdminUsername;
+	private String viewStatus; 
+	  
 
 	public NotificationUser() {
-		super();
-		// TODO Auto-generated constructor stub
+		this.userId =  -1;
+		this.notificationId = -1;
+		this.viewStatus = "N"; 
 	}
 
-	public NotificationUser(Long id, Long notificationId, Long superAdminCode, String superAdminUsername) {
-		super();
-		this.id = id;
-		this.notificationId = notificationId;
-		this.superAdminCode = superAdminCode;
-		this.superAdminUsername = superAdminUsername;
-	}
 
-	public Long getId() {
+
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+
+
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public Long getNotificationId() {
+
+
+	public long getUserId() {
+		return userId;
+	}
+
+
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+
+
+	public long getNotificationId() {
 		return notificationId;
 	}
 
-	public void setNotificationId(Long notificationId) {
+
+
+	public void setNotificationId(long notificationId) {
 		this.notificationId = notificationId;
 	}
 
-	public Long getSuperAdminCode() {
-		return superAdminCode;
+
+
+	public String getViewStatus() {
+		return viewStatus;
 	}
 
-	public void setSuperAdminCode(Long superAdminCode) {
-		this.superAdminCode = superAdminCode;
+
+
+	public void setViewStatus(String viewStatus) {
+		this.viewStatus = viewStatus;
 	}
 
-	public String getsuperAdminUsername() {
-		return superAdminUsername;
-	}
 
-	public void setsuperAdminUsername(String superAdminUsername) {
-		this.superAdminUsername = superAdminUsername;
-	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("NotificationUser [id=").append(id).append(", notificationId=").append(notificationId)
-				.append(", superAdminCode=").append(superAdminCode).append(", superAdminUsername=")
-				.append(superAdminUsername).append("]");
+		builder.append("NotificationUser [id=");
+		builder.append(id);
+		builder.append(", userId=");
+		builder.append(userId);
+		builder.append(", notificationId=");
+		builder.append(notificationId);
+		builder.append(", viewStatus=");
+		builder.append(viewStatus);
+		builder.append("]");
 		return builder.toString();
 	}
-
+ 
+	
+	
+ 
 }

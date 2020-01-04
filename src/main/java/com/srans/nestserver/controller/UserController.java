@@ -32,15 +32,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Bed;
-import com.srans.nestserver.model.Tenant;
+import com.srans.nestserver.model.User;
 import com.srans.nestserver.model.TenantBooking;
 import com.srans.nestserver.repository.BedRepository;
 import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
-import com.srans.nestserver.repository.TenantRepository;
+import com.srans.nestserver.repository.UserRepository;
 import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.service.TenantService;
 import com.srans.nestserver.service.TenantToUaaService;
+import com.srans.nestserver.service.UserService;
+import com.srans.nestserver.util.NSConstants;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -51,97 +53,53 @@ public class UserController {
 	Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
-	private TenantRepository tenantRepository;
+	private UserRepository userRepository;
 
 	@Autowired
 	private StorageService storageService;
-
+ 
 	@Autowired
-	private TenantBookRepository tenantBookRepository;
-
-	@Autowired
-	private PaymentRepository paymentRepository;
-	
-	@Autowired
-	private BedRepository bedRepository;
-	
-	@Autowired
-	private TenantService tenantService;
-	
-	@Autowired
-	private TenantToUaaService tenantToUaaService;
-	
-	  
-	 
+	private UserService userService = new UserService();
 
 	
 	@PostMapping("/users")
 	@PreAuthorize("permitAll()")
-	public Tenant saveTenant(@Valid @RequestBody Tenant tenant) throws NSException {
+	public User saveUser(@Valid @RequestBody User user) throws NSException {
 
-		logger.info("IN::POST::/users::savetenant::" + tenant);
+		logger.info("IN::POST::/users::saveUser::" + user);
+         
+		user = userService.processUser(user);
 
-		Tenant responseTenant = tenantRepository.save(tenant); 
-		
-		if(responseTenant.getUserId() != -1){ 
-			
-			tenant.getTenantBooking().setTenantId(responseTenant.getUserId()); 
-			TenantBooking tenantBooking = tenantBookRepository.save(tenant.getTenantBooking());
-			
-			//Update Bed with alloted_state as N
-			Bed bed = new Bed();
-			bed.setId(tenantBooking.getRoomBedId());
-			bed.setHostelId(tenantBooking.getHostelId());
-			bed.setFloorId(tenantBooking.getFloorId());
-			bed.setRoomId(tenantBooking.getRoomId());
-			bed.setAlloted('Y');
-			bed.setUpdatedAt(new Date()); 
-			
-			responseTenant.setTenantBooking(tenantBooking); 
-			responseTenant.setBed( bedRepository.saveAndFlush(bed));  
-			
-			
-			//Save Payment Information 
-			responseTenant.setPayment( paymentRepository.save(tenant.getPayment())); 
-
-			//Now drop an email to tenant 
-			tenantService.triggerAlertEmail(responseTenant);
-			
-			//Post this info to UAA
-			tenantToUaaService.postUserToUaa(responseTenant);
-
-			
-		}else{
-			throw new NSException("Unable to save tenant ");
-		} 
-
-		logger.info("OUT::POST::/users::saveTenant::" + tenant);
-		return responseTenant;
+		logger.info("OUT::POST::/users::saveUser::" + user);
+		return user;
 	}
+	 
+	
+	
 
 	@GetMapping("/users")
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
 	//@PreAuthorize("permitAll()")
-	public List<Tenant> getAllTenants() {
-		return tenantRepository.findAll();
+	public List<User> getAllTenants() {
+		return userRepository.findAll();
 	}
 	
 	@GetMapping("/users/{id}")
 	@PreAuthorize("permitAll()")
-	public ResponseEntity<Tenant> getTenantById(@PathVariable(value = "id") Long TenantId)
+	public ResponseEntity<User> getTenantById(@PathVariable(value = "id") Long TenantId)
 			throws ResourceNotFoundException {
-		Tenant tenant = tenantRepository.findById(TenantId)
+		User user = userRepository.findById(TenantId)
 				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
-		return ResponseEntity.ok().body(tenant);
+		return ResponseEntity.ok().body(user);
 	}
 	
 	@GetMapping("/users/byname/{name}")
 	@PreAuthorize("permitAll()")
 	//@PreAuthorize("permitAll()")
-	public ResponseEntity<Tenant> getTenantByName(@PathVariable(value = "name") String name)
+	public ResponseEntity<User> getTenantByName(@PathVariable(value = "name") String name)
 			throws ResourceNotFoundException {
-		Tenant tenant = tenantRepository.findByName(name); 
-		return ResponseEntity.ok().body(tenant);
+		User user = userRepository.findByName(name); 
+		return ResponseEntity.ok().body(user);
 	}
 
 	@PostMapping("/users/{id}/upload/{cat}")
@@ -194,18 +152,18 @@ public class UserController {
 
 	@PutMapping("/users/{Id}")
 	@PreAuthorize("permitAll()")
-	public ResponseEntity<Tenant> updateUser(@PathVariable(value = "Id") Long TenantId,
-			@Valid @RequestBody Tenant tenantDetails) throws ResourceNotFoundException {
-		Tenant tenant = tenantRepository.findById(TenantId)
+	public ResponseEntity<User> updateUser(@PathVariable(value = "Id") Long TenantId,
+			@Valid @RequestBody User tenantDetails) throws ResourceNotFoundException {
+		User user = userRepository.findById(TenantId)
 				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
 
-		tenant.setUserId(tenant.getUserId());
-		tenant.setBloodGroup(tenant.getBloodGroup());
-		tenant.setContactNumber(tenant.getContactNumber());
-		tenant.setDob(tenant.getDob());
-		tenant.setEmailId(tenant.getEmailId());
-      tenant.setPermanentAddress(tenant.getPermanentAddress());
-		final Tenant updatedTenant = tenantRepository.save(tenant);
+		user.setUserId(user.getUserId());
+		user.setBloodGroup(user.getBloodGroup());
+		user.setContactNumber(user.getContactNumber());
+		user.setDob(user.getDob());
+		user.setEmailId(user.getEmailId());
+      user.setPermanentAddress(user.getPermanentAddress());
+		final User updatedTenant = userRepository.save(user);
 		return ResponseEntity.ok(updatedTenant);
 	}
 
@@ -214,10 +172,10 @@ public class UserController {
 	public <tenantRepository> Map<String, Boolean> deleteUser(@PathVariable(value = "Id") Long TenantId)
 			throws ResourceNotFoundException {
 		@SuppressWarnings("unused")
-		Tenant tenant = tenantRepository.findById(TenantId)
+		User user = userRepository.findById(TenantId)
 				.orElseThrow(() -> new ResourceNotFoundException("SransUser not found for this id :: " + TenantId));
 
-		tenantRepository.deleteById(TenantId);
+		userRepository.deleteById(TenantId);
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
 		return response;

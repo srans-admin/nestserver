@@ -11,8 +11,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
-@Table(name = "tenant")
-public class Tenant implements Serializable {
+@Table(name = "sransUser")
+public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -21,7 +21,13 @@ public class Tenant implements Serializable {
 	private Long userId;
 
 	@Column(name = "name")
-	private String name;
+	private String name; 
+
+	@Column(name = "role")
+	private String role;
+	
+	@Column(name = "status")
+	private String status;
 
 	@Column(name = "contactNumber")
 	private Long contactNumber;
@@ -70,17 +76,18 @@ public class Tenant implements Serializable {
 	
 	@Transient
 	private Bed bed;
+	 
 	
-
 	@Transient
 	private UserSubscription userSubscriptionWrapper;
+	
 
-	public Tenant() {
+	public User() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Tenant(Long userId, String name, Long contactNumber, String fatherName, Long fatherphoneNumber,
+	public User(Long userId, String name, Long contactNumber, String fatherName, Long fatherphoneNumber,
 			String motherName, long motherphoneNumber, String dob, long emergencyContactNumber,
 			String nameOfTheEmployer, String bloodGroup, String officeAddress, Long mobileNumber, String emailId,
 			String permanentAddress, TenantBooking tenantBooking, Payment payment, Bed bed) {
@@ -260,22 +267,74 @@ public class Tenant implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+ 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+	 
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Tenant [userId=").append(userId).append(", name=").append(name).append(", contactNumber=")
-				.append(contactNumber).append(", fatherName=").append(fatherName).append(", fatherphoneNumber=")
-				.append(fatherphoneNumber).append(", motherName=").append(motherName).append(", motherphoneNumber=")
-				.append(motherphoneNumber).append(", dob=").append(dob).append(", emergencyContactNumber=")
-				.append(emergencyContactNumber).append(", nameOfTheEmployer=").append(nameOfTheEmployer)
-				.append(", bloodGroup=").append(bloodGroup).append(", officeAddress=").append(officeAddress)
-				.append(", mobileNumber=").append(mobileNumber).append(", emailId=").append(emailId)
-				.append(", permanentAddress=").append(permanentAddress).append(", tenantBooking=").append(tenantBooking)
-				.append(", payment=").append(payment).append(", bed=").append(bed).append("]");
+		builder.append("User [userId=");
+		builder.append(userId);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", role=");
+		builder.append(role);
+		builder.append(", contactNumber=");
+		builder.append(contactNumber);
+		builder.append(", fatherName=");
+		builder.append(fatherName);
+		builder.append(", fatherphoneNumber=");
+		builder.append(fatherphoneNumber);
+		builder.append(", motherName=");
+		builder.append(motherName);
+		builder.append(", motherphoneNumber=");
+		builder.append(motherphoneNumber);
+		builder.append(", dob=");
+		builder.append(dob);
+		builder.append(", emergencyContactNumber=");
+		builder.append(emergencyContactNumber);
+		builder.append(", nameOfTheEmployer=");
+		builder.append(nameOfTheEmployer);
+		builder.append(", bloodGroup=");
+		builder.append(bloodGroup);
+		builder.append(", officeAddress=");
+		builder.append(officeAddress);
+		builder.append(", mobileNumber=");
+		builder.append(mobileNumber);
+		builder.append(", emailId=");
+		builder.append(emailId);
+		builder.append(", permanentAddress=");
+		builder.append(permanentAddress);
+		builder.append(", tenantBooking=");
+		builder.append(tenantBooking);
+		builder.append(", payment=");
+		builder.append(payment);
+		builder.append(", bed=");
+		builder.append(bed);
+		builder.append(", status=");
+		builder.append(status);
+		builder.append(", userSubscriptionWrapper=");
+		builder.append(userSubscriptionWrapper);
+		builder.append("]");
 		return builder.toString();
 	}
 
+	
 }
 	
 

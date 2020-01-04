@@ -27,16 +27,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.srans.nestserver.communication.NiodsMailer;
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Invoice;
 import com.srans.nestserver.model.Room;
-import com.srans.nestserver.model.Tenant;
+import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.InvoiceRepository;
 import com.srans.nestserver.repository.RoomRepository;
-import com.srans.nestserver.repository.TenantRepository;
+import com.srans.nestserver.repository.UserRepository;
 import com.srans.nestserver.util.MailTemplates;
-import com.srans.nestserver.util.NiodsMailer;
 
 import freemarker.template.TemplateException;
 
@@ -50,7 +50,7 @@ public class InvoiceController {
 	private InvoiceRepository invoiceRepository;
 
 	@Autowired
-	private TenantRepository tenantRepository;
+	private UserRepository userRepository;
 	@Autowired
 	private FloorRepository floorRepository;
 	@Autowired
@@ -60,14 +60,14 @@ public class InvoiceController {
 	private NiodsMailer niodsMailer;
 
 	@GetMapping("invoice/tenant/{Id}")
-	public ResponseEntity<Tenant> getTenantById(@PathVariable(value = "Id") long TenantId)
+	public ResponseEntity<User> getTenantById(@PathVariable(value = "Id") long TenantId)
 			throws ResourceNotFoundException {
 		logger.info("In::TenantId::" + TenantId);
-		Tenant tenant = tenantRepository.findById(TenantId)
+		User user = userRepository.findById(TenantId)
 				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
 
-		logger.info("Out::tenant::" + tenant);
-		return ResponseEntity.ok().body(tenant);
+		logger.info("Out::tenant::" + user);
+		return ResponseEntity.ok().body(user);
 	}
 
 	@GetMapping("/invoice")

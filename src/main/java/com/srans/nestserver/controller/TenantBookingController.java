@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.srans.nestserver.model.Tenant;
+import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.TenantBookRepository;
-import com.srans.nestserver.repository.TenantRepository;
+import com.srans.nestserver.repository.UserRepository;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -28,7 +28,7 @@ public class TenantBookingController {
 	Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
-	private TenantRepository tenantRepository;
+	private UserRepository userRepository;
 	
 	@Autowired
 	private TenantBookRepository tenantBookRepository; 
@@ -54,21 +54,21 @@ public class TenantBookingController {
 	
 	@PostMapping("/tenantbooking")
 	@PreAuthorize("permitAll()")
-	public Tenant bookTenant(@Valid @RequestBody Tenant tenant) throws NSException {
+	public User bookTenant(@Valid @RequestBody User user) throws NSException {
 		
-		logger.info("IN::POST::/tenantbooking::bookTenant::" + tenant);
+		logger.info("IN::POST::/tenantbooking::bookTenant::" + user);
 
-		Tenant responsetenant=tenantRepository.save(tenant); 
+		User responsetenant=userRepository.save(user); 
  
-		tenantBookRepository.save(tenant.getTenantBooking());
+		tenantBookRepository.save(user.getTenantBooking());
 		 
 		return responsetenant;
 			
 		}
 	
 	@GetMapping("/tenantbooking")
-	public List<Tenant> getAllPosts() {
-		return tenantRepository.findAll();
+	public List<User> getAllPosts() {
+		return userRepository.findAll();
 		
 		
 	}
