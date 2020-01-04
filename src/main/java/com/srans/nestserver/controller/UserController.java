@@ -46,9 +46,9 @@ import com.srans.nestserver.util.NSException;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1")
-public class TenantController {
+public class UserController {
 
-	Logger logger = LoggerFactory.getLogger(TenantController.class);
+	Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private TenantRepository tenantRepository;
@@ -75,11 +75,11 @@ public class TenantController {
 	 
 
 	
-	@PostMapping("/tenants")
+	@PostMapping("/users")
 	@PreAuthorize("permitAll()")
 	public Tenant saveTenant(@Valid @RequestBody Tenant tenant) throws NSException {
 
-		logger.info("IN::POST::/tenants::savetenant::" + tenant);
+		logger.info("IN::POST::/users::savetenant::" + tenant);
 
 		Tenant responseTenant = tenantRepository.save(tenant); 
 		
@@ -115,18 +115,18 @@ public class TenantController {
 			throw new NSException("Unable to save tenant ");
 		} 
 
-		logger.info("OUT::POST::/tenants::saveTenant::" + tenant);
+		logger.info("OUT::POST::/users::saveTenant::" + tenant);
 		return responseTenant;
 	}
 
-	@GetMapping("/tenants")
+	@GetMapping("/users")
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
 	//@PreAuthorize("permitAll()")
 	public List<Tenant> getAllTenants() {
 		return tenantRepository.findAll();
 	}
 	
-	@GetMapping("/tenants/{id}")
+	@GetMapping("/users/{id}")
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<Tenant> getTenantById(@PathVariable(value = "id") Long TenantId)
 			throws ResourceNotFoundException {
@@ -135,7 +135,7 @@ public class TenantController {
 		return ResponseEntity.ok().body(tenant);
 	}
 	
-	@GetMapping("/tenants/byname/{name}")
+	@GetMapping("/users/byname/{name}")
 	@PreAuthorize("permitAll()")
 	//@PreAuthorize("permitAll()")
 	public ResponseEntity<Tenant> getTenantByName(@PathVariable(value = "name") String name)
@@ -144,18 +144,18 @@ public class TenantController {
 		return ResponseEntity.ok().body(tenant);
 	}
 
-	@PostMapping("/tenants/{id}/upload/{cat}")
+	@PostMapping("/users/{id}/upload/{cat}")
 	@PreAuthorize("permitAll()")
 	public void storeTenantImage(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file,
 			@PathVariable("cat") String cat) throws NSException {
 
-		logger.info("In::POST::/tenants/{id}/upload/{cat}::uploadTenantImages::" + id + "::" + cat);
+		logger.info("In::POST::/users/{id}/upload/{cat}::uploadTenantImages::" + id + "::" + cat);
 		storageService.storeTenantImage(file, cat, id);
-		logger.info("OUT::POST:://tenants/uploadImage/{cat}/{id}::uploadTenantImages::" + id + "::" + cat);
+		logger.info("OUT::POST:://users/uploadImage/{cat}/{id}::uploadTenantImages::" + id + "::" + cat);
 
 	}
 
-	@GetMapping("/tenants/{id}/retrive/{cat}")
+	@GetMapping("/users/{id}/retrive/{cat}")
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<InputStreamResource> retriveHostelImage(@PathVariable("id") Long id,
 			@PathVariable("cat") String cat) throws NSException, IOException {
@@ -165,7 +165,7 @@ public class TenantController {
 
 	}
 
-	@GetMapping("/tenantsidproof/{id}/retrive/{cat}")
+	@GetMapping("/usersidproof/{id}/retrive/{cat}")
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<InputStreamResource> retriveIdproofImage(@PathVariable("id") Long id,
 			@PathVariable("cat") String cat) throws NSException, IOException {
@@ -175,24 +175,24 @@ public class TenantController {
 
 	}
 
-	@PostMapping("/tenantsidproof/{id}/upload/{cat}")
+	@PostMapping("/usersidproof/{id}/upload/{cat}")
 	@PreAuthorize("permitAll()")
 	public void storeIdproofImage(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file,
 			@PathVariable("cat") String cat) throws NSException {
 
-		logger.info("In::POST::/tenants/{id}/upload/{cat}::uploadIdproofImages::" + id + "::" + cat);
+		logger.info("In::POST::/users/{id}/upload/{cat}::uploadIdproofImages::" + id + "::" + cat);
 		storageService.storeIdproofImage(file, cat, id);
-		logger.info("OUT::POST:://tenants/uploadImage/{cat}/{id}::uploadIdproofImage::" + id + "::" + cat);
+		logger.info("OUT::POST:://users/uploadImage/{cat}/{id}::uploadIdproofImage::" + id + "::" + cat);
 
 	}
 
 	/*
-	 * @PostMapping("/tenants") public Tenant createUser(@RequestBody Tenant tenant)
+	 * @PostMapping("/users") public Tenant createUser(@RequestBody Tenant tenant)
 	 * { System.out.println("User : " + tenant); return
 	 * tenantRepository.save(tenant); }
 	 */
 
-	@PutMapping("/tenants/{Id}")
+	@PutMapping("/users/{Id}")
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<Tenant> updateUser(@PathVariable(value = "Id") Long TenantId,
 			@Valid @RequestBody Tenant tenantDetails) throws ResourceNotFoundException {
@@ -209,7 +209,7 @@ public class TenantController {
 		return ResponseEntity.ok(updatedTenant);
 	}
 
-	@DeleteMapping("/tenants/{Id}")
+	@DeleteMapping("/users/{Id}")
 	@PreAuthorize("permitAll()")
 	public <tenantRepository> Map<String, Boolean> deleteUser(@PathVariable(value = "Id") Long TenantId)
 			throws ResourceNotFoundException {

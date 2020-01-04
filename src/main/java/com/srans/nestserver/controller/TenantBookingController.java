@@ -25,7 +25,7 @@ import com.srans.nestserver.util.NSException;
 @RequestMapping("/api/v1")
 public class TenantBookingController {
 
-	Logger logger = LoggerFactory.getLogger(TenantController.class);
+	Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private TenantRepository tenantRepository;
