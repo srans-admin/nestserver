@@ -70,6 +70,10 @@ public class Tenant implements Serializable {
 	
 	@Transient
 	private Bed bed;
+	
+
+	@Transient
+	private UserSubscription userSubscriptionWrapper;
 
 	public Tenant() {
 		super();
@@ -243,6 +247,14 @@ public class Tenant implements Serializable {
 
 	public void setBed(Bed bed) {
 		this.bed = bed;
+	} 
+
+	public UserSubscription getUserSubscriptionWrapper() {
+		return userSubscriptionWrapper;
+	}
+
+	public void setUserSubscriptionWrapper(UserSubscription userSubscriptionWrapper) {
+		this.userSubscriptionWrapper = userSubscriptionWrapper;
 	}
 
 	public static long getSerialversionuid() {

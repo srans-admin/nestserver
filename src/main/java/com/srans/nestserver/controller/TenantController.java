@@ -40,6 +40,7 @@ import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.TenantRepository;
 import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.service.TenantService;
+import com.srans.nestserver.service.TenantToUaaService;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -66,6 +67,11 @@ public class TenantController {
 	
 	@Autowired
 	private TenantService tenantService;
+	
+	@Autowired
+	private TenantToUaaService tenantToUaaService;
+	
+	  
 	 
 
 	
@@ -75,7 +81,7 @@ public class TenantController {
 
 		logger.info("IN::POST::/tenants::savetenant::" + tenant);
 
-		Tenant responseTenant = tenantRepository.save(tenant);
+		Tenant responseTenant = tenantRepository.save(tenant); 
 		
 		if(responseTenant.getUserId() != -1){ 
 			
@@ -100,6 +106,9 @@ public class TenantController {
 
 			//Now drop an email to tenant 
 			tenantService.triggerAlertEmail(responseTenant);
+			
+			//Post this info to UAA
+			tenantToUaaService.postUserToUaa(responseTenant);
 
 			
 		}else{
@@ -127,7 +136,7 @@ public class TenantController {
 	}
 	
 	@GetMapping("/tenants/byname/{name}")
-	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	@PreAuthorize("permitAll()")
 	//@PreAuthorize("permitAll()")
 	public ResponseEntity<Tenant> getTenantByName(@PathVariable(value = "name") String name)
 			throws ResourceNotFoundException {
