@@ -1,13 +1,10 @@
 package com.srans.nestserver.controller;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.validation.Valid;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,18 +16,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Payment;
-import com.srans.nestserver.model.Role;
 import com.srans.nestserver.model.Room;
 import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.PaymentRepository;
-import com.srans.nestserver.repository.RoleRepository;
 import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.repository.UserRepository;
 
@@ -38,6 +31,7 @@ import com.srans.nestserver.repository.UserRepository;
 @RestController
 @RequestMapping("/api/v1")
 public class PaymentController {
+
 //Logger logger = LoggerFactory.getLogger(RolesController.class);
 @Autowired
 private PaymentRepository paymentRepository;
@@ -141,11 +135,19 @@ response.put("deleted", Boolean.TRUE);
 return response;
 }
 
-@GetMapping("payment/tenant/{Id}")
-public ResponseEntity<User> getTenantById(@PathVariable(value = "Id") Long TenantId)
+@GetMapping("payments/tenant/{Id}")
+public ResponseEntity<User> getUserById(@PathVariable(value = "Id") Long UserId)
 		throws ResourceNotFoundException {
-	User user = userRepository.findById(TenantId)
-			.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
+	User user = userRepository.findById(UserId)
+			.orElseThrow(() -> new ResourceNotFoundException("User not found for this Id :: " + UserId));
+	return ResponseEntity.ok().body(user);
+}
+
+@GetMapping("/payments/users/byname/{name}")
+// @PreAuthorize("permitAll()")
+public ResponseEntity<User> getUserByName(@PathVariable(value = "name") String name)
+		throws ResourceNotFoundException {
+	User user = userRepository.findByName(name);
 	return ResponseEntity.ok().body(user);
 }
 

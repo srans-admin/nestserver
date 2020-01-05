@@ -95,6 +95,16 @@ public class UserService {
 	}
 	
 	
+	public boolean changePassword(User user, Long userId) {
+		logger.debug("In::"); 
+		
+		boolean status = tenantToUaaService.changePassword(user);
+		
+		logger.debug("Out::"+status); 
+		return status;
+	}
+	
+	
 	
 	private User processTenantOps(User user) {
 		logger.debug("In::processTenantOps");

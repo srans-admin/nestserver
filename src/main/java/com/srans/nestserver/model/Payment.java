@@ -22,6 +22,9 @@ private static final long serialVersionUID = 1L;
 private Long id;
 
 @Column
+private Long tenantid;
+
+@Column
 private Long bookingid;
 
 @Column
@@ -49,14 +52,13 @@ private String date;
 
 public Payment() {
 	super();
-	
-	
 }
 
-public Payment(Long id, Long bookingid, String name, String roomName, String roomType, Long roomRent,
+public Payment(Long id, Long tenantid, Long bookingid, String name, String roomName, String roomType, Long roomRent,
 		String paymentThrough, Long transactionId, String bankName, String date) {
 	super();
 	this.id = id;
+	this.tenantid = tenantid;
 	this.bookingid = bookingid;
 	this.name = name;
 	this.roomName = roomName;
@@ -74,6 +76,14 @@ public Long getId() {
 
 public void setId(Long id) {
 	this.id = id;
+}
+
+public Long getTenantid() {
+	return tenantid;
+}
+
+public void setTenantid(Long tenantid) {
+	this.tenantid = tenantid;
 }
 
 public Long getBookingid() {
@@ -148,13 +158,18 @@ public void setDate(String date) {
 	this.date = date;
 }
 
+public static long getSerialversionuid() {
+	return serialVersionUID;
+}
+
 @Override
 public String toString() {
 	StringBuilder builder = new StringBuilder();
-	builder.append("Payment [id=").append(id).append(", bookingid=").append(bookingid).append(", name=").append(name)
-			.append(", roomName=").append(roomName).append(", roomType=").append(roomType).append(", roomRent=")
-			.append(roomRent).append(", paymentThrough=").append(paymentThrough).append(", transactionId=")
-			.append(transactionId).append(", bankName=").append(bankName).append(", date=").append(date).append("]");
+	builder.append("Payment [id=").append(id).append(", tenantid=").append(tenantid).append(", bookingid=")
+			.append(bookingid).append(", name=").append(name).append(", roomName=").append(roomName)
+			.append(", roomType=").append(roomType).append(", roomRent=").append(roomRent).append(", paymentThrough=")
+			.append(paymentThrough).append(", transactionId=").append(transactionId).append(", bankName=")
+			.append(bankName).append(", date=").append(date).append("]");
 	return builder.toString();
 }
 }

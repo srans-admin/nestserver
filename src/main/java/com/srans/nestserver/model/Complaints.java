@@ -18,20 +18,21 @@ public class Complaints implements Serializable {
 	private String name;
 	private String emailId;
 	private long phoneNumber;
-	private String descripition;
-
+	private String description;
+	
 	public Complaints() {
 		super();
+		
 	}
 
-	public Complaints(long id, String roleName, String name, String emailId, long phoneNumber, String descripition) {
+	public Complaints(long id, String roleName, String name, String emailId, long phoneNumber, String description) {
 		super();
 		this.id = id;
 		this.roleName = roleName;
 		this.name = name;
 		this.emailId = emailId;
 		this.phoneNumber = phoneNumber;
-		this.descripition = descripition;
+		this.description = description;
 	}
 
 	public long getId() {
@@ -74,12 +75,12 @@ public class Complaints implements Serializable {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public String getDescripition() {
-		return descripition;
+	public String getdescription() {
+		return description;
 	}
 
-	public void setDescripition(String descripition) {
-		this.descripition = descripition;
+	public void setdescription(String description) {
+		this.description = description;
 	}
 
 	@Override
@@ -87,11 +88,10 @@ public class Complaints implements Serializable {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Complaints [id=").append(id).append(", roleName=").append(roleName).append(", name=")
 				.append(name).append(", emailId=").append(emailId).append(", phoneNumber=").append(phoneNumber)
-				.append(", descripition=").append(descripition).append("]");
+				.append(", description=").append(description).append("]");
 		return builder.toString();
 	}
 
 	
-	}
-
-
+	
+}

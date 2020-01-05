@@ -82,6 +82,9 @@ public class User implements Serializable {
 	
 	@Column(name = "subscriptionType")
 	private String subscriptionType;
+	
+	@Transient
+	private String password;
 	 
 	
 	@Transient
@@ -285,6 +288,31 @@ public class User implements Serializable {
 
 	public String getStatus() {
 		return status;
+	} 
+	
+
+	public int getSubscriptions() {
+		return subscriptions;
+	}
+
+	public void setSubscriptions(int subscriptions) {
+		this.subscriptions = subscriptions;
+	}
+
+	public String getSubscriptionType() {
+		return subscriptionType;
+	}
+
+	public void setSubscriptionType(String subscriptionType) {
+		this.subscriptionType = subscriptionType;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public void setStatus(String status) {
@@ -294,51 +322,22 @@ public class User implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("User [userId=");
-		builder.append(userId);
-		builder.append(", name=");
-		builder.append(name);
-		builder.append(", role=");
-		builder.append(role);
-		builder.append(", contactNumber=");
-		builder.append(contactNumber);
-		builder.append(", fatherName=");
-		builder.append(fatherName);
-		builder.append(", fatherphoneNumber=");
-		builder.append(fatherphoneNumber);
-		builder.append(", motherName=");
-		builder.append(motherName);
-		builder.append(", motherphoneNumber=");
-		builder.append(motherphoneNumber);
-		builder.append(", dob=");
-		builder.append(dob);
-		builder.append(", emergencyContactNumber=");
-		builder.append(emergencyContactNumber);
-		builder.append(", nameOfTheEmployer=");
-		builder.append(nameOfTheEmployer);
-		builder.append(", bloodGroup=");
-		builder.append(bloodGroup);
-		builder.append(", officeAddress=");
-		builder.append(officeAddress);
-		builder.append(", mobileNumber=");
-		builder.append(mobileNumber);
-		builder.append(", emailId=");
-		builder.append(emailId);
-		builder.append(", permanentAddress=");
-		builder.append(permanentAddress);
-		builder.append(", tenantBooking=");
-		builder.append(tenantBooking);
-		builder.append(", payment=");
-		builder.append(payment);
-		builder.append(", bed=");
-		builder.append(bed);
-		builder.append(", status=");
-		builder.append(status);
-		builder.append(", userSubscriptionWrapper=");
-		builder.append(userSubscriptionWrapper);
-		builder.append("]");
+		builder.append("User [userId=").append(userId).append(", name=").append(name).append(", role=").append(role)
+				.append(", status=").append(status).append(", contactNumber=").append(contactNumber)
+				.append(", fatherName=").append(fatherName).append(", fatherphoneNumber=").append(fatherphoneNumber)
+				.append(", motherName=").append(motherName).append(", motherphoneNumber=").append(motherphoneNumber)
+				.append(", dob=").append(dob).append(", emergencyContactNumber=").append(emergencyContactNumber)
+				.append(", nameOfTheEmployer=").append(nameOfTheEmployer).append(", bloodGroup=").append(bloodGroup)
+				.append(", officeAddress=").append(officeAddress).append(", mobileNumber=").append(mobileNumber)
+				.append(", emailId=").append(emailId).append(", permanentAddress=").append(permanentAddress)
+				.append(", tenantBooking=").append(tenantBooking).append(", payment=").append(payment).append(", bed=")
+				.append(bed).append(", subscriptions=").append(subscriptions).append(", subscriptionType=")
+				.append(subscriptionType).append(", password=").append("******").append(", userSubscriptionWrapper=")
+				.append(userSubscriptionWrapper).append("]");
 		return builder.toString();
 	}
+
+	 
 
 	
 }

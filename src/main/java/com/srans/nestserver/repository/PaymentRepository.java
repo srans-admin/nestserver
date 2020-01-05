@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.srans.nestserver.model.Payment;
+import com.srans.nestserver.model.User;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
@@ -31,6 +32,11 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 	@Query(value="SELECT room_rent FROM ROOM WHERE id=?1", nativeQuery=true)
 	public Long roomRent(Long floor_id);
 	
+	@Query(value="SELECT u FROM USER u WHERE u.name=?1",nativeQuery=true) 
+	public User findByName(String name);
+	
+	@Query(value="SELECT user_id FROM USER WHERE id=?1", nativeQuery=true)
+	public Long user_id(Long user_id);
 	
 	
 }

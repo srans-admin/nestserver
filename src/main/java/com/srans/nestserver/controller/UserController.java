@@ -1,7 +1,7 @@
 package com.srans.nestserver.controller;
 
 import java.io.IOException;
-import java.util.Date;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,18 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
-import com.srans.nestserver.model.Bed;
+
 import com.srans.nestserver.model.User;
-import com.srans.nestserver.model.TenantBooking;
-import com.srans.nestserver.repository.BedRepository;
-import com.srans.nestserver.repository.PaymentRepository;
-import com.srans.nestserver.repository.TenantBookRepository;
+
 import com.srans.nestserver.repository.UserRepository;
 import com.srans.nestserver.service.StorageService;
-import com.srans.nestserver.service.TenantService;
-import com.srans.nestserver.service.TenantToUaaService;
+
 import com.srans.nestserver.service.UserService;
-import com.srans.nestserver.util.NSConstants;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -80,23 +75,23 @@ public class UserController {
 	@GetMapping("/users")
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
 	//@PreAuthorize("permitAll()")
-	public List<User> getAllTenants() {
+	public List<User> getAllUser() {
 		return userRepository.findAll();
 	}
 	
 	@GetMapping("/users/{id}")
 	@PreAuthorize("permitAll()")
-	public ResponseEntity<User> getTenantById(@PathVariable(value = "id") Long TenantId)
+	public ResponseEntity<User> getTenantById(@PathVariable(value = "id") Long UserId)
 			throws ResourceNotFoundException {
-		User user = userRepository.findById(TenantId)
-				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
+		User user = userRepository.findById(UserId)
+				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + UserId));
 		return ResponseEntity.ok().body(user);
 	}
 	
 	@GetMapping("/users/byname/{name}")
 	@PreAuthorize("permitAll()")
 	//@PreAuthorize("permitAll()")
-	public ResponseEntity<User> getTenantByName(@PathVariable(value = "name") String name)
+	public ResponseEntity<User> getUserByName(@PathVariable(value = "name") String name)
 			throws ResourceNotFoundException {
 		User user = userRepository.findByName(name); 
 		return ResponseEntity.ok().body(user);
@@ -104,7 +99,7 @@ public class UserController {
 
 	@PostMapping("/users/{id}/upload/{cat}")
 	@PreAuthorize("permitAll()")
-	public void storeTenantImage(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file,
+	public void storeUserImage(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file,
 			@PathVariable("cat") String cat) throws NSException {
 
 		logger.info("In::POST::/users/{id}/upload/{cat}::uploadTenantImages::" + id + "::" + cat);
@@ -179,6 +174,19 @@ public class UserController {
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
 		return response;
+	}
+	
+	
+	@PostMapping("/users/{id}/change-password")
+	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN') OR hasRole('ROLE_USER')")
+	public boolean changePassword(@PathVariable(value = "id") Long userId, @RequestBody User user)
+			throws ResourceNotFoundException {
+		logger.info("In::/users/{id}/change-password");
+		
+		boolean status = userService.changePassword(user, userId);
+		
+		logger.info("Out::/users/{id}/change-password");
+		return status;
 	}
 
 }
