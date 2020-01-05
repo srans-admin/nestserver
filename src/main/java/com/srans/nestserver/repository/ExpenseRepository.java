@@ -12,5 +12,7 @@ import com.srans.nestserver.model.Expense;
 public interface ExpenseRepository extends JpaRepository<Expense, Long>{
 	@Query(value="SELECT * FROM expense WHERE hostel_id=?1", nativeQuery = true)
 	public List<Expense> getExpenses(Long hostelId);
-
+	
+	@Query(value="SELECT * FROM expensescategory WHERE type_id=?1",nativeQuery = true)
+   public List<Expense>getExpenses(long type_id);
 }
