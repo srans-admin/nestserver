@@ -18,6 +18,7 @@ import com.srans.nestserver.communication.NiodsSmsGateway;
 import com.srans.nestserver.model.User;
 import com.srans.nestserver.util.MailTemplates;
 import com.srans.nestserver.util.NSConstants;
+import com.srans.nestserver.util.PasswordGenerator;
 import com.srans.nestserver.util.SMSTemplates;
 
 import freemarker.template.TemplateException;
@@ -113,7 +114,17 @@ public class TenantService {
 			} else if( responseTenant.getRole().endsWith(NSConstants.ROLE_USER)){
 				message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE;
 					 
-			} else{
+			} else if(responseTenant.getRole().endsWith(NSConstants.ROLE_ADMIN)) {
+				message=SMSTemplates.TENANT_REGISTRATION_TEMPLATE;
+				
+				/*
+				 * message=SMSTemplates.TENANT_CREDETIALS.replaceAll("##USER_NAME##",
+				 * "hfdsghjdfs") .replaceAll("##USER_ID##", ""+1010)
+				 * .replaceAll("##TEMP_PASSWORD##", PasswordGenerator.generateRamdomPassword());
+				 */
+			}
+			
+			else{
 				message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE;
 			}	 
 			

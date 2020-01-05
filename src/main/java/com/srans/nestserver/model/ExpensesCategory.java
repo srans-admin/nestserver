@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "expensetype")
+@Table(name = "expenseType")
 public class ExpensesCategory extends AuditModel {
 
 	/**
@@ -23,17 +23,20 @@ public class ExpensesCategory extends AuditModel {
 
 	@Column
 	private String expenseType;
+	
+	@Column
+	private String description;
 
 	public ExpensesCategory() {
 		super();
-
+	
 	}
 
-	public ExpensesCategory(Long typeId, String expenseType) {
+	public ExpensesCategory(Long typeId, String expenseType, String description) {
 		super();
 		this.typeId = typeId;
 		this.expenseType = expenseType;
-		
+		this.description = description;
 	}
 
 	public Long getTypeId() {
@@ -52,15 +55,30 @@ public class ExpensesCategory extends AuditModel {
 		this.expenseType = expenseType;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ExpensesType [typeId=");
+		builder.append("ExpensesCategory [typeId=");
 		builder.append(typeId);
 		builder.append(", expenseType=");
 		builder.append(expenseType);
+		builder.append(", description=");
+		builder.append(description);
 		builder.append("]");
 		return builder.toString();
 	}
-	
 }
+
+	

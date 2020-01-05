@@ -24,66 +24,91 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Complaints;
+import com.srans.nestserver.model.User;
+import com.srans.nestserver.repository.ComplaintsRepository;
+import com.srans.nestserver.repository.UserRepository;
 
 
-@CrossOrigin(origins = "*",allowedHeaders = "*") 
+@CrossOrigin(origins = "*",allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1")
 public class ComplaintsController {
-	Logger logger = LoggerFactory.getLogger(RolesController.class);
-	@Autowired
-	private ComplaintsRepository complaintsRepository;
-	
-	
-	@GetMapping("/complaints")
-	@PreAuthorize("permitAll()")
-	public List<Complaints> getAllComplaints() {
-		return complaintsRepository.findAll();
-	}
-	
+Logger logger = LoggerFactory.getLogger(RolesController.class);
+@Autowired
+private ComplaintsRepository complaintsRepository;
+@Autowired
+private UserRepository userRepository;
 
-	@GetMapping("/complaints/{id}")
-	@PreAuthorize("permitAll()")
-	public ResponseEntity<Complaints> getComplaintsById(@PathVariable(value = "id") Long complaintsId)
-			throws ResourceNotFoundException {
-		Complaints complaints = complaintsRepository.findById(complaintsId)
-				.orElseThrow(() -> new ResourceNotFoundException("Complaints not found for this id :: " + complaintsId));
-		return ResponseEntity.ok().body(complaints);
-	}
+@GetMapping("/complaints")
+@PreAuthorize("permitAll()")
+public List<Complaints> getAllComplaints() {
+return complaintsRepository.findAll();
+}
 
-	@PostMapping("/complaints")
-	@PreAuthorize("permitAll()")
-	public Complaints createComplaints(@Valid @RequestBody Complaints complaints) {
-		return complaintsRepository.save(complaints);
-	}
 
-	@PutMapping("/complaints/{id}")
-	@PreAuthorize("permitAll()")
-	public ResponseEntity<Complaints> updateComplaints(@PathVariable(value = "id") Long complaints_Id,
-			@Valid @RequestBody Complaints complaintsDetails) throws ResourceNotFoundException {
-		Complaints complaints = complaintsRepository.findById(complaints_Id)
-				.orElseThrow(() -> new ResourceNotFoundException("Complaints not found for this id :: " +complaints_Id));
-		complaints.setRoleName(complaintsDetails.getRoleName());
-   complaints.setDescripition(complaintsDetails.getDescripition());
-   complaints.setName(complaintsDetails.getName());
-   complaints.setId(complaintsDetails.getId());
-   complaints.setPhoneNumber(complaintsDetails.getPhoneNumber());
-   complaints.setEmailId(complaintsDetails.getEmailId());
-   
-		final Complaints updatedComplaints = complaintsRepository.save(complaints);
-		return ResponseEntity.ok(updatedComplaints);
-	}
+@GetMapping("/complaints/{id}")
+@PreAuthorize("permitAll()")
+public ResponseEntity<Complaints> getComplaintsById(@PathVariable(value = "id") Long complaintsId)
+throws ResourceNotFoundException {
+Complaints complaints = complaintsRepository.findById(complaintsId)
+.orElseThrow(() -> new ResourceNotFoundException("Complaints not found for this id :: " + complaintsId));
+return ResponseEntity.ok().body(complaints);
+}
 
-	@DeleteMapping("/complaints/{id}")
-	@PreAuthorize("permitAll()")
-	public Map<String, Boolean> deleteRole(@PathVariable(value = "id") Long complaintsId)
-			throws ResourceNotFoundException {
-		Complaints complaints = complaintsRepository.findById(complaintsId)
-				.orElseThrow(() -> new ResourceNotFoundException("Complaints not found for this id :: " + complaintsId));
 
-		complaintsRepository.delete(complaints);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return response;
-	}
+
+
+@GetMapping("/complaints/users/{id}")
+@PreAuthorize("permitAll()")
+public ResponseEntity<User> getTenantById(@PathVariable(value = "id") Long TenantId)
+throws ResourceNotFoundException {
+User user = userRepository.findById(TenantId)
+.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
+return ResponseEntity.ok().body(user);
+}
+
+@GetMapping("/complaints/users/byname/{name}")
+@PreAuthorize("permitAll()")
+//@PreAuthorize("permitAll()")
+public ResponseEntity<User> getTenantByName(@PathVariable(value = "name") String name)
+throws ResourceNotFoundException {
+User user = userRepository.findByName(name);
+return ResponseEntity.ok().body(user);
+}
+
+@PostMapping("/complaints")
+@PreAuthorize("permitAll()")
+public Complaints createComplaints(@Valid @RequestBody Complaints complaints) {
+return complaintsRepository.save(complaints);
+}
+
+@PutMapping("/complaints/{id}")
+@PreAuthorize("permitAll()")
+public ResponseEntity<Complaints> updateComplaints(@PathVariable(value = "id") Long complaints_Id,
+@Valid @RequestBody Complaints complaintsDetails) throws ResourceNotFoundException {
+Complaints complaints = complaintsRepository.findById(complaints_Id)
+.orElseThrow(() -> new ResourceNotFoundException("Complaints not found for this id :: " +complaints_Id));
+complaints.setRoleName(complaintsDetails.getRoleName());
+complaints.setDescription(complaintsDetails.getDescription());
+complaints.setName(complaintsDetails.getName());
+complaints.setId(complaintsDetails.getId());
+complaints.setPhoneNumber(complaintsDetails.getPhoneNumber());
+complaints.setEmailId(complaintsDetails.getEmailId());
+
+final Complaints updatedComplaints = complaintsRepository.save(complaints);
+return ResponseEntity.ok(updatedComplaints);
+}
+
+@DeleteMapping("/complaints/{id}")
+@PreAuthorize("permitAll()")
+public Map<String, Boolean> deleteRole(@PathVariable(value = "id") Long complaintsId)
+throws ResourceNotFoundException {
+Complaints complaints = complaintsRepository.findById(complaintsId)
+.orElseThrow(() -> new ResourceNotFoundException("Complaints not found for this id :: " + complaintsId));
+
+complaintsRepository.delete(complaints);
+Map<String, Boolean> response = new HashMap<>();
+response.put("deleted", Boolean.TRUE);
+return response;
+}
 }
