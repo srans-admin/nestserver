@@ -1,5 +1,6 @@
 package com.srans.nestserver.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.repository.NotificationRepository;
 import com.srans.nestserver.util.NSException;
+import com.srans.nestserver.util.NotificationUtil;
 
 @CrossOrigin(value = "*", allowedHeaders = "*")
 @RestController
@@ -27,14 +29,17 @@ public class NotificationController {
 	
 	@GetMapping(value = "/users/{userId}/notifications")
 	@PreAuthorize("permitAll()")
-	public List<Object> getAllUserNotifications(@PathVariable(value = "userId") Long userId) throws NSException {
-		logger.info("In::getAllNotificationsOfUser::" ); 
-		
-		List<Object> response = notificationRepo.getAllUserNotifications(userId); 
-		
-		logger.info("Out::getAllNotificationsOfUser::"+response ); 
-		
-		return response;
+	public List<NotificationUtil> getAllUserNotifications(@PathVariable(value = "userId") Long userId) throws NSException {
+		logger.info("In::getAllNotificationsOfUser::" );
+		List<String> response = notificationRepo.getAllNotification(userId);
+		List<NotificationUtil> l1=new ArrayList<>();
+		for(String s:response) {
+			NotificationUtil n1=new NotificationUtil();
+			n1.setMessage(s);
+			l1.add(n1);
+		}
+		logger.info("Out::getAllNotificationsOfUser::"+response );
+		return l1;
 	}
 	
 	

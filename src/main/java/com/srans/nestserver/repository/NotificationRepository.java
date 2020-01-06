@@ -16,16 +16,16 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 	public Long[] getNotificationId();
 
 	
-	@Query(value = "select n.message, n.notification_category, n.user_role, n.view_status, nu.notification_id from notification n  inner\r\n"
-			+ "JOIN notificationuser nu\r\n"
-			+ "on(n.id=nu.notification_id) where n.view_status='N' and nu.super_admin_username=?1", nativeQuery = true)
-	public Set<Object> findNewNotification(String superAdminUsername);
+	@Query(value = "select n.message from notification n  inner JOIN notification_user nu on (n.id=nu.notification_id) where nu.view_status='N' and nu.user_id=?1", nativeQuery = true)
+	public List <String> getAllNotification(Long userId);
 	
 	
-	@Query(value = "select n.message  from Notification n  INNER \r\n"
-			+ "JOIN NotificationUser nu\r\n"
-			+ "on(n.id=nu.notificationId) where nu.viewStatus='N' and nu.userId=?1", nativeQuery = true)
-	public List<Object> getAllUserNotifications(Long userId);
+	/*
+	 * @Query(value = "select n.message  from Notification n  INNER \r\n" +
+	 * "JOIN NotificationUser nu\r\n" +
+	 * "on(n.id=nu.notificationId) where nu.viewStatus='N' and nu.userId=?1",
+	 * nativeQuery = true) public List<Object> getAllUserNotifications(Long userId);
+	 */
 	 
 
 }

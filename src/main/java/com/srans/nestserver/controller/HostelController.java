@@ -33,6 +33,7 @@ import com.srans.nestserver.repository.BedRepository;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.RoomRepository;
+import com.srans.nestserver.service.NotificationService;
 import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.util.NSException;
 
@@ -42,6 +43,8 @@ import com.srans.nestserver.util.NSException;
 public class HostelController {
 	private Logger logger = LoggerFactory.getLogger(HostelController.class);
 	
+	@Autowired
+	private NotificationService notificationService;
 
 	@Autowired
 	private HostelRepository hostelRepository;
@@ -71,7 +74,7 @@ public class HostelController {
 	public Hostel getHostel(@PathVariable(value = "id") Long hostelId) throws IOException {
 
 		Hostel responseHostel = hostelRepository.getOne(hostelId);
-
+		
 		floorRepository.findByHostelId(hostelId).forEach(floor -> {
 			responseHostel.getfloors().add(floor);
 			roomRepository.findByFloorId(floor.getId()).forEach(room -> {
@@ -81,7 +84,7 @@ public class HostelController {
 				});
 			});
 		});
-
+		
 		return responseHostel;
 	}
 
@@ -93,14 +96,13 @@ public class HostelController {
 	 * @throws NSException
 	 */
 	@PostMapping("/hostels")
-	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
-	//@PreAuthorize("permitAll()")
+	//@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	@PreAuthorize("permitAll()")
 	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) throws NSException {
 
 		logger.info("IN::POST::/hostels::saveHostel::" + hostel);
 
 		Hostel responseHostel = hostelRepository.save(hostel);
-
 		// SAVE Database stuff here
 
 		responseHostel.getfloors().forEach(floor -> {
@@ -121,6 +123,10 @@ public class HostelController {
 			});
 
 		});
+		
+		// STEP-7 : Prepare one Notification to SuperAdmin(s)
+		notificationService.addHostelNotifictaion(responseHostel);
+				
 		logger.info("OUT::POST::/hostels::saveHostel::" + hostel);
 		return responseHostel;
 	}
