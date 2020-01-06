@@ -34,6 +34,9 @@ public class TenantToUaaService {
 	@Autowired
 	private NiodsSmsGateway niodsSmsGateway;
 	
+	@Autowired
+	private PasswordGenerator passwordGenerator;
+	
 	
 	
 	@Value("${uaa-server-url:http://localhost:9090/uaa-server}")
@@ -49,7 +52,7 @@ public class TenantToUaaService {
 			logger.debug("In::postUserToUaa");  
 			
 			String url = UAA_SERVER_URL+"/v1/users";
-			String randomPassword = PasswordGenerator.generateRamdomPassword();
+			String randomPassword = passwordGenerator.generateRamdomPassword();
 			
 			UserSubscription userSubscriptionWrapper = new UserSubscription();
 			
