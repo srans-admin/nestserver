@@ -74,13 +74,13 @@ public class NotificationService {
 
 	public boolean addTenantNotifictaion(User responseTenant) {
 
-		logger.debug("In::addAdminRequestNotifictaion");
+		logger.debug("In::addTenantNotifictaion");
 		boolean status = false;
 		try {
 
 			// STEP-1 prepare Notification object with messsage
 			Notification notification = new Notification();
-			notification.setMessage(responseTenant.getName() + " has requested subscription, please review.");
+			notification.setMessage(responseTenant.getName() + " has requested for registration, please review.");
 			final Notification notificationResponse = notificationRepo.save(notification);
 
 			// STEP-2: Get superAdmins from UAA
@@ -90,7 +90,6 @@ public class NotificationService {
 				NotificationUser notificationUser = new NotificationUser();
 				notificationUser.setNotificationId(notificationResponse.getId());
 				notificationUser.setUserId(admin.getUserId());
-
 				notificationUserRepo.save(notificationUser);
 
 			});
@@ -107,13 +106,13 @@ public class NotificationService {
 
 	public boolean addHostelNotifictaion(Hostel responseHostel) {
 
-		// logger.debug("In::addAdminRequestNotifictaion");
+		// logger.debug("In::addHostelNotifictaion");
 		boolean status = false;
 		try {
 
 			// STEP-1 prepare Notification object with messsage
 			Notification notification = new Notification();
-			notification.setMessage(responseHostel.getHostelName() + " has add, please review.");
+			notification.setMessage(responseHostel.getHostelName() + " hostel has add, please review.");
 			final Notification notificationResponse = notificationRepo.save(notification);
 
 			// STEP-2: Get superAdmins from UAA

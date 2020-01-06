@@ -1,21 +1,25 @@
 package com.srans.nestserver.controller;
 
-import java.util.ArrayList;
+import java.math.BigInteger;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.srans.nestserver.model.Notification;
 import com.srans.nestserver.repository.NotificationRepository;
 import com.srans.nestserver.util.NSException;
-import com.srans.nestserver.util.NotificationUtil;
 
 @CrossOrigin(value = "*", allowedHeaders = "*")
 @RestController
@@ -25,21 +29,24 @@ public class NotificationController {
 
 	@Autowired
 	private NotificationRepository notificationRepo;
+	
+	
  
 	
 	@GetMapping(value = "/users/{userId}/notifications")
 	@PreAuthorize("permitAll()")
-	public List<NotificationUtil> getAllUserNotifications(@PathVariable(value = "userId") Long userId) throws NSException {
+	public Notification getAllUserNotification(@PathVariable(value = "userId") Long userId,   Notification notifications) throws NSException {
 		logger.info("In::getAllNotificationsOfUser::" );
-		List<String> response = notificationRepo.getAllNotification(userId);
-		List<NotificationUtil> l1=new ArrayList<>();
-		for(String s:response) {
-			NotificationUtil n1=new NotificationUtil();
-			n1.setMessage(s);
-			l1.add(n1);
-		}
+		List<Object[]> response = notificationRepo.getAllNotification(userId);
+		 for(Object[] s:response) {
+			
+			 notifications.setId(((BigInteger) s[0]).longValue());
+			 notifications.setMessage((String) s[1]);
+		 
+		 }
+		
 		logger.info("Out::getAllNotificationsOfUser::"+response );
-		return l1;
+		return notifications ;
 	}
 	
 	

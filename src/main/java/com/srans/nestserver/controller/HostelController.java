@@ -124,7 +124,6 @@ public class HostelController {
 
 		});
 		
-		// STEP-7 : Prepare one Notification to SuperAdmin(s)
 		notificationService.addHostelNotifictaion(responseHostel);
 				
 		logger.info("OUT::POST::/hostels::saveHostel::" + hostel);

@@ -76,7 +76,7 @@ public class UserService {
 			user = processTenantOps(user);
 			break;
 
-		case NSConstants.ROLE_ADMIN: // Subscription Request
+		case NSConstants.ROLE_ADMIN:
 			user = processAdminOps(user);
 			break;
 
@@ -103,51 +103,45 @@ public class UserService {
 			responseTenant = userRepository.save(user);
 
 			if (responseTenant.getUserId() != -1) {
-				
-				
-				// STEP-6 : Post this info to UAA
+
+				// STEP-1 : Post this info to UAA
 				tenantToUaaService.postUserToUaa(responseTenant);
-				
-				// STEP-7 : Prepare one Notification to SuperAdmin(s)
+
+				// STEP-2 : Prepare one Notification to SuperAdmin(s)
 				notificationService.addTenantNotifictaion(responseTenant);
 
 				// STEP-2
-				/*
-				 * user.getTenantBooking().setTenantId(responseTenant.getUserId());
-				 * TenantBooking tenantBooking =
-				 * tenantBookRepository.save(user.getTenantBooking());
-				 */
+
+				user.getTenantBooking().setTenantId(responseTenant.getUserId());
+				TenantBooking tenantBooking = tenantBookRepository.save(user.getTenantBooking());
 
 				// Update Bed with alloted_state as N
-				/*
-				 * Bed bed = new Bed(); bed.setId(tenantBooking.getRoomBedId());
-				 * bed.setHostelId(tenantBooking.getHostelId());
-				 * bed.setFloorId(tenantBooking.getFloorId());
-				 * bed.setRoomId(tenantBooking.getRoomId()); bed.setAlloted('Y');
-				 * bed.setUpdatedAt(new Date());
-				 * 
-				 * responseTenant.setTenantBooking(tenantBooking);
-				 * responseTenant.setBed(bedRepository.saveAndFlush(bed));
-				 */
 
-				/*
-				 * // STEP-3 : Save Payment Information
-				 * responseTenant.setPayment(paymentRepository.save(user.getPayment()));
-				 */
+				Bed bed = new Bed();
+				bed.setId(tenantBooking.getRoomBedId());
+				bed.setHostelId(tenantBooking.getHostelId());
+				bed.setFloorId(tenantBooking.getFloorId());
+				bed.setRoomId(tenantBooking.getRoomId());
+				bed.setAlloted('Y');
+				bed.setUpdatedAt(new Date());
+
+				responseTenant.setTenantBooking(tenantBooking);
+				responseTenant.setBed(bedRepository.saveAndFlush(bed));
+
+				// STEP-3 : Save Payment Information
+				responseTenant.setPayment(paymentRepository.save(user.getPayment()));
 
 				// STEP-4 : Now drop an email to tenant
-				/*
-				 * if (responseTenant.getEmailId() != null &&
-				 * !responseTenant.getEmailId().isEmpty()) {
-				 * tenantService.triggerAlertEmail(responseTenant); }
-				 */
-				// STEP-5 : Now drop an SMS to tenant
-				/*
-				 * if (!("" + responseTenant.getContactNumber()).isEmpty()) {
-				 * tenantService.triggerSMS(responseTenant); }
-				 */
 
-				
+				if (responseTenant.getEmailId() != null && !responseTenant.getEmailId().isEmpty()) {
+					tenantService.triggerAlertEmail(responseTenant);
+				}
+
+				// STEP-5 : Now drop an SMS to tenant
+
+				if (!("" + responseTenant.getContactNumber()).isEmpty()) {
+					tenantService.triggerSMS(responseTenant);
+				}
 
 			} else {
 				throw new NSException("Unable to save tenant ");
@@ -208,17 +202,15 @@ public class UserService {
 
 			if (responseTenant.getUserId() != -1) {
 
-				/*
-				 * //STEP-4 : Now drop an email to tenant if(responseTenant.getEmailId() != null
-				 * && !responseTenant.getEmailId().isEmpty()){
-				 * tenantService.triggerAlertEmail(responseTenant); }
-				 */
+				// STEP-4 : Now drop an email to tenant
+				if (responseTenant.getEmailId() != null && !responseTenant.getEmailId().isEmpty()) {
+					tenantService.triggerAlertEmail(responseTenant);
+				}
 
-				/*
-				 * //STEP-5 : Now drop an SMS to tenant
-				 * if(!(""+responseTenant.getContactNumber()).isEmpty()){
-				 * tenantService.triggerSMS(responseTenant); }
-				 */
+				// STEP-5 : Now drop an SMS to tenant
+				if (!("" + responseTenant.getContactNumber()).isEmpty()) {
+					tenantService.triggerSMS(responseTenant);
+				}
 
 				// STEP-6 : Post this info to UAA
 				tenantToUaaService.postUserToUaa(responseTenant);
