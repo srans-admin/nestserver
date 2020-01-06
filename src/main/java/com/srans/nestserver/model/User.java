@@ -291,6 +291,22 @@ public class User implements Serializable {
 		this.status = status;
 	}
 
+	public int getSubscriptions() {
+		return subscriptions;
+	}
+
+	public void setSubscriptions(int subscriptions) {
+		this.subscriptions = subscriptions;
+	}
+
+	public String getSubscriptionType() {
+		return subscriptionType;
+	}
+
+	public void setSubscriptionType(String subscriptionType) {
+		this.subscriptionType = subscriptionType;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
