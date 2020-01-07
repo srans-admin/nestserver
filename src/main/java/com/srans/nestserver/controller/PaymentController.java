@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,135 +26,142 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Payment;
-import com.srans.nestserver.model.Role;
 import com.srans.nestserver.model.Room;
 import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.PaymentRepository;
-import com.srans.nestserver.repository.RoleRepository;
 import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.repository.UserRepository;
+import com.srans.nestserver.service.SubscriptionService;
+import com.srans.nestserver.util.NSException;
 
-@CrossOrigin(origins = "*",allowedHeaders = "*") 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1")
 public class PaymentController {
-//Logger logger = LoggerFactory.getLogger(RolesController.class);
-@Autowired
-private PaymentRepository paymentRepository;
+Logger logger = LoggerFactory.getLogger(RolesController.class);
+	@Autowired
+	private PaymentRepository paymentRepository;
 
-@Autowired
-private RoomRepository roomRepository;
+	@Autowired
+	private RoomRepository roomRepository;
 
-@Autowired
-private HostelRepository hostelRepository;
+	@Autowired
+	private HostelRepository hostelRepository;
 
-@Autowired
-private FloorRepository floorRepository;
+	@Autowired
+	private FloorRepository floorRepository;
 
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private SubscriptionService subscriptionService;
 
-@Autowired
-private UserRepository userRepository;
+	// Update approved status
+	@PostMapping("/payment/approved-status")
+	@PreAuthorize("permitAll()")
+	public Payment savePayment(@Valid @RequestBody Payment payment) throws NSException {
 
+		logger.info("IN::POST::/users::savePayment::" + payment);
+         
+		payment = subscriptionService.processOfApproving(payment);
 
+		logger.info("OUT::POST::/users::saveUser::" + payment);
+		return payment;
+	}
 
-@GetMapping("/payment")
-public List<Payment> getAllPayment() {
-return paymentRepository.findAll();
-}
+	@GetMapping("/payment")
+	public List<Payment> getAllPayment() {
+		return paymentRepository.findAll();
+	}
 
+	@GetMapping("payment/hostels/floor/{id}/room/{room_id}")
+	public ResponseEntity<Room> getFloorById(@PathVariable(value = "id") Long floor_id,
 
+			@PathVariable(value = "room_id") Long room_id) {
+		if (!floorRepository.existsById(floor_id)) {
+			throw new ResourceNotFoundException("FloorId " + floor_id + " not found");
+		}
 
+		Room room = roomRepository.findById(room_id).orElseThrow(() -> new ResourceNotFoundException(
+				"Floor not found for this Floorid :: " + floor_id + "Floor not found for this Floor id::" + room_id));
+		return ResponseEntity.ok().body(room);
+	}
 
-@GetMapping("payment/hostels/floor/{id}/room/{room_id}")
-public ResponseEntity<Room> getFloorById(@PathVariable(value = "id") Long floor_id,
+	/*
+	 * @GetMapping("/payment/roomName/{floor_id}") public Room
+	 * getroomNameByfloor_Id(@PathVariable(value = "id") Long id) { return
+	 * roomRepository.findById(id).orElse(null); }
+	 * 
+	 * 
+	 * 
+	 * @GetMapping("/payment/roomtype/room/{room_id}") public Payment
+	 * getAllroomTypeByPaymentId(@PathVariable(value = "id") Long id) { return
+	 * paymentRepository.findById(id).orElse(null); }
+	 * 
+	 * 
+	 * 
+	 * 
+	 * @GetMapping("/payment/roomRent/room/{room_id}") public Payment
+	 * getroomRentByPaymentId(@PathVariable(value = "id") Long id) { return
+	 * paymentRepository.findById(id).orElse(null); }
+	 * 
+	 */
 
-@PathVariable(value = "room_id") Long room_id) {
-if (!floorRepository.existsById(floor_id)) {
-throw new ResourceNotFoundException("FloorId " + floor_id + " not found");
-}
+	@GetMapping("/payment/{id}")
+	public ResponseEntity<Payment> getPaymentById(@PathVariable(value = "id") Long paymentId)
+			throws ResourceNotFoundException {
+		Payment payment = paymentRepository.findById(paymentId)
+				.orElseThrow(() -> new ResourceNotFoundException("Payment not found for this id :: " + paymentId));
+		return ResponseEntity.ok().body(payment);
+	}
 
-Room room = roomRepository.findById(room_id).orElseThrow(() -> new ResourceNotFoundException(
-"Floor not found for this Floorid :: " + floor_id + "Floor not found for this Floor id::" + room_id));
-return ResponseEntity.ok().body(room);
-}
+	@PreAuthorize("permitAll()")
+	@PostMapping("/payment")
+	public Payment createPayment(@Valid @RequestBody Payment payment) {
+		return paymentRepository.save(payment);
+	}
 
+	@PutMapping("/payment/{id}")
+	public ResponseEntity<Payment> updatePayment(@PathVariable(value = "id") Long payment_Id,
+			@Valid @RequestBody Payment paymentDetails) throws ResourceNotFoundException {
+		Payment payment = paymentRepository.findById(payment_Id)
+				.orElseThrow(() -> new ResourceNotFoundException("Payment not found for this id :: " + payment_Id));
 
-/*
-* @GetMapping("/payment/roomName/{floor_id}") public Room
-* getroomNameByfloor_Id(@PathVariable(value = "id") Long id) { return
-* roomRepository.findById(id).orElse(null); }
-* 
-* 
-* 
-* @GetMapping("/payment/roomtype/room/{room_id}") public Payment
-* getAllroomTypeByPaymentId(@PathVariable(value = "id") Long id) { return
-* paymentRepository.findById(id).orElse(null); }
-* 
-* 
-* 
-* 
-* @GetMapping("/payment/roomRent/room/{room_id}") public Payment
-* getroomRentByPaymentId(@PathVariable(value = "id") Long id) { return
-* paymentRepository.findById(id).orElse(null); }
-* 
-*/
+		payment.setPaymentThrough(paymentDetails.getPaymentThrough());
+		payment.setTransactionId(paymentDetails.getTransactionId());
+		payment.setBankName(paymentDetails.getBankName());
+		payment.setDate(paymentDetails.getDate());
+		final Payment updatedpayment = paymentRepository.save(payment);
+		return ResponseEntity.ok(payment);
+	}
 
+	@DeleteMapping("/payment/{id}")
+	public Map<String, Boolean> deletepayment(@PathVariable(value = "id") Long paymentId)
+			throws ResourceNotFoundException {
+		Payment payment = paymentRepository.findById(paymentId)
+				.orElseThrow(() -> new ResourceNotFoundException("Payment not found for this id :: " + paymentId));
 
-@GetMapping("/payment/{id}")
-public ResponseEntity<Payment> getPaymentById(@PathVariable(value = "id") Long paymentId)
-throws ResourceNotFoundException {
-Payment payment = paymentRepository.findById(paymentId)
-.orElseThrow(() -> new ResourceNotFoundException("Payment not found for this id :: " + paymentId));
-return ResponseEntity.ok().body(payment);
-}
+		paymentRepository.delete(payment);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("deleted", Boolean.TRUE);
+		return response;
+	}
 
-@PreAuthorize("permitAll()")
-@PostMapping("/payment")
-public Payment createPayment(@Valid @RequestBody Payment payment) {
-return paymentRepository.save(payment);
-}
+	@GetMapping("payment/tenant/{Id}")
+	public ResponseEntity<User> getTenantById(@PathVariable(value = "Id") Long TenantId)
+			throws ResourceNotFoundException {
+		User user = userRepository.findById(TenantId)
+				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
+		return ResponseEntity.ok().body(user);
+	}
 
+	@GetMapping("payment/hostels/{id}/roomdetail")
 
-@PutMapping("/payment/{id}")
-public ResponseEntity<Payment> updatePayment(@PathVariable(value = "id") Long payment_Id,
-@Valid @RequestBody Payment paymentDetails) throws ResourceNotFoundException {
-Payment payment = paymentRepository.findById(payment_Id)
-.orElseThrow(() -> new ResourceNotFoundException("Payment not found for this id :: " +payment_Id));
-
-payment.setPaymentThrough(paymentDetails.getPaymentThrough());
-payment.setTransactionId(paymentDetails.getTransactionId());
-payment.setBankName(paymentDetails.getBankName());
-payment.setDate(paymentDetails.getDate());
-final Payment updatedpayment = paymentRepository.save(payment);
-return ResponseEntity.ok(payment);
-}
-
-@DeleteMapping("/payment/{id}")
-public Map<String, Boolean> deletepayment(@PathVariable(value = "id") Long paymentId)
-throws ResourceNotFoundException {
-Payment payment = paymentRepository.findById(paymentId)
-.orElseThrow(() -> new ResourceNotFoundException("Payment not found for this id :: " + paymentId));
-
-paymentRepository.delete(payment);
-Map<String, Boolean> response = new HashMap<>();
-response.put("deleted", Boolean.TRUE);
-return response;
-}
-
-@GetMapping("payment/tenant/{Id}")
-public ResponseEntity<User> getTenantById(@PathVariable(value = "Id") Long TenantId)
-		throws ResourceNotFoundException {
-	User user = userRepository.findById(TenantId)
-			.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
-	return ResponseEntity.ok().body(user);
-}
-
-@GetMapping("payment/hostels/{id}/roomdetail")
-
-public List<Object[]> getRoomdetails(@PathVariable(value = "id") Long hostelId) {
-	return hostelRepository.getRoomDetails(hostelId);
-}
+	public List<Object[]> getRoomdetails(@PathVariable(value = "id") Long hostelId) {
+		return hostelRepository.getRoomDetails(hostelId);
+	}
 
 }

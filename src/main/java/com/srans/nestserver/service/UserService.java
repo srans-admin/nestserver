@@ -163,11 +163,11 @@ public class UserService {
 				tenantService.triggerAlertEmail(responseTenant);
 			}
 
-			/*
-			 * //STEP-3 : Now drop an SMS to tenant
-			 * if(!(""+responseTenant.getContactNumber()).isEmpty()){
-			 * tenantService.triggerSMS(responseTenant); }
-			 */
+			
+			  //STEP-3 : Now drop an SMS to tenant
+			  if(!(""+responseTenant.getContactNumber()).isEmpty()){
+			  tenantService.triggerSMS(responseTenant); }
+			 
 
 			// STEP-4 : Post this info to UAA
 			tenantToUaaService.postUserToUaa(responseTenant);
@@ -195,17 +195,18 @@ public class UserService {
 
 			if (responseTenant.getUserId() != -1) {
 
-				/*
-				 * //STEP-4 : Now drop an email to tenant if(responseTenant.getEmailId() != null
-				 * && !responseTenant.getEmailId().isEmpty()){
-				 * tenantService.triggerAlertEmail(responseTenant); }
-				 */
+				
+				  //STEP-4 : Now drop an email to tenant 
+				if(responseTenant.getEmailId() != null
+				  && !responseTenant.getEmailId().isEmpty()){
+				  tenantService.triggerAlertEmail(responseTenant); }
+				 
 
-				/*
-				 * //STEP-5 : Now drop an SMS to tenant
-				 * if(!(""+responseTenant.getContactNumber()).isEmpty()){
-				 * tenantService.triggerSMS(responseTenant); }
-				 */
+				
+				  //STEP-5 : Now drop an SMS to tenant
+				  if(!(""+responseTenant.getContactNumber()).isEmpty()){
+				  tenantService.triggerSMS(responseTenant); }
+				 
 
 				// STEP-6 : Post this info to UAA
 				tenantToUaaService.postUserToUaa(responseTenant);
