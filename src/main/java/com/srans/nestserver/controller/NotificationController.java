@@ -1,17 +1,23 @@
 package com.srans.nestserver.controller;
 
+import java.math.BigInteger;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.srans.nestserver.model.Notification;
 import com.srans.nestserver.repository.NotificationRepository;
 import com.srans.nestserver.util.NSException;
 
@@ -23,18 +29,24 @@ public class NotificationController {
 
 	@Autowired
 	private NotificationRepository notificationRepo;
- 
 	
+	
+ 
+	//Get Notification	
 	@GetMapping(value = "/users/{userId}/notifications")
 	@PreAuthorize("permitAll()")
-	public List<Object> getAllUserNotifications(@PathVariable(value = "userId") Long userId) throws NSException {
-		logger.info("In::getAllNotificationsOfUser::" ); 
+	public Notification getAllUserNotification(@PathVariable(value = "userId") Long userId,   Notification notifications) throws NSException {
+		logger.info("In::getAllNotificationsOfUser::" );
+		List<Object[]> response = notificationRepo.getAllNotification(userId);
+		 for(Object[] s:response) {
+			
+			 notifications.setId(((BigInteger) s[0]).longValue());
+			 notifications.setMessage((String) s[1]);
+		 
+		 }
 		
-		List<Object> response = notificationRepo.getAllUserNotifications(userId); 
-		
-		logger.info("Out::getAllNotificationsOfUser::"+response ); 
-		
-		return response;
+		logger.info("Out::getAllNotificationsOfUser::"+response );
+		return notifications ;
 	}
 	
 	
