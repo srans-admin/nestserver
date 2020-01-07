@@ -201,7 +201,7 @@ public class UserService {
 			responseTenant = userRepository.save(user);
 
 			if (responseTenant.getUserId() != -1) {
-
+        
 				// STEP-4 : Now drop an email to tenant
 				if (responseTenant.getEmailId() != null && !responseTenant.getEmailId().isEmpty()) {
 					tenantService.triggerAlertEmail(responseTenant);
@@ -211,6 +211,7 @@ public class UserService {
 				if (!("" + responseTenant.getContactNumber()).isEmpty()) {
 					tenantService.triggerSMS(responseTenant);
 				}
+ 
 
 				// STEP-6 : Post this info to UAA
 				tenantToUaaService.postUserToUaa(responseTenant);
