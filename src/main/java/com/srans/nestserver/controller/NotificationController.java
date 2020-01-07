@@ -32,7 +32,7 @@ public class NotificationController {
 	
 	
  
-	
+	//Get Notification	
 	@GetMapping(value = "/users/{userId}/notifications")
 	@PreAuthorize("permitAll()")
 	public Notification getAllUserNotification(@PathVariable(value = "userId") Long userId,   Notification notifications) throws NSException {

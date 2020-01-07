@@ -124,6 +124,7 @@ public class HostelController {
 
 		});
 		
+		//Sending notification to superadmin
 		notificationService.addHostelNotifictaion(responseHostel);
 				
 		logger.info("OUT::POST::/hostels::saveHostel::" + hostel);
