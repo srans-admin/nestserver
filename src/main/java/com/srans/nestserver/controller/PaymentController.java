@@ -60,17 +60,17 @@ Logger logger = LoggerFactory.getLogger(RolesController.class);
 	private SubscriptionService subscriptionService;
 
 	// Update approved status
-	@PostMapping("/payment/approved-status")
-	@PreAuthorize("permitAll()")
-	public Payment savePayment(@Valid @RequestBody Payment payment) throws NSException {
+		@PostMapping("/payment/approved-status")
+		@PreAuthorize("permitAll()")
+		public Payment savePayment(@Valid @RequestBody Payment payment) throws NSException {
 
-		logger.info("IN::POST::/users::savePayment::" + payment);
-         
-		payment = subscriptionService.processOfApproving(payment);
+			logger.info("IN::POST::/users::savePayment::" + payment);
+	         
+			payment = subscriptionService.processOfApproving(payment);
 
-		logger.info("OUT::POST::/users::saveUser::" + payment);
-		return payment;
-	}
+			logger.info("OUT::POST::/users::saveUser::" + payment);
+			return payment;
+		}
 
 	@GetMapping("/payment")
 	public List<Payment> getAllPayment() {

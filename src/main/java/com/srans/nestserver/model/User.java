@@ -10,61 +10,82 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 @Entity
 @Table(name = "sransUser")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@JsonInclude(Include.NON_NULL)
 	private Long userId;
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "name")
 	private String name; 
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "role")
 	private String role;
 	
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "status")
 	private String status;
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "contactNumber")
 	private Long contactNumber;
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "fatherName")
 	private String fatherName;
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "fatherphoneNumber")
 	private Long fatherphoneNumber;
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "motherName")
 	private String motherName;
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "motherphoneNumber")
 	private long motherphoneNumber;
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "dob")
 	private String dob;
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "emergencyContactNumber")
 	private long emergencyContactNumber;
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "nameOfTheEmployer")
 	private String nameOfTheEmployer;
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "bloodGroup")
 	private String bloodGroup;
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "officeAddress")
 	private String officeAddress;
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "mobileNumber")
 	private Long mobileNumber;
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "emailId")
 	private String emailId;
 
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "permanentAddress")
 	private String permanentAddress;
 
@@ -77,9 +98,11 @@ public class User implements Serializable {
 	@Transient
 	private Bed bed;
 	
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "subscriptions")
 	private int subscriptions;
 	
+	@JsonInclude(Include.NON_NULL)
 	@Column(name = "subscriptionType")
 	private String subscriptionType;
 	 
