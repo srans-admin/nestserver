@@ -15,6 +15,11 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "hostel")
 public class Hostel implements Serializable {
+	/**
+	 * @author user
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -44,6 +49,9 @@ public class Hostel implements Serializable {
 	@Column
 	private boolean gym;
 
+	@Column
+	private Long adminId;
+
 	@Transient
 	private List<Floor> floors;
 
@@ -52,12 +60,14 @@ public class Hostel implements Serializable {
 		this.hostelName = "";
 		this.hostelAddress = "";
 		this.hostelType = "";
-		this.numOfFloors=0;
+		this.numOfFloors = 0;
+		this.adminId = 0L;
 		this.floors = new ArrayList<>();
 	}
 
 	public Hostel(Long id, String hostelName, String hostelAddress, String hostelType, Integer numOfFloors, boolean tv,
-			boolean fridge, boolean ac, boolean mineralWater, boolean parking, boolean gym, List<Floor> floors) {
+			boolean fridge, boolean ac, boolean mineralWater, boolean parking, boolean gym, Long adminId,
+			List<Floor> floors) {
 		super();
 		this.id = id;
 		this.hostelName = hostelName;
@@ -71,6 +81,7 @@ public class Hostel implements Serializable {
 		this.parking = parking;
 		this.gym = gym;
 		this.floors = floors;
+		this.adminId = adminId;
 	}
 
 	public Long getId() {
@@ -169,34 +180,23 @@ public class Hostel implements Serializable {
 		this.gym = gym;
 	}
 
+	public Long getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(Long adminId) {
+		this.adminId = adminId;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Hostel [id=");
-		builder.append(id);
-		builder.append(", hostelName=");
-		builder.append(hostelName);
-		builder.append(", hostelAddress=");
-		builder.append(hostelAddress);
-		builder.append(", hostelType=");
-		builder.append(hostelType);
-		builder.append(", numOfFloors=");
-		builder.append(numOfFloors);
-		builder.append(", tv=");
-		builder.append(tv);
-		builder.append(", fridge=");
-		builder.append(fridge);
-		builder.append(", ac=");
-		builder.append(ac);
-		builder.append(", mineralWater=");
-		builder.append(mineralWater);
-		builder.append(", parking=");
-		builder.append(parking);
-		builder.append(", gym=");
-		builder.append(gym);
-		builder.append(", floors=");
-		builder.append(floors);
-		builder.append("]");
+		builder.append("Hostel [id=").append(id).append(", hostelName=").append(hostelName).append(", hostelAddress=")
+				.append(hostelAddress).append(", hostelType=").append(hostelType).append(", numOfFloors=")
+				.append(numOfFloors).append(", tv=").append(tv).append(", fridge=").append(fridge).append(", ac=")
+				.append(ac).append(", mineralWater=").append(mineralWater).append(", parking=").append(parking)
+				.append(", gym=").append(gym).append(", adminId=").append(adminId).append(", floors=").append(floors)
+				.append("]");
 		return builder.toString();
 	}
 

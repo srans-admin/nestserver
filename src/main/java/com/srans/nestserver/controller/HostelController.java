@@ -33,8 +33,10 @@ import com.srans.nestserver.repository.BedRepository;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.RoomRepository;
+import com.srans.nestserver.service.HostelService;
 import com.srans.nestserver.service.NotificationService;
 import com.srans.nestserver.service.StorageService;
+import com.srans.nestserver.util.ConsolidatedHostel;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -42,7 +44,7 @@ import com.srans.nestserver.util.NSException;
 @RestController
 public class HostelController {
 	private Logger logger = LoggerFactory.getLogger(HostelController.class);
-	
+
 	@Autowired
 	private NotificationService notificationService;
 
@@ -61,20 +63,32 @@ public class HostelController {
 	@Autowired
 	private StorageService storageService;
 
+	@Autowired
+	private HostelService hostelService;
+
 	@GetMapping("/hostels")
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
-	//@PreAuthorize("permitAll()")
+	// @PreAuthorize("permitAll()")
 	public List<Hostel> getAllHostels() {
 		return hostelRepository.findAll();
 	}
 
+	@GetMapping("/hostels/subscription-details")
+	//@PreAuthorize("hasRole('ROLE_SUPERADMIN')")
+	@PreAuthorize("permitAll()")
+	
+	public List<ConsolidatedHostel> getAllHostelSubscriptionDetails() {
+
+		return hostelService.getHostelDetails();
+	}
+
 	@GetMapping("/hostels/{id}")
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
-	//@PreAuthorize("permitAll()")
+	// @PreAuthorize("permitAll()")
 	public Hostel getHostel(@PathVariable(value = "id") Long hostelId) throws IOException {
 
 		Hostel responseHostel = hostelRepository.getOne(hostelId);
-		
+
 		floorRepository.findByHostelId(hostelId).forEach(floor -> {
 			responseHostel.getfloors().add(floor);
 			roomRepository.findByFloorId(floor.getId()).forEach(room -> {
@@ -84,7 +98,7 @@ public class HostelController {
 				});
 			});
 		});
-		
+
 		return responseHostel;
 	}
 
@@ -96,7 +110,7 @@ public class HostelController {
 	 * @throws NSException
 	 */
 	@PostMapping("/hostels")
-	//@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	// @PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
 	@PreAuthorize("permitAll()")
 	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) throws NSException {
 
@@ -123,10 +137,10 @@ public class HostelController {
 			});
 
 		});
-		
-		//Sending notification to superadmin
+
+		// Sending notification to superadmin
 		notificationService.addHostelNotifictaion(responseHostel);
-				
+
 		logger.info("OUT::POST::/hostels::saveHostel::" + hostel);
 		return responseHostel;
 	}
