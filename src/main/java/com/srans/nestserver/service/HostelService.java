@@ -16,6 +16,8 @@ import com.srans.nestserver.util.NSConstants;
 @Service
 public class HostelService {
 
+	// Get All Consolidated Hostel Details
+	
 	private Logger logger = LoggerFactory.getLogger(HostelService.class);
 
 	@Autowired
@@ -25,7 +27,6 @@ public class HostelService {
 
 		logger.debug("In::getHostelDetails");
 
-		// List<User> userDetails = userRepository.findAll();
 		List<Object> hostelInfo = userRepository.getConsolidatedHostel(NSConstants.ROLE_ADMIN);
 		List<ConsolidatedHostel> getconsoData = new ArrayList<>();
 

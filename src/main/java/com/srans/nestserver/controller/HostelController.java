@@ -73,14 +73,15 @@ public class HostelController {
 		return hostelRepository.findAll();
 	}
 
-	@GetMapping("/hostels/subscription-details")
-	//@PreAuthorize("hasRole('ROLE_SUPERADMIN')")
+	// Get All Consolidated Hostel Details
+	@GetMapping("/hostels/consolidated-hostel-info")
 	@PreAuthorize("permitAll()")
 	
 	public List<ConsolidatedHostel> getAllHostelSubscriptionDetails() {
 
 		return hostelService.getHostelDetails();
 	}
+	
 
 	@GetMapping("/hostels/{id}")
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
