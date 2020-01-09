@@ -62,139 +62,130 @@ public class Payment extends AuditModel {
 
 	}
 
-	public Payment(Long id, Long bookingid, String name, String ammountType, String roomName, String roomType,
-			Long ammount, Long discount, String paymentThrough, Long transactionId, String bankName, String date,
-			Long adminId) {
-		super();
-		this.id = id;
-		this.bookingid = bookingid;
-		this.name = name;
-		this.ammountType = ammountType;
-		this.roomName = roomName;
-		this.roomType = roomType;
-		this.ammount = ammount;
-		this.discount = discount;
-		this.paymentThrough = paymentThrough;
-		this.transactionId = transactionId;
-		this.bankName = bankName;
-		this.date = date;
-		this.adminId = adminId;
-	}
+@Column
+private String bankName;
+@Column
+private String date;
+@Column
+private  Long depositAmount;
+@Column
+private Long discountAmount;
+
+public Payment() {
+	super();
+	
+	
+}
+public Payment(Long id, Long bookingid, String name, String roomName, String roomType, Long roomRent,
+		String paymentThrough, Long transactionId, String bankName, String date, Long depositAmount,
+		Long discountAmount) {
+	super();
+	this.id = id;
+	this.bookingid = bookingid;
+	this.name = name;
+	this.roomName = roomName;
+	this.roomType = roomType;
+	this.roomRent = roomRent;
+	this.paymentThrough = paymentThrough;
+	this.transactionId = transactionId;
+	this.bankName = bankName;
+	this.date = date;
+	this.depositAmount = depositAmount;
+	this.discountAmount = discountAmount;
+}
+
+
+public Long getId() {
+	return id;
+}
+
+public void setId(Long id) {
+	this.id = id;
+}
+
+public Long getBookingid() {
+	return bookingid;
+}
+
+public void setBookingid(Long bookingid) {
+	this.bookingid = bookingid;
+}
+
 
 	public Long getId() {
 		return id;
-	}
+	}	
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+public Long getRoomRent() {
+	return roomRent;
+}
 
-	public Long getBookingid() {
-		return bookingid;
-	}
+public void setRoomRent(Long roomRent) {
+	this.roomRent = roomRent;
+}
 
-	public void setBookingid(Long bookingid) {
-		this.bookingid = bookingid;
-	}
+public String getPaymentThrough() {
+	return paymentThrough;
+}
 
-	public String getName() {
-		return name;
-	}
+public void setPaymentThrough(String paymentThrough) {
+	this.paymentThrough = paymentThrough;
+}
 
-	public void setName(String name) {
-		this.name = name;
-	}
+public Long getTransactionId() {
+	return transactionId;
+}
 
-	public String getRoomName() {
-		return roomName;
-	}
+public void setTransactionId(Long transactionId) {
+	this.transactionId = transactionId;
+}
 
-	public void setRoomName(String roomName) {
-		this.roomName = roomName;
-	}
+public String getBankName() {
+	return bankName;
+}
 
-	public String getRoomType() {
-		return roomType;
-	}
+public void setBankName(String bankName) {
+	this.bankName = bankName;
+}
 
-	public void setRoomType(String roomType) {
-		this.roomType = roomType;
-	}
+public String getDate() {
+	return date;
+}
 
-	public Long getAmmount() {
-		return ammount;
-	}
+public void setDate(String date) {
+	this.date = date;
+}
 
-	public void setAmmount(Long ammount) {
-		this.ammount = ammount;
-	}
+public Long getDepositAmount() {
+	return depositAmount;
+}
 
-	public Long getDiscount() {
-		return discount;
-	}
+public void setDepositAmount(Long depositAmount) {
+	this.depositAmount = depositAmount;
+}
 
-	public void setDiscount(Long discount) {
-		this.discount = discount;
-	}
+public Long getDiscountAmount() {
+	return discountAmount;
+}
 
-	public String getPaymentThrough() {
-		return paymentThrough;
-	}
+public void setDiscountAmount(Long discountAmount) {
+	this.discountAmount = discountAmount;
+}
 
-	public void setPaymentThrough(String paymentThrough) {
-		this.paymentThrough = paymentThrough;
-	}
+public static long getSerialversionuid() {
+	return serialVersionUID;
+}
+@Override
+public String toString() {
+	StringBuilder builder = new StringBuilder();
+	builder.append("Payment [id=").append(id).append(", bookingid=").append(bookingid).append(", name=").append(name)
+			.append(", roomName=").append(roomName).append(", roomType=").append(roomType).append(", roomRent=")
+			.append(roomRent).append(", paymentThrough=").append(paymentThrough).append(", transactionId=")
+			.append(transactionId).append(", bankName=").append(bankName).append(", date=").append(date)
+			.append(", depositAmount=").append(depositAmount).append(", discountAmount=").append(discountAmount)
+			.append("]");
+	return builder.toString();
+}
 
-	public Long getTransactionId() {
-		return transactionId;
-	}
-
-	public void setTransactionId(Long transactionId) {
-		this.transactionId = transactionId;
-	}
-
-	public String getBankName() {
-		return bankName;
-	}
-
-	public void setBankName(String bankName) {
-		this.bankName = bankName;
-	}
-
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
-	}
-
-	public String getAmmountType() {
-		return ammountType;
-	}
-
-	public void setAmmountType(String ammountType) {
-		this.ammountType = ammountType;
-	}
-
-	public Long getAdminId() {
-		return adminId;
-	}
-
-	public void setAdminId(Long adminId) {
-		this.adminId = adminId;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Payment [id=").append(id).append(", bookingid=").append(bookingid).append(", name=")
-				.append(name).append(", ammountType=").append(ammountType).append(", roomName=").append(roomName)
-				.append(", roomType=").append(roomType).append(", ammount=").append(ammount).append(", discount=")
-				.append(discount).append(", paymentThrough=").append(paymentThrough).append(", transactionId=")
-				.append(transactionId).append(", bankName=").append(bankName).append(", date=").append(date)
-				.append(", adminId=").append(adminId).append("]");
-		return builder.toString();
-	}
 
 }

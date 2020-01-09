@@ -113,7 +113,7 @@ public class User implements Serializable {
 
 	public User() {
 		super();
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	public User(Long userId, String name, Long contactNumber, String fatherName, Long fatherphoneNumber,

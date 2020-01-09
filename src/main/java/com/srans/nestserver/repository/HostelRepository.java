@@ -1,6 +1,7 @@
 package com.srans.nestserver.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,10 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 
 	@Autowired 
 	public FloorRepository floorRepository = null ; 
+	
+	
+	@Query(value="SELECT hostel_owner_id FROM HOSTEL WHERE id=?1",nativeQuery=true)
+	public Long hostelownerid(Long hostel_owner_id);
 	
 	@Query(value="SELECT num_of_floors FROM HOSTEL WHERE id=?1", nativeQuery = true)
     public Long numOfFloor(Long hostel_id);
@@ -57,5 +62,12 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 		
 	}
 
+
+	public Optional<Hostel> findByhostelownerid(long hostelownerid);
+
+	
+
+
+	
 
 }
