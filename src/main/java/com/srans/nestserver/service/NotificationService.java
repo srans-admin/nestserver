@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
+import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.Notification;
 import com.srans.nestserver.model.NotificationUser;
 import com.srans.nestserver.model.User;
@@ -24,54 +24,117 @@ import com.srans.nestserver.util.NSConstants;
  */
 @Service
 public class NotificationService {
-	
+
 	private Logger logger = LoggerFactory.getLogger(NotificationService.class);
- 
+
 	@Autowired
-	private UserRepository userRepository ;
-	
+	private UserRepository userRepository;
+
 	@Autowired
 	private NotificationRepository notificationRepo;
- 
 
 	@Autowired
 	private NotificationUserRepository notificationUserRepo;
-	
+
 	@Value("${uaa-server-url:http://localhost:9090/uaa-server}")
 	private String UAA_SERVER_URL;
-	
+
 	public boolean addAdminRequestNotifictaion(User responseTenant) {
-		
-		logger.debug("In::addAdminRequestNotifictaion"); 
-		boolean status = false; 
-		try { 
-			
-			//STEP-1 prepare Notification object with messsage
+
+		logger.debug("In::addAdminRequestNotifictaion");
+		boolean status = false;
+		try {
+
+			// STEP-1 prepare Notification object with messsage
 			Notification notification = new Notification();
-			notification.setMessage(responseTenant.getName()+ " has requested subscription, please review.");
+			notification.setMessage(responseTenant.getName() + " has requested subscription, please review.");
 			final Notification notificationResponse = notificationRepo.save(notification);
-			
-			//STEP-2: Get superAdmins from UAA  
-			userRepository.getUsersByRole(NSConstants.ROLE_SUPERADMIN).stream().forEach(superAdmin ->{
-				 
-				//STEP-3 for each super admin assign
+
+			// STEP-2: Get superAdmins from UAA
+			userRepository.getUsersByRole(NSConstants.ROLE_SUPERADMIN).stream().forEach(superAdmin -> {
+
+				// STEP-3 for each super admin assign
 				NotificationUser notificationUser = new NotificationUser();
 				notificationUser.setNotificationId(notificationResponse.getId());
 				notificationUser.setUserId(superAdmin.getUserId());
-				 
+
 				notificationUserRepo.save(notificationUser);
-				
+
 			});
-			 
-			
-		}  catch (Exception e) {
+
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		logger.debug("Out::"); 
+
+		logger.debug("Out::");
 		return status;
-		
+
 	}
-	
+
+	public boolean addTenantNotifictaion(User responseTenant) {
+
+		logger.debug("In::addTenantNotifictaion");
+		boolean status = false;
+		try {
+
+			// STEP-1 prepare Notification object with messsage
+			Notification notification = new Notification();
+			notification.setMessage(responseTenant.getName() + " has requested for registration, please review.");
+			final Notification notificationResponse = notificationRepo.save(notification);
+
+			// STEP-2: Get superAdmins from UAA
+			userRepository.getUsersByRole(NSConstants.ROLE_ADMIN).stream().forEach(admin -> {
+
+				// STEP-3 for each super admin assign
+				NotificationUser notificationUser = new NotificationUser();
+				notificationUser.setNotificationId(notificationResponse.getId());
+				notificationUser.setUserId(admin.getUserId());
+				notificationUserRepo.save(notificationUser);
+
+			});
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		logger.debug("Out::");
+		return status;
+
+	}
+
+	public boolean addHostelNotifictaion(Hostel responseHostel) {
+
+		// logger.debug("In::addHostelNotifictaion");
+		boolean status = false;
+		try {
+
+			// STEP-1 prepare Notification object with messsage
+			Notification notification = new Notification();
+			notification.setMessage(responseHostel.getHostelName() + " hostel has add, please review.");
+			final Notification notificationResponse = notificationRepo.save(notification);
+
+			// STEP-2: Get superAdmins from UAA
+			userRepository.getUsersByRole(NSConstants.ROLE_SUPERADMIN).stream().forEach(superAdmin -> {
+
+				// STEP-3 for each super admin assign
+				NotificationUser notificationUser = new NotificationUser();
+				notificationUser.setNotificationId(notificationResponse.getId());
+				notificationUser.setUserId(superAdmin.getUserId());
+
+				notificationUserRepo.save(notificationUser);
+
+			});
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		logger.debug("Out::");
+		return status;
+
+	}
+
 }

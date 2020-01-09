@@ -11,36 +11,56 @@ import javax.persistence.Table;
 @Table(name = "payment")
 public class Payment extends AuditModel {
 
-/**
-* 
-* @author likhit
-*/
-private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 * @author likhit
+	 */
+	private static final long serialVersionUID = 1L;
 
-@Id
-@GeneratedValue(strategy = GenerationType.AUTO)
-private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-@Column
-private Long bookingid;
+	@Column
+	private Long bookingid;
 
-@Column
-private String name;
+	@Column
+	private String name;
 
-@Column
-private String roomName;
+	@Column
+	private String ammountType;
 
-@Column
-private String roomType;
+	@Column
+	private String roomName;
 
-@Column
-private Long roomRent;
+	@Column
+	private String roomType;
 
-@Column
-private String paymentThrough;
+	@Column
+	private Long ammount;
 
-@Column
-private Long transactionId;
+	@Column
+	private Long discount;
+
+	@Column
+	private String paymentThrough;
+
+	@Column
+	private Long transactionId;
+
+	@Column
+	private String bankName;
+
+	@Column
+	private String date;
+
+	@Column
+	private Long adminId;
+
+	public Payment() {
+		super();
+
+	}
 
 @Column
 private String bankName;
@@ -91,29 +111,10 @@ public void setBookingid(Long bookingid) {
 	this.bookingid = bookingid;
 }
 
-public String getName() {
-	return name;
-}
 
-public void setName(String name) {
-	this.name = name;
-}
-
-public String getRoomName() {
-	return roomName;
-}
-
-public void setRoomName(String roomName) {
-	this.roomName = roomName;
-}
-
-public String getRoomType() {
-	return roomType;
-}
-
-public void setRoomType(String roomType) {
-	this.roomType = roomType;
-}
+	public Long getId() {
+		return id;
+	}	
 
 public Long getRoomRent() {
 	return roomRent;
@@ -185,5 +186,6 @@ public String toString() {
 			.append("]");
 	return builder.toString();
 }
+
 
 }

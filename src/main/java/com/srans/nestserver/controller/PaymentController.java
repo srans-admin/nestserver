@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +26,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Payment;
-import com.srans.nestserver.model.Role;
 import com.srans.nestserver.model.Room;
 import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.PaymentRepository;
-import com.srans.nestserver.repository.RoleRepository;
 import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.repository.UserRepository;
+import com.srans.nestserver.service.SubscriptionService;
+import com.srans.nestserver.util.NSException;
 
-@CrossOrigin(origins = "*",allowedHeaders = "*") 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1")
 public class PaymentController {
@@ -176,6 +178,4 @@ public ResponseEntity<User> getTenantById(@PathVariable(value = "Id") Long Tenan
 
 public List<Object[]> getRoomdetails(@PathVariable(value = "id") Long hostelId) {
 	return hostelRepository.getRoomDetails(hostelId);
-}
-
 }
