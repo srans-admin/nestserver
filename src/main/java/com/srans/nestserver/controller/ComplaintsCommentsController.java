@@ -27,6 +27,7 @@ import com.srans.nestserver.model.Complaints;
 import com.srans.nestserver.model.ComplaintsComment;
 import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.User;
+import com.srans.nestserver.repository.ComplaintsCommentRepository;
 import com.srans.nestserver.repository.ComplaintsRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.UserRepository;
@@ -43,6 +44,8 @@ private ComplaintsCommentRepository complaintscommentRepository;
 private UserRepository userRepository;
 @Autowired
 private HostelRepository hostelRepository;
+@Autowired
+private ComplaintsRepository complaintsRepository;
 
 @GetMapping("/complaintscomments")
 @PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
@@ -62,12 +65,24 @@ return ResponseEntity.ok().body(complaintscomment);
 
 
 
+@GetMapping("/complaintscomments/complaints")
+@PreAuthorize("permitAll()")
+public List<Complaints> getAllComplaints() {
+return complaintsRepository.findAll();
+}
 
 
+@GetMapping("/complaintscomments/complaints/{id}")
+@PreAuthorize("permitAll()")
+public ResponseEntity<Complaints> getComplaintsById(@PathVariable(value = "id") Long complaintsId)
+throws ResourceNotFoundException {
+Complaints complaints = complaintsRepository.findById(complaintsId)
+.orElseThrow(() -> new ResourceNotFoundException("Complaints not found for this id :: " + complaintsId));
+return ResponseEntity.ok().body(complaints);
+}
 
 
-
-@GetMapping("/complaints/hostelownerid/{id}")
+@GetMapping("/complaintscomments/hostelownerid/{id}")
 @PreAuthorize("permitAll()")
 public ResponseEntity<Hostel> gethostelownerById(@PathVariable(value = "id") long hostelownerid)
 		throws ResourceNotFoundException {
@@ -75,8 +90,6 @@ public ResponseEntity<Hostel> gethostelownerById(@PathVariable(value = "id") lon
 			.orElseThrow(() -> new ResourceNotFoundException("hostelownerid not found for this id :: " + hostelownerid));
 	return ResponseEntity.ok().body(hostel);
 }
-
-
 
 
 

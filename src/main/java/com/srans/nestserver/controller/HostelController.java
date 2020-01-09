@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Floor;
 import com.srans.nestserver.model.Hostel;
+import com.srans.nestserver.model.Invoice;
 import com.srans.nestserver.model.Room;
 import com.srans.nestserver.repository.BedRepository;
 import com.srans.nestserver.repository.FloorRepository;
@@ -124,6 +125,12 @@ public class HostelController {
 		logger.info("OUT::POST::/hostels::saveHostel::" + hostel);
 		return responseHostel;
 	}
+	
+	
+	
+	
+	
+	
 
 	@PostMapping("/hostels/{id}/upload/{cat}")
 	@PreAuthorize("permitAll()")

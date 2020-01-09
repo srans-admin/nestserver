@@ -134,6 +134,7 @@ public class UserService {
 				}
 
 				// STEP-6 : Post this info to UAA
+	
 				tenantToUaaService.postUserToUaa(responseTenant);
 
 			} else {
@@ -195,7 +196,7 @@ public class UserService {
 
 			if (responseTenant.getUserId() != -1) {
 
-				/*
+				/*`
 				 * //STEP-4 : Now drop an email to tenant if(responseTenant.getEmailId() != null
 				 * && !responseTenant.getEmailId().isEmpty()){
 				 * tenantService.triggerAlertEmail(responseTenant); }

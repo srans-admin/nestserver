@@ -51,19 +51,14 @@ private HostelRepository hostelRepository;
 @Autowired
 private FloorRepository floorRepository;
 
-
 @Autowired
 private UserRepository userRepository;
-
 
 
 @GetMapping("/payment")
 public List<Payment> getAllPayment() {
 return paymentRepository.findAll();
 }
-
-
-
 
 @GetMapping("payment/hostels/floor/{id}/room/{room_id}")
 public ResponseEntity<Room> getFloorById(@PathVariable(value = "id") Long floor_id,
@@ -77,6 +72,32 @@ Room room = roomRepository.findById(room_id).orElseThrow(() -> new ResourceNotFo
 "Floor not found for this Floorid :: " + floor_id + "Floor not found for this Floor id::" + room_id));
 return ResponseEntity.ok().body(room);
 }
+
+@GetMapping("payments/users/bycontactNumbers/{contactNumber}")
+@PreAuthorize("permitAll()")
+//@PreAuthorize("permitAll()")
+public ResponseEntity<User> getTenantBycontactNumber(@PathVariable(value = "contactNumber") Long contactNumber)
+		throws ResourceNotFoundException {
+	User user = userRepository.findByContactNumber(contactNumber);
+	return ResponseEntity.ok().body(user);
+}
+
+
+
+
+
+
+@GetMapping("payments/users/byname/{name}")
+@PreAuthorize("permitAll()")
+//@PreAuthorize("permitAll()")
+public ResponseEntity<User> getTenantByName(@PathVariable(value = "name") String name)
+		throws ResourceNotFoundException {
+	User user = userRepository.findByName(name); 
+	return ResponseEntity.ok().body(user);
+}
+
+
+
 
 
 /*
@@ -125,6 +146,8 @@ payment.setPaymentThrough(paymentDetails.getPaymentThrough());
 payment.setTransactionId(paymentDetails.getTransactionId());
 payment.setBankName(paymentDetails.getBankName());
 payment.setDate(paymentDetails.getDate());
+payment.setDepositAmount(payment.getDepositAmount());
+payment.setDiscountAmount(payment.getDiscountAmount());
 final Payment updatedpayment = paymentRepository.save(payment);
 return ResponseEntity.ok(payment);
 }

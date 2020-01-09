@@ -46,15 +46,19 @@ private Long transactionId;
 private String bankName;
 @Column
 private String date;
+@Column
+private  Long depositAmount;
+@Column
+private Long discountAmount;
 
 public Payment() {
 	super();
 	
 	
 }
-
 public Payment(Long id, Long bookingid, String name, String roomName, String roomType, Long roomRent,
-		String paymentThrough, Long transactionId, String bankName, String date) {
+		String paymentThrough, Long transactionId, String bankName, String date, Long depositAmount,
+		Long discountAmount) {
 	super();
 	this.id = id;
 	this.bookingid = bookingid;
@@ -66,7 +70,10 @@ public Payment(Long id, Long bookingid, String name, String roomName, String roo
 	this.transactionId = transactionId;
 	this.bankName = bankName;
 	this.date = date;
+	this.depositAmount = depositAmount;
+	this.discountAmount = discountAmount;
 }
+
 
 public Long getId() {
 	return id;
@@ -148,13 +155,35 @@ public void setDate(String date) {
 	this.date = date;
 }
 
+public Long getDepositAmount() {
+	return depositAmount;
+}
+
+public void setDepositAmount(Long depositAmount) {
+	this.depositAmount = depositAmount;
+}
+
+public Long getDiscountAmount() {
+	return discountAmount;
+}
+
+public void setDiscountAmount(Long discountAmount) {
+	this.discountAmount = discountAmount;
+}
+
+public static long getSerialversionuid() {
+	return serialVersionUID;
+}
 @Override
 public String toString() {
 	StringBuilder builder = new StringBuilder();
 	builder.append("Payment [id=").append(id).append(", bookingid=").append(bookingid).append(", name=").append(name)
 			.append(", roomName=").append(roomName).append(", roomType=").append(roomType).append(", roomRent=")
 			.append(roomRent).append(", paymentThrough=").append(paymentThrough).append(", transactionId=")
-			.append(transactionId).append(", bankName=").append(bankName).append(", date=").append(date).append("]");
+			.append(transactionId).append(", bankName=").append(bankName).append(", date=").append(date)
+			.append(", depositAmount=").append(depositAmount).append(", discountAmount=").append(discountAmount)
+			.append("]");
 	return builder.toString();
 }
+
 }
