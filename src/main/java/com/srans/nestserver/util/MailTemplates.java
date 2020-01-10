@@ -237,5 +237,17 @@ public class MailTemplates {
 			+ "</div>"
 			+ "</body>"
 			+ "</head></html>";
+	
+	public static final String ADMIN_VACATED_NOTIFICATION_TEMPLATE="<html><head><title></title>"
+			+ "<body>"
+			+"<div>"
+			+"Dear ##NAME##,"
+			+"</div>"
+			+ "  <div> <p style='font-size: 18px; text-align: center; '>Your vacated request has been submitted.<br> "
+			+ " "
+			+ "</p>"
+			+ "</div>"
+			+ "</body>"
+			+ "</head></html>";
 
 }
