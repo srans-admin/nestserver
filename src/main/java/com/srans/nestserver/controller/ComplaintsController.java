@@ -88,12 +88,9 @@ public ResponseEntity<Complaints> updateComplaints(@PathVariable(value = "id") L
 @Valid @RequestBody Complaints complaintsDetails) throws ResourceNotFoundException {
 Complaints complaints = complaintsRepository.findById(complaints_Id)
 .orElseThrow(() -> new ResourceNotFoundException("Complaints not found for this id :: " +complaints_Id));
-complaints.setRoleName(complaintsDetails.getRoleName());
+
 complaints.setDescription(complaintsDetails.getDescription());
-complaints.setName(complaintsDetails.getName());
 complaints.setId(complaintsDetails.getId());
-complaints.setPhoneNumber(complaintsDetails.getPhoneNumber());
-complaints.setEmailId(complaintsDetails.getEmailId());
 
 final Complaints updatedComplaints = complaintsRepository.save(complaints);
 return ResponseEntity.ok(updatedComplaints);

@@ -7,102 +7,80 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "complaints")
 public class Complaints implements Serializable {
-@Id
-@GeneratedValue(strategy = GenerationType.AUTO)
-private long id;
-private String roleName;
-private String name;
-private String emailId;
-private long phoneNumber;
-private String description;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
+	@Transient
+	private User user;
+	private long userid;
+	private String description;
+	private String status;
 
-public Complaints() {
-	super();
-	
-}
+	public Complaints() {
+		super();
 
+	}
 
-public Complaints(long id, String roleName, String name, String emailId, long phoneNumber, String description) {
-	super();
-	this.id = id;
-	this.roleName = roleName;
-	this.name = name;
-	this.emailId = emailId;
-	this.phoneNumber = phoneNumber;
-	this.description = description;
-}
+	public Complaints(long id, User user, long userid, String description, String status) {
+		super();
+		this.id = id;
+		this.user = user;
+		this.userid = userid;
+		this.description = description;
+		this.status = status;
+	}
 
+	public long getId() {
+		return id;
+	}
 
-public long getId() {
-	return id;
-}
+	public void setId(long id) {
+		this.id = id;
+	}
 
-public void setId(long id) {
-	this.id = id;
-}
+	public User getUser() {
+		return user;
+	}
 
-public String getRoleName() {
-	return roleName;
-}
+	public void setUser(User user) {
+		this.user = user;
+	}
 
-public void setRoleName(String roleName) {
-	this.roleName = roleName;
-}
+	public long getUserid() {
+		return userid;
+	}
 
-public String getName() {
-	return name;
-}
+	public void setUserid(long userid) {
+		this.userid = userid;
+	}
 
-public void setName(String name) {
-	this.name = name;
-}
+	public String getDescription() {
+		return description;
+	}
 
-public String getEmailId() {
-	return emailId;
-}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-public void setEmailId(String emailId) {
-	this.emailId = emailId;
-}
+	public String getStatus() {
+		return status;
+	}
 
-public long getPhoneNumber() {
-	return phoneNumber;
-}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-public void setPhoneNumber(long phoneNumber) {
-	this.phoneNumber = phoneNumber;
-}
-
-public String getDescription() {
-	return description;
-}
-
-public void setDescription(String description) {
-	this.description = description;
-}
-
-
-@Override
-public String toString() {
-	StringBuilder builder = new StringBuilder();
-	builder.append("Complaints [id=");
-	builder.append(id);
-	builder.append(", roleName=");
-	builder.append(roleName);
-	builder.append(", name=");
-	builder.append(name);
-	builder.append(", emailId=");
-	builder.append(emailId);
-	builder.append(", phoneNumber=");
-	builder.append(phoneNumber);
-	builder.append(", description=");
-	builder.append(description);
-	builder.append("]");
-	return builder.toString();
-}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Complaints [id=").append(id).append(", user=").append(user).append(", userid=").append(userid)
+				.append(", description=").append(description).append(", status=").append(status).append("]");
+		return builder.toString();
+	}
 
 }

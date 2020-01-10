@@ -23,9 +23,15 @@ public class Hostel implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
+	
+	private Long hostelownerid;
+	
 	@Column
 	private String hostelName;
+	
+	@Column
+	private String hostelownername;
 
 	@Column
 	private String hostelAddress;
@@ -59,6 +65,7 @@ public class Hostel implements Serializable {
 		super();
 		this.hostelName = "";
 		this.hostelAddress = "";
+		this.hostelownername = "";
 		this.hostelType = "";
 		this.numOfFloors = 0;
 		this.adminId = 0L;
@@ -66,8 +73,9 @@ public class Hostel implements Serializable {
 	}
 
 	public Hostel(Long id, String hostelName, String hostelAddress, String hostelType, Integer numOfFloors, boolean tv,
-			boolean fridge, boolean ac, boolean mineralWater, boolean parking, boolean gym, Long adminId,
-			List<Floor> floors) {
+
+			boolean fridge, boolean ac, boolean mineralWater, boolean parking, boolean gym,String hostelownername,Long hostelownerid,  List<Floor> floors) {
+
 		super();
 		this.id = id;
 		this.hostelName = hostelName;
@@ -81,7 +89,8 @@ public class Hostel implements Serializable {
 		this.parking = parking;
 		this.gym = gym;
 		this.floors = floors;
-		this.adminId = adminId;
+		this.hostelownername=hostelownername;
+		this.hostelownerid=hostelownerid;
 	}
 
 	public Long getId() {
@@ -94,6 +103,23 @@ public class Hostel implements Serializable {
 
 	public String getHostelName() {
 		return hostelName;
+	}
+
+	public String getHostelownername() {
+		return hostelownername;
+	}
+
+	public void setHostelownername(String hostelownername) {
+		this.hostelownername = hostelownername;
+	}
+	
+
+	public Long getHostelownerid() {
+		return hostelownerid;
+	}
+
+	public void setHostelownerid(Long hostelownerid) {
+		this.hostelownerid = hostelownerid;
 	}
 
 	public void setHostelName(String hostelName) {
@@ -191,12 +217,37 @@ public class Hostel implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Hostel [id=").append(id).append(", hostelName=").append(hostelName).append(", hostelAddress=")
-				.append(hostelAddress).append(", hostelType=").append(hostelType).append(", numOfFloors=")
-				.append(numOfFloors).append(", tv=").append(tv).append(", fridge=").append(fridge).append(", ac=")
-				.append(ac).append(", mineralWater=").append(mineralWater).append(", parking=").append(parking)
-				.append(", gym=").append(gym).append(", adminId=").append(adminId).append(", floors=").append(floors)
-				.append("]");
+
+		builder.append("Hostel [id=");
+		builder.append(id);
+		builder.append(", hostelName=");
+		builder.append(hostelName);
+		builder.append(", hostelAddress=");
+		builder.append(hostelAddress);
+		builder.append(", hostelType=");
+		builder.append(hostelType);
+		builder.append(", numOfFloors=");
+		builder.append(numOfFloors);
+		builder.append(", tv=");
+		builder.append(tv);
+		builder.append(", fridge=");
+		builder.append(fridge);
+		builder.append(", ac=");
+		builder.append(ac);
+		builder.append(", mineralWater=");
+		builder.append(mineralWater);
+		builder.append(", parking=");
+		builder.append(parking);
+		builder.append(", gym=");
+		builder.append(gym);
+		builder.append(", floors=");
+		builder.append(floors);
+		builder.append(",hostelownername=");
+		builder.append(hostelownername);
+		builder.append(",hostelownerid=");
+		builder.append(hostelownerid);
+		builder.append("]");
+
 		return builder.toString();
 	}
 

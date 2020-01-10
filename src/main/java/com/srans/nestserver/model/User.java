@@ -91,7 +91,7 @@ public class User implements Serializable {
 
 	public User() {
 		super();
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	public User(Long userId, String name, String role, String status, Long contactNumber, String fatherName,
