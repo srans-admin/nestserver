@@ -179,3 +179,4 @@ public ResponseEntity<User> getTenantById(@PathVariable(value = "Id") Long Tenan
 public List<Object[]> getRoomdetails(@PathVariable(value = "id") Long hostelId) {
 	return hostelRepository.getRoomDetails(hostelId);
 }
+}
