@@ -54,6 +54,9 @@ public class Hostel implements Serializable {
 
 	@Transient
 	private List<Floor> floors;
+	
+	@Transient
+	private List<AdminDetails> adminDetails;
 
 	public Hostel() {
 		super();
@@ -61,13 +64,15 @@ public class Hostel implements Serializable {
 		this.hostelAddress = "";
 		this.hostelType = "";
 		this.numOfFloors = 0;
-		this.adminId = 0L;
 		this.floors = new ArrayList<>();
+		this.adminDetails=new ArrayList<>();
 	}
+
+	
 
 	public Hostel(Long id, String hostelName, String hostelAddress, String hostelType, Integer numOfFloors, boolean tv,
 			boolean fridge, boolean ac, boolean mineralWater, boolean parking, boolean gym, Long adminId,
-			List<Floor> floors) {
+			List<Floor> floors, List<AdminDetails> adminDetails) {
 		super();
 		this.id = id;
 		this.hostelName = hostelName;
@@ -80,9 +85,12 @@ public class Hostel implements Serializable {
 		this.mineralWater = mineralWater;
 		this.parking = parking;
 		this.gym = gym;
-		this.floors = floors;
 		this.adminId = adminId;
+		this.floors = floors;
+		this.adminDetails = adminDetails;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -187,6 +195,17 @@ public class Hostel implements Serializable {
 	public void setAdminId(Long adminId) {
 		this.adminId = adminId;
 	}
+	
+	public List<AdminDetails> getAdminDetails() {
+		return adminDetails;
+	}
+
+
+
+	public void setAdminDetails(List<AdminDetails> adminDetails) {
+		this.adminDetails = adminDetails;
+	}
+
 
 	@Override
 	public String toString() {
@@ -200,4 +219,7 @@ public class Hostel implements Serializable {
 		return builder.toString();
 	}
 
+
+
+	
 }

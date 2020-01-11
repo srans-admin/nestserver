@@ -1,8 +1,12 @@
 package com.srans.nestserver.controller;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -26,9 +30,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
+import com.srans.nestserver.model.AdminDetails;
 import com.srans.nestserver.model.Floor;
 import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.Room;
+import com.srans.nestserver.model.User;
+import com.srans.nestserver.repository.AdminDetailsRepository;
 import com.srans.nestserver.repository.BedRepository;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
@@ -36,6 +43,8 @@ import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.service.HostelService;
 import com.srans.nestserver.service.NotificationService;
 import com.srans.nestserver.service.StorageService;
+import com.srans.nestserver.service.SubAdminService;
+import com.srans.nestserver.service.UserService;
 import com.srans.nestserver.util.ConsolidatedHostel;
 import com.srans.nestserver.util.NSException;
 
@@ -66,6 +75,12 @@ public class HostelController {
 	@Autowired
 	private HostelService hostelService;
 
+	@Autowired
+	private AdminDetailsRepository adminDetailsRepo;
+	
+	@Autowired
+	private SubAdminService adminService = new SubAdminService();
+
 	@GetMapping("/hostels")
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
 	// @PreAuthorize("permitAll()")
@@ -76,12 +91,11 @@ public class HostelController {
 	// Get All Consolidated Hostel Details
 	@GetMapping("/hostels/consolidated-hostel-info")
 	@PreAuthorize("permitAll()")
-	
+
 	public List<ConsolidatedHostel> getAllHostelSubscriptionDetails() {
 
 		return hostelService.getHostelDetails();
 	}
-	
 
 	@GetMapping("/hostels/{id}")
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
@@ -118,8 +132,9 @@ public class HostelController {
 		logger.info("IN::POST::/hostels::saveHostel::" + hostel);
 
 		Hostel responseHostel = hostelRepository.save(hostel);
-		// SAVE Database stuff here
+		AdminDetails adminDetails = new AdminDetails();
 
+		// SAVE Database stuff here
 		responseHostel.getfloors().forEach(floor -> {
 			floor.setHostelId(responseHostel.getId());
 			Floor resFloor = floorRepository.save(floor);
@@ -139,11 +154,28 @@ public class HostelController {
 
 		});
 
+		/*
+		 * //Assign Multiple hostel for multiple admin
+		 * adminDetails.setHostelId(responseHostel.getId());
+		 * adminDetails.setAdminId(responseHostel.getAdminId());
+		 */
+
+		adminDetailsRepo.save(adminDetails);
+
 		// Sending notification to superadmin
 		notificationService.addHostelNotifictaion(responseHostel);
 
 		logger.info("OUT::POST::/hostels::saveHostel::" + hostel);
 		return responseHostel;
+	}
+
+	// Assign Multiple hostel for multiple admin
+	@PostMapping("/hostels/assign/")
+	@PreAuthorize("permitAll()")
+	public AdminDetails assignHostel(@Valid @RequestBody AdminDetails adminDetails ) {
+		
+		adminDetails=adminService.subAdminProcess(adminDetails);
+		return adminDetails;
 	}
 
 	@PostMapping("/hostels/{id}/upload/{cat}")
@@ -164,6 +196,59 @@ public class HostelController {
 
 		return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG)
 				.body(new InputStreamResource(storageService.retriveHostelImage(id, cat)));
+
+	}
+
+	@GetMapping("/hostels/admin/{id}")
+	@PreAuthorize("permitAll()")
+	public List<Hostel> getHostelForAdmin(@PathVariable("id") Long adminId) {
+
+		List<Object> hosteDetails = hostelRepository.getHostelDetailsForAdmin(adminId);
+		List<Hostel> hostelData = new ArrayList<Hostel>();
+		for (Iterator<Object> iterator = hosteDetails.iterator(); iterator.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			Hostel hostel = new Hostel();
+			for (int i = 0; i < object.length; i++) {
+
+				if (i == 0) {
+					hostel.setId(((BigInteger) object[i]).longValue());
+				} else if (i == 1) {
+					hostel.setAc((boolean) object[i]);
+				} else if (i == 2) {
+					hostel.setAdminId(((BigInteger) object[i]).longValue());
+				} else if (i == 3) {
+					hostel.setFridge((boolean) object[i]);
+				} else if (i == 4) {
+					hostel.setGym((boolean) object[i]);
+				} else if (i == 5) {
+					hostel.setHostelAddress((String) object[i]);
+				} else if (i == 6) {
+					hostel.setHostelName((String) object[i]);
+				} else if (i == 7) {
+					hostel.setHostelType((String) object[i]);
+				} else if (i == 8) {
+					hostel.setMineralWater((boolean) object[i]);
+				} else if (i == 9) {
+					hostel.setNumOfFloors((Integer) object[i]);
+				} else if (i == 10) {
+					hostel.setParking((boolean) object[i]);
+				} else if (i == 11) {
+					hostel.setTv((boolean) object[i]);
+				}
+
+			}
+
+			hostelData.add(hostel);
+		}
+		return (hostelData);
+
+	}
+
+	@GetMapping("/hostels/admin1/{id}")
+	@PreAuthorize("permitAll()")
+	public Optional<Hostel> getHostelForAdmin1(@PathVariable("id") Long adminId) {
+
+		return hostelRepository.findById(adminId);
 
 	}
 
