@@ -22,6 +22,9 @@ public class Payment extends AuditModel {
 	private Long id;
 
 	@Column
+	private Long tenantId;
+
+	@Column
 	private Long bookingid;
 
 	@Column
@@ -57,7 +60,7 @@ public class Payment extends AuditModel {
 	@Column
 	private Long adminId;
 	@Column
-	private  Long depositAmount;
+	private Long depositAmount;
 	@Column
 	private Long discountAmount;
 
@@ -66,11 +69,12 @@ public class Payment extends AuditModel {
 
 	}
 
-	public Payment(Long id, Long bookingid, String name, String ammountType, String roomName, String roomType,
-			Long ammount, Long discount, String paymentThrough, Long transactionId, String bankName, String date,
-			Long adminId, Long depositAmount, Long discountAmount) {
+	public Payment(Long id, Long tenantId, Long bookingid, String name, String ammountType, String roomName,
+			String roomType, Long ammount, Long discount, String paymentThrough, Long transactionId, String bankName,
+			String date, Long adminId, Long depositAmount, Long discountAmount) {
 		super();
 		this.id = id;
+		this.tenantId = tenantId;
 		this.bookingid = bookingid;
 		this.name = name;
 		this.ammountType = ammountType;
@@ -117,6 +121,14 @@ public class Payment extends AuditModel {
 
 	public void setAmmountType(String ammountType) {
 		this.ammountType = ammountType;
+	}
+
+	public Long getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(Long tenantId) {
+		this.tenantId = tenantId;
 	}
 
 	public String getRoomName() {
@@ -214,16 +226,15 @@ public class Payment extends AuditModel {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Payment [id=").append(id).append(", bookingid=").append(bookingid).append(", name=")
-				.append(name).append(", ammountType=").append(ammountType).append(", roomName=").append(roomName)
-				.append(", roomType=").append(roomType).append(", ammount=").append(ammount).append(", discount=")
-				.append(discount).append(", paymentThrough=").append(paymentThrough).append(", transactionId=")
-				.append(transactionId).append(", bankName=").append(bankName).append(", date=").append(date)
-				.append(", adminId=").append(adminId).append(", depositAmount=").append(depositAmount)
-				.append(", discountAmount=").append(discountAmount).append("]");
+		builder.append("Payment [id=").append(id).append(", tenantId=").append(tenantId).append(", bookingid=")
+				.append(bookingid).append(", name=").append(name).append(", ammountType=").append(ammountType)
+				.append(", roomName=").append(roomName).append(", roomType=").append(roomType).append(", ammount=")
+				.append(ammount).append(", discount=").append(discount).append(", paymentThrough=")
+				.append(paymentThrough).append(", transactionId=").append(transactionId).append(", bankName=")
+				.append(bankName).append(", date=").append(date).append(", adminId=").append(adminId)
+				.append(", depositAmount=").append(depositAmount).append(", discountAmount=").append(discountAmount)
+				.append("]");
 		return builder.toString();
 	}
 
 }
-
-	

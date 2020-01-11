@@ -1,13 +1,15 @@
 package com.srans.nestserver.controller;
 
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +35,7 @@ import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.repository.UserRepository;
-import com.srans.nestserver.service.HistoryUtil;
-import com.srans.nestserver.service.SubscriptionService;
-import com.srans.nestserver.util.NSException;
-
-import javassist.bytecode.Descriptor.Iterator;
+import com.srans.nestserver.util.HistoryUtil;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -63,32 +61,43 @@ public class PaymentController {
 	public List<Payment> getAllPayment() {
 		return paymentRepository.findAll();
 	}
+	
 
-	/*
-	 * @GetMapping("payments/history/{id}")
-	 * 
-	 * @PreAuthorize("permitAll()") //@PreAuthorize("permitAll()") public
-	 * List<HistoryUtil> getPaymentHistoryDetail(@PathVariable(value = "id") Long
-	 * userId) throws ResourceNotFoundException { List<Object> historyInfo =
-	 * paymentRepository.getDataForpaymentHistory(userId); List<HistoryUtil>
-	 * getPaymentHistory=new ArrayList<>();
-	 * 
-	 * for(Iterator<Object> iterator=historyInfo.iterator(); iterator.hasNext();) {
-	 * Object[] object =(Object[]) iterator.next(); HistoryUtil historyUtil=new
-	 * HistoryUtil(); for(int i=0;i<object.length;i++) { switch (i) { case 0:
-	 * historyUtil.setRoomType((String) object[0]); break; case 1:
-	 * historyUtil.setRoomRent((Long) object [i]); break; case 2:
-	 * historyUtil.setRoomName((String) object [i]); break;
-	 * 
-	 * case 3: historyUtil.setCreatedAt((Date)object [i]); break;
-	 * 
-	 * default: break; } } getPaymentHistory.add(historyUtil); }
-	 * 
-	 * return(getPaymentHistory);
-	 * 
-	 * }
-	 * 
-	 */
+	@GetMapping("payments/history/{id}")
+	@PreAuthorize("permitAll()")
+	// @PreAuthorize("permitAll()")
+	public List<HistoryUtil> getPaymentHistoryDetail(@PathVariable(value = "id") Long userId)
+			throws ResourceNotFoundException {
+		List<Object> historyInfo = paymentRepository.getDataForpaymentHistory(userId);
+		List<HistoryUtil> getPaymentHistory = new ArrayList<>();
+
+		for (Iterator<Object> iterator = historyInfo.iterator(); iterator.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			HistoryUtil historyUtil = new HistoryUtil();
+		
+			for (int i = 0; i < object.length; i++) {
+				switch (i) {
+				case 0:
+					historyUtil.setRoomType((String) object[0]);
+					break;
+				case 1:
+					historyUtil.setAmount(((BigInteger) object[i]).longValue());
+					break;
+				case 2:
+					historyUtil.setRoomName((String) object[i]);
+					break;
+				case 3:
+					historyUtil.setCreatedAt((Timestamp) object[i]);;
+				default:
+					break;
+				}
+			}
+			getPaymentHistory.add(historyUtil);
+		}
+
+		return (getPaymentHistory);
+
+	}
 
 	@GetMapping("payment/hostels/floor/{id}/room/{room_id}")
 	public ResponseEntity<Room> getFloorById(@PathVariable(value = "id") Long floor_id,

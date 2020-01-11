@@ -1,5 +1,7 @@
 package com.srans.nestserver.repository;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.srans.nestserver.model.Payment;
 import com.srans.nestserver.model.User;
+
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
@@ -24,6 +27,10 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 	
 	@Autowired
 	public UserRepository userRepository = null ;
+	
+	
+	@Query(value = "select room_type, ammount, room_name, created_at from payment where tenant_id=?1",nativeQuery = true)
+	public List<Object> getDataForpaymentHistory(Long tenantId);
 	
 	@Query(value="SELECT room_type FROM ROOM WHERE id=?1", nativeQuery=true)
 	public String roomtype(Long floor_id);
