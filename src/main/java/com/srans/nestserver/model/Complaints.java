@@ -11,28 +11,36 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "complaints")
-public class Complaints implements Serializable {
+public class Complaints extends AuditModel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
+	
 	@Transient
 	private User user;
+	
 	private long userid;
 	private String description;
 	private String status;
+	private String date;
 
 	public Complaints() {
 		super();
 
 	}
 
-	public Complaints(long id, User user, long userid, String description, String status) {
+	public Complaints(long id, User user, long userid, String description, String status, String date) {
 		super();
 		this.id = id;
 		this.user = user;
 		this.userid = userid;
 		this.description = description;
 		this.status = status;
+		this.date = date;
 	}
 
 	public long getId() {
@@ -75,11 +83,20 @@ public class Complaints implements Serializable {
 		this.status = status;
 	}
 
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Complaints [id=").append(id).append(", user=").append(user).append(", userid=").append(userid)
-				.append(", description=").append(description).append(", status=").append(status).append("]");
+				.append(", description=").append(description).append(", status=").append(status).append(", date=")
+				.append(date).append("]");
 		return builder.toString();
 	}
 

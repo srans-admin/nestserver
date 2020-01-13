@@ -78,16 +78,12 @@ public class PaymentController {
 			for (int i = 0; i < object.length; i++) {
 				switch (i) {
 				case 0:
-					historyUtil.setRoomType((String) object[0]);
+					historyUtil.setRoomType((String) object[i]);
 					break;
 				case 1:
-					historyUtil.setAmount(((BigInteger) object[i]).longValue());
+					historyUtil.setCreatedAt((Timestamp) object[i]);
 					break;
-				case 2:
-					historyUtil.setRoomName((String) object[i]);
-					break;
-				case 3:
-					historyUtil.setCreatedAt((Timestamp) object[i]);;
+				
 				default:
 					break;
 				}
