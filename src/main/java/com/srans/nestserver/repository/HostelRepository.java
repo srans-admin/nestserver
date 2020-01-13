@@ -43,8 +43,20 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 	public List<Object[]> getRoomDetails(Long hostelId);
 	
 	@Query(value="SELECT id, ac, admin_id, fridge, gym, hostel_address, hostel_name, hostel_type, mineral_water, num_of_floors, parking, tv\r\n" + 
-			"	FROM hostel where admin_id=?1", nativeQuery = true)
+			" FROM hostel  where admin_id=?1", nativeQuery = true)
 	public List<Object> getHostelDetailsForAdmin(Long adminId);
+	
+	@Query(value="SELECT id, ac, admin_id, fridge, gym, hostel_address, hostel_name, hostel_type, mineral_water, num_of_floors, parking, tv\r\n" + 
+			" FROM hostel  where id=?1", nativeQuery = true)
+	public List<Object> getHostelDetailsForSubAdmin(Long adminId);
+	
+	@Query(value = "select count(admin_id) from hostel where admin_id=?1", nativeQuery = true)
+	public Long checkAdminId(Long adminId);
+	
+	@Query(value = "select assign_hostel_ids from admin_details where sub_admin_id=?1", nativeQuery = true)
+	public Long[] getSubAdminId(Long adminId);
+	
+	
 	
 
 	public default Hostel saveWholeObject(Hostel hostel){

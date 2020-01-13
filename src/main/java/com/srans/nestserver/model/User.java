@@ -71,6 +71,12 @@ public class User implements Serializable {
 	@Column(name = "permanentAddress")
 	private String permanentAddress;
 
+	@Column(name = "subscriptions")
+	private Long subscriptions;
+
+	@Column(name = "subscriptionType")
+	private String subscriptionType;
+
 	@Transient
 	private TenantBooking tenantBooking;
 
@@ -80,25 +86,18 @@ public class User implements Serializable {
 	@Transient
 	private Bed bed;
 
-	@Column(name = "subscriptions")
-	private Long subscriptions;
-
-	@Column(name = "subscriptionType")
-	private String subscriptionType;
-
 	@Transient
 	private UserSubscription userSubscriptionWrapper;
 
 	public User() {
-		super();
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	public User(Long userId, String name, String role, String status, Long contactNumber, String fatherName,
 			Long fatherphoneNumber, String motherName, long motherphoneNumber, String dob, long emergencyContactNumber,
 			String nameOfTheEmployer, String bloodGroup, String officeAddress, Long mobileNumber, String emailId,
-			String permanentAddress, TenantBooking tenantBooking, Payment payment, Bed bed, Long subscriptions,
-			String subscriptionType, UserSubscription userSubscriptionWrapper) {
+			String permanentAddress, Long subscriptions, String subscriptionType, TenantBooking tenantBooking,
+			Payment payment, Bed bed, UserSubscription userSubscriptionWrapper) {
 		super();
 		this.userId = userId;
 		this.name = name;
@@ -117,11 +116,11 @@ public class User implements Serializable {
 		this.mobileNumber = mobileNumber;
 		this.emailId = emailId;
 		this.permanentAddress = permanentAddress;
+		this.subscriptions = subscriptions;
+		this.subscriptionType = subscriptionType;
 		this.tenantBooking = tenantBooking;
 		this.payment = payment;
 		this.bed = bed;
-		this.subscriptions = subscriptions;
-		this.subscriptionType = subscriptionType;
 		this.userSubscriptionWrapper = userSubscriptionWrapper;
 	}
 
@@ -261,6 +260,22 @@ public class User implements Serializable {
 		this.permanentAddress = permanentAddress;
 	}
 
+	public Long getSubscriptions() {
+		return subscriptions;
+	}
+
+	public void setSubscriptions(Long subscriptions) {
+		this.subscriptions = subscriptions;
+	}
+
+	public String getSubscriptionType() {
+		return subscriptionType;
+	}
+
+	public void setSubscriptionType(String subscriptionType) {
+		this.subscriptionType = subscriptionType;
+	}
+
 	public TenantBooking getTenantBooking() {
 		return tenantBooking;
 	}
@@ -285,22 +300,6 @@ public class User implements Serializable {
 		this.bed = bed;
 	}
 
-	public Long getSubscriptions() {
-		return subscriptions;
-	}
-
-	public void setSubscriptions(Long subscriptions) {
-		this.subscriptions = subscriptions;
-	}
-
-	public String getSubscriptionType() {
-		return subscriptionType;
-	}
-
-	public void setSubscriptionType(String subscriptionType) {
-		this.subscriptionType = subscriptionType;
-	}
-
 	public UserSubscription getUserSubscriptionWrapper() {
 		return userSubscriptionWrapper;
 	}
@@ -320,10 +319,9 @@ public class User implements Serializable {
 				.append(", nameOfTheEmployer=").append(nameOfTheEmployer).append(", bloodGroup=").append(bloodGroup)
 				.append(", officeAddress=").append(officeAddress).append(", mobileNumber=").append(mobileNumber)
 				.append(", emailId=").append(emailId).append(", permanentAddress=").append(permanentAddress)
+				.append(", subscriptions=").append(subscriptions).append(", subscriptionType=").append(subscriptionType)
 				.append(", tenantBooking=").append(tenantBooking).append(", payment=").append(payment).append(", bed=")
-				.append(bed).append(", subscriptions=").append(subscriptions).append(", subscriptionType=")
-				.append(subscriptionType).append(", userSubscriptionWrapper=").append(userSubscriptionWrapper)
-				.append("]");
+				.append(bed).append(", userSubscriptionWrapper=").append(userSubscriptionWrapper).append("]");
 		return builder.toString();
 	}
 

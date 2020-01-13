@@ -30,7 +30,7 @@ import freemarker.template.TemplateException;
 @Service
 public class TenantService {
 
-	private Logger logger = LoggerFactory.getLogger(TenantService.class);
+	private static Logger logger = LoggerFactory.getLogger(TenantService.class);
 
 	@Autowired
 	private NiodsMailer niodsMailer;
@@ -38,7 +38,7 @@ public class TenantService {
 	@Autowired
 	private NiodsSmsGateway niodsSmsGateway;
 
-	public boolean triggerAlertEmail(User responseTenant) {
+	public  boolean triggerAlertEmail(User responseTenant) {
 
 		boolean emailStatus = false;
 
@@ -48,19 +48,21 @@ public class TenantService {
 
 			String email, subject, ccMail, bccMail, message;
 			email = responseTenant.getEmailId();
+			System.out.println(email);
 			subject = "Welcome to Hostel ";
 			ccMail = null;
 			bccMail = null;
+			System.out.println(responseTenant.getRole());
 
 			if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)) {
 
-				message = MailTemplates.TENANT_REGISTRATION_TEMPLATE
-						.replaceAll("##USER_NAME##", responseTenant.getName())
-						.replaceAll("##PASSWORD##", responseTenant.getName()).replaceAll("##HOSTEL_NAME##", "NIODS")// hostelRepository.getHostelName(responseTenant.getTenantBooking().getHostelId())
+				message = MailTemplates.ADMIN_VACATED_NOTIFICATION_TEMPLATE
+						.replaceAll("##NAME##", responseTenant.getName());
+			             // hostelRepository.getHostelName(responseTenant.getTenantBooking().getHostelId())
 																													// )
-						.replaceAll("##ROOM_NUMBER##", "" + responseTenant.getTenantBooking().getRoomName())
-						.replaceAll("##FLOOR_NUMBER##", "" + responseTenant.getTenantBooking().getFloorName())
-						.replaceAll("##ROOM_RENT##", "" + responseTenant.getTenantBooking().getRoomRent());
+						//.replaceAll("##ROOM_NUMBER##", "" + responseTenant.getTenantBooking().getRoomName())
+						//.replaceAll("##FLOOR_NUMBER##", "" + responseTenant.getTenantBooking().getFloorName())
+						//.replaceAll("##ROOM_RENT##", "" + responseTenant.getTenantBooking().getRoomRent());
 
 			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_USER)) {
 				message = MailTemplates.TENANT_REGISTRATION_TEMPLATE

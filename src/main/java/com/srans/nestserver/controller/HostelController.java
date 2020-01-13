@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
-import com.srans.nestserver.model.AdminDetails;
+import com.srans.nestserver.model.SubAdminDetails;
 import com.srans.nestserver.model.Floor;
 import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.Room;
@@ -77,7 +77,7 @@ public class HostelController {
 
 	@Autowired
 	private AdminDetailsRepository adminDetailsRepo;
-	
+
 	@Autowired
 	private SubAdminService adminService = new SubAdminService();
 
@@ -132,7 +132,6 @@ public class HostelController {
 		logger.info("IN::POST::/hostels::saveHostel::" + hostel);
 
 		Hostel responseHostel = hostelRepository.save(hostel);
-		AdminDetails adminDetails = new AdminDetails();
 
 		// SAVE Database stuff here
 		responseHostel.getfloors().forEach(floor -> {
@@ -154,14 +153,6 @@ public class HostelController {
 
 		});
 
-		/*
-		 * //Assign Multiple hostel for multiple admin
-		 * adminDetails.setHostelId(responseHostel.getId());
-		 * adminDetails.setAdminId(responseHostel.getAdminId());
-		 */
-
-		adminDetailsRepo.save(adminDetails);
-
 		// Sending notification to superadmin
 		notificationService.addHostelNotifictaion(responseHostel);
 
@@ -172,10 +163,10 @@ public class HostelController {
 	// Assign Multiple hostel for multiple admin
 	@PostMapping("/hostels/assign/")
 	@PreAuthorize("permitAll()")
-	public AdminDetails assignHostel(@Valid @RequestBody AdminDetails adminDetails ) {
-		
-		adminDetails=adminService.subAdminProcess(adminDetails);
-		return adminDetails;
+	public SubAdminDetails assignHostel(@Valid @RequestBody SubAdminDetails subAdminDetails) {
+
+		subAdminDetails = adminService.subAdminProcess(subAdminDetails);
+		return subAdminDetails;
 	}
 
 	@PostMapping("/hostels/{id}/upload/{cat}")
@@ -199,47 +190,11 @@ public class HostelController {
 
 	}
 
+	//Get Hostel Details For Admin And SubAdmin
 	@GetMapping("/hostels/admin/{id}")
 	@PreAuthorize("permitAll()")
 	public List<Hostel> getHostelForAdmin(@PathVariable("id") Long adminId) {
-
-		List<Object> hosteDetails = hostelRepository.getHostelDetailsForAdmin(adminId);
-		List<Hostel> hostelData = new ArrayList<Hostel>();
-		for (Iterator<Object> iterator = hosteDetails.iterator(); iterator.hasNext();) {
-			Object[] object = (Object[]) iterator.next();
-			Hostel hostel = new Hostel();
-			for (int i = 0; i < object.length; i++) {
-
-				if (i == 0) {
-					hostel.setId(((BigInteger) object[i]).longValue());
-				} else if (i == 1) {
-					hostel.setAc((boolean) object[i]);
-				} else if (i == 2) {
-					hostel.setAdminId(((BigInteger) object[i]).longValue());
-				} else if (i == 3) {
-					hostel.setFridge((boolean) object[i]);
-				} else if (i == 4) {
-					hostel.setGym((boolean) object[i]);
-				} else if (i == 5) {
-					hostel.setHostelAddress((String) object[i]);
-				} else if (i == 6) {
-					hostel.setHostelName((String) object[i]);
-				} else if (i == 7) {
-					hostel.setHostelType((String) object[i]);
-				} else if (i == 8) {
-					hostel.setMineralWater((boolean) object[i]);
-				} else if (i == 9) {
-					hostel.setNumOfFloors((Integer) object[i]);
-				} else if (i == 10) {
-					hostel.setParking((boolean) object[i]);
-				} else if (i == 11) {
-					hostel.setTv((boolean) object[i]);
-				}
-
-			}
-
-			hostelData.add(hostel);
-		}
+		List<Hostel> hostelData = hostelService.getHostelByAdminId(adminId);
 		return (hostelData);
 
 	}

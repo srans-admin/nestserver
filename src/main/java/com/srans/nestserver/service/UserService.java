@@ -57,6 +57,8 @@ public class UserService {
 
 	@Autowired
 	private NotificationService notificationService;
+	
+	
 
 	/**
 	 * 
@@ -103,17 +105,16 @@ public class UserService {
 			responseTenant = userRepository.save(user);
 
 			if (responseTenant.getUserId() != -1) {
-
-				// STEP-1 : Post this info to UAA
-				tenantToUaaService.postUserToUaa(responseTenant);
-
-				// STEP-2 : Prepare one Notification to SuperAdmin(s)
-				notificationService.addTenantNotifictaion(responseTenant);
-
+				
 				// STEP-3
-
+				
+				System.out.println(responseTenant.getUserId());
 				user.getTenantBooking().setTenantId(responseTenant.getUserId());
-				TenantBooking tenantBooking = tenantBookRepository.save(user.getTenantBooking());
+				TenantBooking tenantBooking =new TenantBooking();
+				 tenantBooking = tenantBookRepository.save(user.getTenantBooking());
+				
+				System.out.println(user.getTenantBooking());
+				
 
 				// Update Bed with alloted_state as N
 
@@ -127,7 +128,6 @@ public class UserService {
 
 				responseTenant.setTenantBooking(tenantBooking);
 				responseTenant.setBed(bedRepository.saveAndFlush(bed));
-
 				// STEP-4: Save Payment Information
 				responseTenant.setPayment(paymentRepository.save(user.getPayment()));
 
@@ -135,13 +135,24 @@ public class UserService {
 
 				if (responseTenant.getEmailId() != null && !responseTenant.getEmailId().isEmpty()) {
 					tenantService.triggerAlertEmail(responseTenant);
+					
+			        // STEP-2 : Prepare one Notification to SuperAdmin(s)
+					  notificationService.addTenantNotifictaion(responseTenant);
 				}
 
 				// STEP-6 : Now drop an SMS to tenant
 
 				if (!("" + responseTenant.getContactNumber()).isEmpty()) {
 					tenantService.triggerSMS(responseTenant);
+					
+					// STEP- : Post this info to UAA
+					  tenantToUaaService.postUserToUaa(responseTenant);
 				}
+				
+
+				  
+				  
+				  
 
 			} else {
 				throw new NSException("Unable to save tenant ");

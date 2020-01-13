@@ -56,7 +56,7 @@ public class Hostel implements Serializable {
 	private List<Floor> floors;
 	
 	@Transient
-	private List<AdminDetails> adminDetails;
+	private List<SubAdminDetails> subAdminDetails;
 
 	public Hostel() {
 		super();
@@ -65,14 +65,14 @@ public class Hostel implements Serializable {
 		this.hostelType = "";
 		this.numOfFloors = 0;
 		this.floors = new ArrayList<>();
-		this.adminDetails=new ArrayList<>();
+		this.subAdminDetails=new ArrayList<>();
 	}
 
 	
 
 	public Hostel(Long id, String hostelName, String hostelAddress, String hostelType, Integer numOfFloors, boolean tv,
 			boolean fridge, boolean ac, boolean mineralWater, boolean parking, boolean gym, Long adminId,
-			List<Floor> floors, List<AdminDetails> adminDetails) {
+			List<Floor> floors, List<SubAdminDetails> subAdminDetails) {
 		super();
 		this.id = id;
 		this.hostelName = hostelName;
@@ -87,7 +87,7 @@ public class Hostel implements Serializable {
 		this.gym = gym;
 		this.adminId = adminId;
 		this.floors = floors;
-		this.adminDetails = adminDetails;
+		this.subAdminDetails = subAdminDetails;
 	}
 
 
@@ -196,14 +196,14 @@ public class Hostel implements Serializable {
 		this.adminId = adminId;
 	}
 	
-	public List<AdminDetails> getAdminDetails() {
-		return adminDetails;
+	public List<SubAdminDetails> getAdminDetails() {
+		return subAdminDetails;
 	}
 
 
 
-	public void setAdminDetails(List<AdminDetails> adminDetails) {
-		this.adminDetails = adminDetails;
+	public void setAdminDetails(List<SubAdminDetails> subAdminDetails) {
+		this.subAdminDetails = subAdminDetails;
 	}
 
 

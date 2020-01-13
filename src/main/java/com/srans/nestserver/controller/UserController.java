@@ -1,7 +1,6 @@
 package com.srans.nestserver.controller;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,18 +30,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
-import com.srans.nestserver.model.Bed;
-import com.srans.nestserver.model.User;
 import com.srans.nestserver.model.TenantBooking;
-import com.srans.nestserver.repository.BedRepository;
-import com.srans.nestserver.repository.PaymentRepository;
+import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.UserRepository;
 import com.srans.nestserver.service.StorageService;
-import com.srans.nestserver.service.TenantService;
-import com.srans.nestserver.service.TenantToUaaService;
 import com.srans.nestserver.service.UserService;
-import com.srans.nestserver.util.NSConstants;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -60,6 +53,9 @@ public class UserController {
  
 	@Autowired
 	private UserService userService = new UserService();
+	
+	@Autowired
+	private TenantBookRepository tenantBookingRepo;
 
 	
 	@PostMapping("/users")
@@ -74,8 +70,7 @@ public class UserController {
 		return user;
 	}
 	 
-	
-	
+   
 
 	@GetMapping("/users")
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
@@ -93,9 +88,20 @@ public class UserController {
 		return ResponseEntity.ok().body(user);
 	}
 	
+	@GetMapping("user/{id}")
+	@PreAuthorize("permitAll()")
+	public User getUser(@PathVariable(value="id") Long userId)throws IOException{
+		User responseUser=userRepository.getOne(userId);
+		tenantBookingRepo.findByTenantId(userId).forEach(tenant->{
+			responseUser.getTenantBooking();
+		});
+		
+		return responseUser;
+		
+	}
+	
 	@GetMapping("/users/byname/{name}")
 	@PreAuthorize("permitAll()")
-	//@PreAuthorize("permitAll()")
 	public ResponseEntity<User> getTenantByName(@PathVariable(value = "name") String name)
 			throws ResourceNotFoundException {
 		User user = userRepository.findByName(name); 

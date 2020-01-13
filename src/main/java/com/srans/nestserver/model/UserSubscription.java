@@ -17,12 +17,15 @@ public class UserSubscription {
 	public UaaUser getUser() {
 		return user;
 	}
+	
 	public void setUser(UaaUser user) {
 		this.user = user;
 	}
+	
 	public UaaSubscription getSubscription() {
 		return subscription;
 	}
+	
 	public void setSubscription(UaaSubscription subscription) {
 		this.subscription = subscription;
 	}
