@@ -33,6 +33,7 @@ import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.SubAdminDetails;
 import com.srans.nestserver.model.Floor;
 import com.srans.nestserver.model.Hostel;
+import com.srans.nestserver.model.Invoice;
 import com.srans.nestserver.model.Room;
 import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.AdminDetailsRepository;
@@ -159,6 +160,12 @@ public class HostelController {
 		logger.info("OUT::POST::/hostels::saveHostel::" + hostel);
 		return responseHostel;
 	}
+	
+	
+	
+	
+	
+	
 
 	// Assign Multiple hostel for multiple admin
 	@PostMapping("/hostels/assign/")

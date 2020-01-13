@@ -1,6 +1,10 @@
 package com.srans.nestserver.controller;
 
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +31,8 @@ import com.srans.nestserver.model.Complaints;
 import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.ComplaintsRepository;
 import com.srans.nestserver.repository.UserRepository;
+import com.srans.nestserver.util.ComplaintHistoryUtil;
+import com.srans.nestserver.util.HistoryUtil;
 
 
 @CrossOrigin(origins = "*",allowedHeaders = "*")
@@ -46,14 +52,42 @@ return complaintsRepository.findAll();
 }
 
 
-@GetMapping("/complaints/{id}")
+
+
+@GetMapping("complaints/complainthistory/{id}")
 @PreAuthorize("permitAll()")
-public ResponseEntity<Complaints> getComplaintsById(@PathVariable(value = "id") Long complaintsId)
-throws ResourceNotFoundException {
-Complaints complaints = complaintsRepository.findById(complaintsId)
-.orElseThrow(() -> new ResourceNotFoundException("Complaints not found for this id :: " + complaintsId));
-return ResponseEntity.ok().body(complaints);
+// @PreAuthorize("permitAll()")
+public List<ComplaintHistoryUtil> getComplaintHistoryDetail(@PathVariable(value = "id") Long userId)
+		throws ResourceNotFoundException {
+	List<Object> complainthistoryInfo = complaintsRepository.getDataForcomplaintHistory(userId);
+	List<ComplaintHistoryUtil> getComplaintHistory = new ArrayList<>();
+
+	for (Iterator<Object> iterator = complainthistoryInfo.iterator(); iterator.hasNext();) {
+		Object[] object = (Object[]) iterator.next();
+		ComplaintHistoryUtil complainthistoryUtil = new ComplaintHistoryUtil();
+	
+		for (int i = 0; i < object.length; i++) {
+			switch (i) {
+			case 0:
+				complainthistoryUtil.setDescription((String) object[0]);
+				break;			
+			case 1:
+				complainthistoryUtil.setCreatedAt((Timestamp) object[i]);
+				break;
+			default:
+				break;
+			}
+		}
+		getComplaintHistory.add(complainthistoryUtil);
+	}
+
+	return (getComplaintHistory);
+
 }
+
+
+
+
 
 
 
@@ -88,12 +122,9 @@ public ResponseEntity<Complaints> updateComplaints(@PathVariable(value = "id") L
 @Valid @RequestBody Complaints complaintsDetails) throws ResourceNotFoundException {
 Complaints complaints = complaintsRepository.findById(complaints_Id)
 .orElseThrow(() -> new ResourceNotFoundException("Complaints not found for this id :: " +complaints_Id));
-complaints.setRoleName(complaintsDetails.getRoleName());
+
 complaints.setDescription(complaintsDetails.getDescription());
-complaints.setName(complaintsDetails.getName());
 complaints.setId(complaintsDetails.getId());
-complaints.setPhoneNumber(complaintsDetails.getPhoneNumber());
-complaints.setEmailId(complaintsDetails.getEmailId());
 
 final Complaints updatedComplaints = complaintsRepository.save(complaints);
 return ResponseEntity.ok(updatedComplaints);
