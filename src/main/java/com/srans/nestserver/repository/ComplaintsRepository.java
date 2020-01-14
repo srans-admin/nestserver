@@ -17,10 +17,8 @@ public Long user_id(Long user_id);
 
 
 
-@Query(value="SELECT description ,created_at FROM complaints  WHERE userid=?1", nativeQuery = true)
+@Query(value="SELECT description ,created_at FROM complaints  WHERE userid=?1 order by created_at desc ", nativeQuery = true)
 public List<Object> getDataForcomplaintHistory(Long userId);
-
-
 
 
 
