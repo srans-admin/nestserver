@@ -7,7 +7,7 @@ import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.SubAdminDetails;
 import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.User;
-import com.srans.nestserver.repository.AdminDetailsRepository;
+import com.srans.nestserver.repository.SubAdminDetailsRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.UserRepository;
 import com.srans.nestserver.util.NSConstants;
@@ -22,7 +22,7 @@ public class SubAdminService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private AdminDetailsRepository adminDetailsRepo;
+	private SubAdminDetailsRepository adminDetailsRepo;
 	
 	
 	

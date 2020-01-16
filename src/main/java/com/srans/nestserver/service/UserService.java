@@ -70,7 +70,7 @@ public class UserService {
 		logger.debug("In::");
 		switch (user.getRole()) {
 
-		case NSConstants.ROLE_USER:
+		case NSConstants.ROLE_GUEST:
 			user = processGuestOps(user);
 			break;
 
@@ -148,11 +148,7 @@ public class UserService {
 					// STEP- : Post this info to UAA
 					  tenantToUaaService.postUserToUaa(responseTenant);
 				}
-				
-
-				  
-				  
-				  
+						  
 
 			} else {
 				throw new NSException("Unable to save tenant ");
@@ -213,18 +209,18 @@ public class UserService {
 
 			if (responseTenant.getUserId() != -1) {
         
-				// STEP-4 : Now drop an email to tenant
+				// STEP-2 : Now drop an email to tenant
 				if (responseTenant.getEmailId() != null && !responseTenant.getEmailId().isEmpty()) {
 					tenantService.triggerAlertEmail(responseTenant);
 				}
 
-				// STEP-5 : Now drop an SMS to tenant
+				// STEP-3 : Now drop an SMS to tenant
 				if (!("" + responseTenant.getContactNumber()).isEmpty()) {
 					tenantService.triggerSMS(responseTenant);
 				}
  
 
-				// STEP-6 : Post this info to UAA
+				// STEP-4 : Post this info to UAA
 				tenantToUaaService.postUserToUaa(responseTenant);
 
 			} else {

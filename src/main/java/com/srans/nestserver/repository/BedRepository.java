@@ -53,7 +53,15 @@ public interface BedRepository extends JpaRepository<Bed, Long> {
 	@Query(value = "select count(bed.id)from bed inner join room on bed.room_id=room.id where (room.room_type='Misc' AND bed.alloted='N') AND room.hostel_id=?1", nativeQuery = true)
 	public Integer totalEmptyMiscBeds(Long hostel_id);
 	
-
+	//------------------------ Get Availabile Beds
+	@Query(value = "select tb.room_bed_id, va.date,tb.bed_position,tb.floor_id,tb.room_id,tb.room_rent,tb.room_type from vacation va\r\n" + 
+			"inner join  tenantbooking tb on (va.tenant_id = tb.tenant_id) "
+			+ " where va.date > CURRENT_DATE\r\n" 
+			+ "union"
+			+ " select b.id, b.vacated_date,b.position,b.floor_id, b.room_id, r.room_rent, r.room_type from bed b inner join room r on r.id=b.room_id  where b.alloted = 'N' and b.hostel_id = ?1" 
+			,nativeQuery = true)
+	public List <Object> getAvailableBedsByHostelId(Long HosteId);
 	
+
 
 }

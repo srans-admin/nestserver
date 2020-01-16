@@ -35,7 +35,7 @@ import com.srans.nestserver.model.Floor;
 import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.Room;
 import com.srans.nestserver.model.User;
-import com.srans.nestserver.repository.AdminDetailsRepository;
+import com.srans.nestserver.repository.SubAdminDetailsRepository;
 import com.srans.nestserver.repository.BedRepository;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
@@ -76,7 +76,7 @@ public class HostelController {
 	private HostelService hostelService;
 
 	@Autowired
-	private AdminDetailsRepository adminDetailsRepo;
+	private SubAdminDetailsRepository adminDetailsRepo;
 
 	@Autowired
 	private SubAdminService adminService = new SubAdminService();

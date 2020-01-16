@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.srans.nestserver.model.Hostel;
-import com.srans.nestserver.repository.AdminDetailsRepository;
+import com.srans.nestserver.repository.SubAdminDetailsRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.UserRepository;
 import com.srans.nestserver.util.ConsolidatedHostel;
@@ -19,8 +19,6 @@ import com.srans.nestserver.util.NSConstants;
 
 @Service
 public class HostelService {
-
-	
 
 	private Logger logger = LoggerFactory.getLogger(HostelService.class);
 
@@ -31,7 +29,7 @@ public class HostelService {
 	private HostelRepository hostelRepository;
 
 	@Autowired
-	private AdminDetailsRepository adminDetailsRepo;
+	private SubAdminDetailsRepository adminDetailsRepo;
 
 	// Get All Consolidated Hostel Details
 	public List<ConsolidatedHostel> getHostelDetails() {
@@ -93,11 +91,11 @@ public class HostelService {
 
 		Long checkAdminId = hostelRepository.checkAdminId(adminId);
 		Long checkSubadminId = adminDetailsRepo.checkSubAdminDetails(adminId);
-		List<Hostel> hostelData = new ArrayList<Hostel>();;
+		List<Hostel> hostelData = new ArrayList<Hostel>();
 
 		if (checkAdminId != 0) {
 			List<Object> hosteDetails = hostelRepository.getHostelDetailsForAdmin(adminId);
-			//hostelData = new ArrayList<Hostel>();
+			// hostelData = new ArrayList<Hostel>();
 			for (Iterator<Object> iterator = hosteDetails.iterator(); iterator.hasNext();) {
 				Object[] object = (Object[]) iterator.next();
 				Hostel hostel = new Hostel();
@@ -137,7 +135,7 @@ public class HostelService {
 
 		}
 
-		//Display All Hostel For Sub Admin
+		// Display All Hostel For Sub Admin
 		else if (checkSubadminId != 0) {
 
 			Long[] getAssignHostelId = hostelRepository.getSubAdminId(adminId);
@@ -146,7 +144,7 @@ public class HostelService {
 				List<Object> hosteDetails = hostelRepository.getHostelDetailsForSubAdmin(assignHostelId);
 
 				for (Iterator<Object> iterator = hosteDetails.iterator(); iterator.hasNext();) {
-					
+
 					Object[] object = (Object[]) iterator.next();
 					Hostel hostel = new Hostel();
 
