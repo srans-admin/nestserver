@@ -27,6 +27,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			"	on t1.admin_id=t2.user_id inner join payment t3 on t2.user_id=t3.admin_id where t2.role=?1", nativeQuery = true)
 	public List<Object> getConsolidatedHostel(String role);
 	
+	@Query(value="SELECT u FROM User u WHERE u.contactNumber=?1")
+	public User findByContactNumber(Long contactNumber);
   
 	/*
 	@Query(value = "SELECT hostel_name FROM Hostel", nativeQuery = true)

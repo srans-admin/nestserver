@@ -90,6 +90,7 @@ public class User implements Serializable {
 	private UserSubscription userSubscriptionWrapper;
 
 	public User() {
+		super();
 	
 	}
 

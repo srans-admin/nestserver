@@ -113,6 +113,7 @@ public class UserController {
 		User user = userRepository.findByName(name); 
 		return ResponseEntity.ok().body(user);
 	}
+	
 
 	@PostMapping("/users/{id}/upload/{cat}")
 	@PreAuthorize("permitAll()")
