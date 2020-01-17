@@ -31,12 +31,12 @@ public class BedAvailabilityService {
 	@Autowired
 	private PaymentRepository paymentRepository;
 
-	@Autowired
-	private Payment guestPayment = new Payment();
+	
 
 	@Autowired
 	private BedRepository bedRepository;
 
+	// Display All Empty Beds
 	public List<AvailableBedsUtil> getAllAvailableBed(Long hostelId) {
 
 		List<AvailableBedsUtil> availableBedsInfo = new ArrayList<AvailableBedsUtil>();
@@ -82,16 +82,15 @@ public class BedAvailabilityService {
 
 	// Save Amount Details
 	public Payment saveAmountDetails(@Valid Payment payment) {
-
-		guestPayment = paymentRepository.saveAndFlush(payment);
-
-		if (guestPayment.getRoomBedId() != null) {
+		 Payment guestPayment = new Payment();
+		 guestPayment = paymentRepository.saveAndFlush(payment);
+          
+		if (payment.getRoomBedId() != null) {
 				
 			bedRepository.findById(guestPayment.getRoomBedId()).map(bed -> {
-				bed.setAlloted('R');
-				
-				return bedRepo.save(bed);
-			}).orElseThrow(() -> new ResourceNotFoundException("Bed Id " + guestPayment.getRoomBedId() + " not found"));
+				bed.setAlloted('R');			
+			 return bedRepo.saveAndFlush(bed);
+			});
 		}
 		return payment;
 

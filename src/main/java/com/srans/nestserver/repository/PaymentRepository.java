@@ -1,5 +1,7 @@
 package com.srans.nestserver.repository;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,6 +32,9 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 	
 	@Query(value="SELECT room_rent FROM ROOM WHERE id=?1", nativeQuery=true)
 	public Long roomRent(Long floor_id);
+	
+	@Query(value="SELECT created_at, room_bed_id  from payment where ammount_type='ReservedBedAmount'",nativeQuery=true)
+	public List<Object> guestBedInfo();
 	
 	
 	

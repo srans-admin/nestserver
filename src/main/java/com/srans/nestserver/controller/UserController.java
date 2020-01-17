@@ -30,12 +30,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
+import com.srans.nestserver.model.Payment;
 import com.srans.nestserver.model.TenantBooking;
 import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.UserRepository;
+import com.srans.nestserver.service.BedAvailabilityService;
 import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.service.UserService;
+import com.srans.nestserver.util.AvailableBedsUtil;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -56,6 +59,9 @@ public class UserController {
 	
 	@Autowired
 	private TenantBookRepository tenantBookingRepo;
+	
+	@Autowired
+	private BedAvailabilityService bedAvailabilityService=new BedAvailabilityService();
 
 	
 	@PostMapping("/users")
@@ -149,6 +155,34 @@ public class UserController {
 		logger.info("OUT::POST:://users/uploadImage/{cat}/{id}::uploadIdproofImage::" + id + "::" + cat);
 
 	}
+	
+	// API for available beds to guest
+	@GetMapping("/users/guest-reserve-bed/{hostelId}")
+	@PreAuthorize("permitAll()")
+	public List<AvailableBedsUtil> getAvailableBed(@PathVariable("hostelId") Long hostelId)throws NSException{
+	
+		return bedAvailabilityService.getAllAvailableBed( hostelId);
+		
+	}
+	
+	// API for book the bed by guest
+	
+	@PostMapping("/users/bed-booking")
+	@PreAuthorize("permitAll()")
+	public TenantBooking postBedBookingDetails(@Valid @RequestBody TenantBooking tenantBooking )throws NSException{
+		
+		return bedAvailabilityService.saveBookedBedDetails(tenantBooking);
+	}
+	
+	//API for save amount who's payment by guest for booked bed
+	@PostMapping("/users/guest-payment")
+	@PreAuthorize("permitAll()")
+	public Payment postSaveAmountDetails(@Valid @RequestBody Payment payment )throws NSException{
+		
+		return bedAvailabilityService.saveAmountDetails(payment);
+	}
+	
+	
 
 	/*
 	 * @PostMapping("/users") public Tenant createUser(@RequestBody Tenant tenant)
