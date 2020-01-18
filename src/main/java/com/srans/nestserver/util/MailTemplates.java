@@ -249,5 +249,36 @@ public class MailTemplates {
 			+ "</div>"
 			+ "</body>"
 			+ "</head></html>";
+	
+	public static final String GUEST_BOOKING_TEMPLATE="<html><head><title></title>"
+			+ "<body>"
+			+"<div>"
+			+"Dear ##NAME##,"
+			+"</div>"
+			+ "  <div> <p style='font-size: 18px; text-align: center; '>Thank you for booking the bed.Your booking details below :-<br> "
+			+ "<ul type='disc'> <li>Hostel-Id : ##hostelId##</li>"
+			+ " <li>Floor_Name : ##floorName##</li> "
+			+ " <li>Room_Id : ##roomId##</li> "
+			+ " <li>Room_bed_Id : ##roomBedId##</li> "
+			+ "</ul> "
+			+ "</p>"
+			+"<p> Protect your bed for seven days by going to the payment step and paying the reserved amount.\r\n" + 
+			"</P>"
+			+ "</div>"
+			+ "</body>"
+			+ "</head></html>";
+	
+
+	public static final String GUEST_REGISTRATION_TEMPLATE="<html><head><title></title>"
+			+ "<body>"
+			+"<div>"
+			+"Dear ##NAME##,"
+			+ "</div>"
+			+ "  <div><p style='font-size: 18px; text-align: center; '>You successfully registered.<br>" 
+			+ " You can login using this username- ##USER_NAME##  and temprory password- ##PASSWORD## " 
+			+ "</p>"
+			+ "</div>"
+			+ "</body>"
+			+ "</head></html>";
 
 }

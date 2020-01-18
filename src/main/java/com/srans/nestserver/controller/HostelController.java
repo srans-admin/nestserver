@@ -72,8 +72,6 @@ public class HostelController {
 	@Autowired
 	private HostelService hostelService;
 
-	@Autowired
-	private SubAdminDetailsRepository adminDetailsRepo;
 
 	@Autowired
 	private SubAdminService adminService = new SubAdminService();

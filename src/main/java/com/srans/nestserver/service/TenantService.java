@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service;
 
 import com.srans.nestserver.communication.NiodsMailer;
 import com.srans.nestserver.communication.NiodsSmsGateway;
+import com.srans.nestserver.model.TenantBooking;
 import com.srans.nestserver.model.User;
+import com.srans.nestserver.model.UserSubscription;
+import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.util.MailTemplates;
 import com.srans.nestserver.util.NSConstants;
 import com.srans.nestserver.util.PasswordGenerator;
@@ -38,7 +41,10 @@ public class TenantService {
 	@Autowired
 	private NiodsSmsGateway niodsSmsGateway;
 
-	public  boolean triggerAlertEmail(User responseTenant) {
+	@Autowired
+	private TenantBookRepository tenantBookRepository;
+
+	public boolean triggerAlertEmail(User responseTenant) {
 
 		boolean emailStatus = false;
 
@@ -46,7 +52,7 @@ public class TenantService {
 
 			logger.debug("In::triggerAlertEmail");
 
-			String email, subject, ccMail, bccMail, message;
+			String email, subject, ccMail, bccMail, message = null;
 			email = responseTenant.getEmailId();
 			System.out.println(email);
 			subject = "Welcome to Hostel ";
@@ -56,20 +62,46 @@ public class TenantService {
 
 			if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)) {
 
-				message = MailTemplates.ADMIN_VACATED_NOTIFICATION_TEMPLATE
-						.replaceAll("##NAME##", responseTenant.getName());
-			             // hostelRepository.getHostelName(responseTenant.getTenantBooking().getHostelId())
-																													// )
-						//.replaceAll("##ROOM_NUMBER##", "" + responseTenant.getTenantBooking().getRoomName())
-						//.replaceAll("##FLOOR_NUMBER##", "" + responseTenant.getTenantBooking().getFloorName())
-						//.replaceAll("##ROOM_RENT##", "" + responseTenant.getTenantBooking().getRoomRent());
+				message = MailTemplates.ADMIN_VACATED_NOTIFICATION_TEMPLATE.replaceAll("##NAME##",
+						responseTenant.getName());
+				// hostelRepository.getHostelName(responseTenant.getTenantBooking().getHostelId())
+				// )
+				// .replaceAll("##ROOM_NUMBER##", "" +
+				// responseTenant.getTenantBooking().getRoomName())
+				// .replaceAll("##FLOOR_NUMBER##", "" +
+				// responseTenant.getTenantBooking().getFloorName())
+				// .replaceAll("##ROOM_RENT##", "" +
+				// responseTenant.getTenantBooking().getRoomRent());
 
 			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_USER)) {
 				message = MailTemplates.TENANT_REGISTRATION_TEMPLATE
-						.replaceAll("##USER_NAME##", "" + responseTenant.getName())
+						.replaceAll("##USER_NAME##", " " + responseTenant.getName())
 						.replaceAll("##PASSWORD##", responseTenant.getName()).replaceAll("##HOSTEL_NAME##", "NIODS");
 
-			} else {
+			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_GUEST)) {
+
+				TenantBooking guestInfo = new TenantBooking();
+				if (tenantBookRepository.findGuestId(responseTenant.getUserId()) != 0) {
+					guestInfo = tenantBookRepository.getOne(responseTenant.getUserId());
+					message = MailTemplates.GUEST_BOOKING_TEMPLATE
+							.replaceAll("##NAME##", responseTenant.getName())
+							.replaceAll("##hostelId##", (guestInfo.getHostelId()).toString())
+							.replaceAll("##floorName##", guestInfo.getFloorName())
+							.replaceAll("##roomId##", (guestInfo.getRoomId()).toString())
+							.replaceAll("##roomBedId##", (guestInfo.getRoomBedId()).toString());
+				} else {
+					
+					String s=responseTenant.getUserSubscriptionWrapper().getUser().getPassword();
+					System.out.println(s);
+                     
+					message = MailTemplates.GUEST_REGISTRATION_TEMPLATE.replaceAll("##NAME##", responseTenant.getName())
+							.replaceAll("##USER_NAME##", responseTenant.getName())
+							.replaceAll("##PASSWORD##",s);				
+				}
+
+			}
+
+			else {
 				message = "User added ...";
 			}
 			niodsMailer.sendEmail(email, subject, ccMail, bccMail, message);
@@ -116,8 +148,6 @@ public class TenantService {
 
 			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_ADMIN)) {
 				message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE;
-
-				
 
 			}
 

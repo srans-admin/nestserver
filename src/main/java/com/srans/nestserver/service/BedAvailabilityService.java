@@ -5,18 +5,20 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Payment;
 import com.srans.nestserver.model.TenantBooking;
+import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.BedRepository;
 import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
+import com.srans.nestserver.repository.UserRepository;
 import com.srans.nestserver.util.AvailableBedsUtil;
 
 @Service
@@ -31,10 +33,14 @@ public class BedAvailabilityService {
 	@Autowired
 	private PaymentRepository paymentRepository;
 
-	
+	@Autowired
+	private TenantService tenantService;
 
 	@Autowired
 	private BedRepository bedRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	// Display All Empty Beds
 	public List<AvailableBedsUtil> getAllAvailableBed(Long hostelId) {
@@ -77,7 +83,17 @@ public class BedAvailabilityService {
 	// Save Booked Bed Details
 
 	public TenantBooking saveBookedBedDetails(@Valid TenantBooking tenantBooking) {
-		return tenantBookRepository.saveAndFlush(tenantBooking);
+		
+		TenantBooking guestBooking=new TenantBooking();
+		guestBooking=tenantBookRepository.saveAndFlush(tenantBooking);
+		
+		User userResponse=new User();
+		
+		if(guestBooking.getRoomId()!=null) {
+			userResponse=userRepository.getOne(guestBooking.getGuestId());
+			tenantService.triggerAlertEmail(userResponse);
+		}
+		return guestBooking;
 	}
 
 	// Save Amount Details

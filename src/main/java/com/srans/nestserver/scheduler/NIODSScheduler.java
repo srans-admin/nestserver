@@ -46,7 +46,7 @@ public class NIODSScheduler {
 		return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 
-	// Fire The Schedular Every Day On 07:07 AM
+	// Fire The Schedular Every Day On 23:59 AM(Night)
 	@Scheduled(cron ="${nidos.cron.trigger}" )
 	public void updateBedStatusAfterSevenDays() throws ResourceNotFoundException {
 
