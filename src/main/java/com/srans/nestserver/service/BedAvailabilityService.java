@@ -96,7 +96,7 @@ public class BedAvailabilityService {
 		return guestBooking;
 	}
 
-	// Save Amount Details
+	// Save Bed Booking Amount Details
 	public Payment saveAmountDetails(@Valid Payment payment) {
 		 Payment guestPayment = new Payment();
 		 guestPayment = paymentRepository.saveAndFlush(payment);
