@@ -5,13 +5,13 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.srans.nestserver.model.Bed;
 import com.srans.nestserver.model.Payment;
 import com.srans.nestserver.model.TenantBooking;
 import com.srans.nestserver.model.User;
@@ -38,7 +38,7 @@ public class BedAvailabilityService {
 
 	@Autowired
 	private BedRepository bedRepository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -83,14 +83,14 @@ public class BedAvailabilityService {
 	// Save Booked Bed Details
 
 	public TenantBooking saveBookedBedDetails(@Valid TenantBooking tenantBooking) {
-		
-		TenantBooking guestBooking=new TenantBooking();
-		guestBooking=tenantBookRepository.saveAndFlush(tenantBooking);
-		
-		User userResponse=new User();
-		
-		if(guestBooking.getRoomId()!=null) {
-			userResponse=userRepository.getOne(guestBooking.getGuestId());
+
+		TenantBooking guestBooking = new TenantBooking();
+		guestBooking = tenantBookRepository.saveAndFlush(tenantBooking);
+
+		User userResponse = new User();
+
+		if (guestBooking.getRoomId() != null) {
+			userResponse = userRepository.getOne(guestBooking.getGuestId());
 			tenantService.triggerAlertEmail(userResponse);
 		}
 		return guestBooking;
@@ -98,16 +98,29 @@ public class BedAvailabilityService {
 
 	// Save Bed Booking Amount Details
 	public Payment saveAmountDetails(@Valid Payment payment) {
-		 Payment guestPayment = new Payment();
-		 guestPayment = paymentRepository.saveAndFlush(payment);
-          
-		if (payment.getRoomBedId() != null) {
-				
-			bedRepository.findById(guestPayment.getRoomBedId()).map(bed -> {
-				bed.setAlloted('R');			
-			 return bedRepo.saveAndFlush(bed);
-			});
+		Payment guestPayment = new Payment();
+		guestPayment = paymentRepository.saveAndFlush(payment);
+
+		try {
+			if (payment.getRoomBedId() != null) {
+				bedRepository.findById(guestPayment.getRoomBedId()).map(bed -> {
+					bed.setAlloted('R');
+					return bedRepo.saveAndFlush(bed);
+				});
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+
+			Long guestId;
+			guestId = tenantBookRepository.findByGuestId(guestPayment.getRoomBedId());
+			User userInfo = new User();
+			userInfo = userRepository.getOne(guestId);
+			tenantService.triggerAlertEmail(userInfo);
+			tenantService.triggerSMS(userInfo);
 		}
+
 		return payment;
 
 	}

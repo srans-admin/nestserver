@@ -197,6 +197,10 @@ public class Payment extends AuditModel {
 		this.roomBedId = roomBedId;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

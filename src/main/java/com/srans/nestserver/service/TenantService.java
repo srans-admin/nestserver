@@ -18,6 +18,7 @@ import com.srans.nestserver.communication.NiodsSmsGateway;
 import com.srans.nestserver.model.TenantBooking;
 import com.srans.nestserver.model.User;
 import com.srans.nestserver.model.UserSubscription;
+import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.util.MailTemplates;
 import com.srans.nestserver.util.NSConstants;
@@ -43,6 +44,9 @@ public class TenantService {
 
 	@Autowired
 	private TenantBookRepository tenantBookRepository;
+
+	@Autowired
+	private PaymentRepository paymentRepo;
 
 	public boolean triggerAlertEmail(User responseTenant) {
 
@@ -80,28 +84,43 @@ public class TenantService {
 
 			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_GUEST)) {
 
-				TenantBooking guestInfo = new TenantBooking();
-				if (tenantBookRepository.findGuestId(responseTenant.getUserId()) != 0) {
-					guestInfo = tenantBookRepository.getOne(responseTenant.getUserId());
-					message = MailTemplates.GUEST_BOOKING_TEMPLATE
-							.replaceAll("##NAME##", responseTenant.getName())
-							.replaceAll("##hostelId##", (guestInfo.getHostelId()).toString())
-							.replaceAll("##floorName##", guestInfo.getFloorName())
-							.replaceAll("##roomId##", (guestInfo.getRoomId()).toString())
-							.replaceAll("##roomBedId##", (guestInfo.getRoomBedId()).toString());
-				} else {
-					
-					String s=responseTenant.getUserSubscriptionWrapper().getUser().getPassword();
-					System.out.println(s);
-                     
-					message = MailTemplates.GUEST_REGISTRATION_TEMPLATE.replaceAll("##NAME##", responseTenant.getName())
-							.replaceAll("##USER_NAME##", responseTenant.getName())
-							.replaceAll("##PASSWORD##",s);				
+				try {
+					TenantBooking guestInfo = new TenantBooking();
+
+					if (tenantBookRepository.findGuestId(responseTenant.getUserId()) != 0 && paymentRepo.findRoomBedId(
+							tenantBookRepository.getOne(responseTenant.getUserId()).getRoomBedId()) == 0) {
+						guestInfo = tenantBookRepository.getOne(responseTenant.getUserId());
+						message = MailTemplates.GUEST_BOOKING_TEMPLATE.replaceAll("##NAME##", responseTenant.getName())
+								.replaceAll("##hostelId##", (guestInfo.getHostelId()).toString())
+								.replaceAll("##floorName##", guestInfo.getFloorName())
+								.replaceAll("##roomId##", (guestInfo.getRoomId()).toString())
+								.replaceAll("##roomBedId##", (guestInfo.getRoomBedId()).toString());
+					} else if (responseTenant.getUserId() != null
+							&& tenantBookRepository.findGuestId(responseTenant.getUserId()) == 0) {
+
+						String s = responseTenant.getUserSubscriptionWrapper().getUser().getPassword();
+						System.out.println(s);
+
+						message = MailTemplates.GUEST_REGISTRATION_TEMPLATE
+								.replaceAll("##NAME##", responseTenant.getName())
+								.replaceAll("##USER_NAME##", responseTenant.getName()).replaceAll("##PASSWORD##", s);
+					} else if (paymentRepo.findRoomBedId(
+							tenantBookRepository.getOne(responseTenant.getUserId()).getRoomBedId()) != 0) {
+						guestInfo=tenantBookRepository.getOne(responseTenant.getUserId());
+
+						message = MailTemplates.GUEST_AMOUNT_TEMPLATE.replaceAll("##NAME##", responseTenant.getName())							
+								.replaceAll("##hostelId##", (guestInfo.getHostelId()).toString())
+								.replaceAll("##floorName##", guestInfo.getFloorName())
+								.replaceAll("##roomId##", (guestInfo.getRoomId()).toString())
+								.replaceAll("##roomBedId##", (guestInfo.getRoomBedId()).toString());
+
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 
-			}
-
-			else {
+			} else {
 				message = "User added ...";
 			}
 			niodsMailer.sendEmail(email, subject, ccMail, bccMail, message);
@@ -149,6 +168,9 @@ public class TenantService {
 			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_ADMIN)) {
 				message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE;
 
+			}
+			else if(responseTenant.getRole().endsWith(NSConstants.ROLE_GUEST)) {
+				message=SMSTemplates.GUEST_SUBSCRIPTION_TEMPLATE.replaceAll("USER_NAME", responseTenant.getName());
 			}
 
 			else {

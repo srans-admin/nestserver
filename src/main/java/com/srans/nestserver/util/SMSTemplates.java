@@ -21,5 +21,9 @@ public class SMSTemplates {
 	public static final String TENANT_INVOICE_TEMPLATE= " "; 
 	
 	public static final String ADMIN_SUBSCRIPTION_TEMPLATE=" ";
+	
+	public static final String GUEST_SUBSCRIPTION_TEMPLATE="Hello ##USER_NAME##, \n"+
+	                                                          "Thank you for booking bed.\n"+
+			                                                   "@Team Srans"                 ;
 
 }

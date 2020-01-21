@@ -36,6 +36,9 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 	@Query(value="SELECT created_at, room_bed_id  from payment where ammount_type='ReservedBedAmount'",nativeQuery=true)
 	public List<Object> guestBedInfo();
 	
+	@Query(value="select count(room_bed_id) from payment where room_bed_id=?1",nativeQuery=true)
+	public Long findRoomBedId(Long bedId);
+	
 	
 	
 }
