@@ -15,7 +15,7 @@ public class Complaint extends AuditModel {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id; 
+	private long cid; 
 	
 	private long userId;
 	private String type;
@@ -32,12 +32,12 @@ public class Complaint extends AuditModel {
 
 
 	public long getId() {
-		return id;
+		return cid;
 	}
 
-
+ 
 	public void setId(long id) {
-		this.id = id;
+		this.cid = id;
 	}
 
 
@@ -115,7 +115,7 @@ public class Complaint extends AuditModel {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Complaint [id=");
-		builder.append(id);
+		builder.append(cid);
 		builder.append(", userId=");
 		builder.append(userId);
 		builder.append(", type=");

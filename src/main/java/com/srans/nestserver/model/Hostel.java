@@ -49,6 +49,19 @@ public class Hostel implements Serializable {
 	private boolean parking;
 	@Column
 	private boolean gym;
+	
+	@Column
+	private long adminId;
+
+	public long getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(long adminId) {
+		this.adminId = adminId;
+	}
+
+
 
 	@Transient
 	private List<Floor> floors;
@@ -194,6 +207,8 @@ public class Hostel implements Serializable {
 	public void setGym(boolean gym) {
 		this.gym = gym;
 	}
+	
+	
 
 	@Override
 	public String toString() {

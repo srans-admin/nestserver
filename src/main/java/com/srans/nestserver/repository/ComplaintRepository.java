@@ -14,10 +14,10 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 	public List<Object> getDataForcomplaintHistory(Long userId);
 	
 	
-	@Query(value="SELECT c FROM Complaint c WHERE c.userId=?1", nativeQuery=true)
-	public List<Complaint> getCompliantsForUser(Long userId );
+	@Query(value="SELECT c FROM Complaint c WHERE c.userId=?1")
+	public Optional<List<Complaint>> getCompliantsForUser(Long userId );
 	
-	@Query(value="SELECT c FROM Complaint c WHERE c.adminId=?1", nativeQuery=true)
+	@Query(value="SELECT c FROM Complaint c WHERE c.admin_id=?1", nativeQuery=true)
 	public List<Complaint> getCompliantsForAdmin(Long adminId );
 	
 	
@@ -27,4 +27,5 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 
 
 
+	
 }

@@ -17,7 +17,7 @@ public interface ComplaintCommentsRepository extends JpaRepository<ComplaintComm
 	@Query(value="SELECT h.adminid , tb.tenant_id, cmpt.description, cmpt.status FROM HOSTEL h,complaints cmpt, tenantbooking tb WHERE tb.hostel_id = h.id  and	 tb.tenant_id = cmpt.userid	and tb.tenant_id= ?1", nativeQuery = true)
 	public Long adminid(Long adminid); 
 	
-	@Query(value="SELECT cc FROM ComplaintComment cc WHERE cc.complaintId=?1 ORDER by resolutionDate", nativeQuery=true)
+	@Query(value="SELECT cc FROM ComplaintComment cc WHERE cc.complaintId=?1 ORDER by resolutionDate")
 	public List<ComplaintComment> getAllComments(Long commentId );
 	
 	

@@ -10,12 +10,12 @@ import java.util.List;
  * @author user
  *
  */
-public class ComplaintWapper {
+public class ComplaintWrapper {
 	
 	private Complaint complaint;
 	private List<ComplaintComment> complaintComments;
 	
-	public ComplaintWapper(){
+	public ComplaintWrapper(){
 		this.complaint = new Complaint();
 		this.complaintComments = new ArrayList<>();
 	}
