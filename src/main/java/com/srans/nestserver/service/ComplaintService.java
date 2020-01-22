@@ -10,7 +10,7 @@
  * import com.srans.nestserver.communication.NiodsMailer; import
  * com.srans.nestserver.model.Complaints; import
  * com.srans.nestserver.repository.BedRepository; import
- * com.srans.nestserver.repository.ComplaintsRepository; import
+ * com.srans.nestserver.repository.ComplaintRepository; import
  * com.srans.nestserver.repository.HostelRepository; import
  * com.srans.nestserver.repository.PaymentRepository; import
  * com.srans.nestserver.repository.TenantBookRepository; import
@@ -26,7 +26,7 @@
  * private Logger logger = LoggerFactory.getLogger(ComplaintService.class);
  * 
  * 
- * @Autowired private ComplaintsRepository complaintsRepository;
+ * @Autowired private ComplaintRepository complaintsRepository;
  * 
  * @Autowired private Complaints complaints;
  * 
