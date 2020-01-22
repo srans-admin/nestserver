@@ -15,15 +15,31 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Autowired 
 	TenantBookRepository tenantBookRepository = null; 
 	
+	@Autowired
+	public PaymentRepository paymentRepository=null;
 	
 	@Query(value="SELECT u FROM User u WHERE u.name=?1") 
 	public User findByName(String name);
+	
+	
+	/*
+	 * @Query(
+	 * value="SELECT room_name, room_type, date, ammount, deposit_amount, payment_through FROM PAYMENT where user_id=?1"
+	 * ) public User findByuserid(Long userId);
+	 * 
+	 */
 	
 	@Query(value="SELECT u FROM User u WHERE u.role=?1") 
 	public List<User> getUsersByRole(String role);
 	
 	@Query(value="SELECT u FROM User u WHERE u.contactNumber=?1")
 	public User findByContactNumber(Long contactNumber);
+	
+	
+	/*
+	 * @Query(value="SELECT * FROM PAYMENT WHERE userid=?1," nativeQuery = true)
+	 * public User findByUserid(Long userId);
+	 */
   
 	/*
 	@Query(value = "SELECT hostel_name FROM Hostel", nativeQuery = true)

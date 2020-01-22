@@ -81,6 +81,9 @@ public class PaymentController {
 					historyUtil.setRoomType((String) object[i]);
 					break;
 				case 1:
+					historyUtil.setAmount(((BigInteger)object[i]).longValue());
+					break;
+				case 2:
 					historyUtil.setCreatedAt((Timestamp) object[i]);
 					break;
 				
