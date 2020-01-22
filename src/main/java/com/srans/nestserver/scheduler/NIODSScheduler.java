@@ -61,10 +61,10 @@ public class NIODSScheduler {
 
 					LocalDate today = obj.convertToLocalDateViaInstant(bookingDate);
 					nextWeek = today.plus(1, ChronoUnit.WEEKS);
-					System.out.println(nextWeek.plusDays(1));
+					//System.out.println(nextWeek.plusDays(1));
 
 					if (nextWeek.isEqual(LocalDate.now())) {
-						System.out.println("yehhh");
+						System.out.println(" ");
 					}
 
 				} else if (i == 1) {

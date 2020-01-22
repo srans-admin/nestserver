@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -39,6 +40,7 @@ import com.srans.nestserver.service.BedAvailabilityService;
 import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.service.UserService;
 import com.srans.nestserver.util.AvailableBedsUtil;
+import com.srans.nestserver.util.NSConstants;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -53,64 +55,70 @@ public class UserController {
 
 	@Autowired
 	private StorageService storageService;
- 
+
 	@Autowired
 	private UserService userService = new UserService();
-	
+
 	@Autowired
 	private TenantBookRepository tenantBookingRepo;
-	
-	@Autowired
-	private BedAvailabilityService bedAvailabilityService=new BedAvailabilityService();
 
-	
+	@Autowired
+	private BedAvailabilityService bedAvailabilityService = new BedAvailabilityService();
+
 	@PostMapping("/users")
 	@PreAuthorize("permitAll()")
 	public User saveUser(@Valid @RequestBody User user) throws NSException {
 
 		logger.info("IN::POST::/users::saveUser::" + user);
-         
+
 		user = userService.processUser(user);
 
 		logger.info("OUT::POST::/users::saveUser::" + user);
 		return user;
 	}
-	 
-   
 
 	@GetMapping("/users")
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
-	//@PreAuthorize("permitAll()")
+	// @PreAuthorize("permitAll()")
 	public List<User> getAllTenants() {
 		return userRepository.findAll();
 	}
-	
-	@GetMapping("/users/{id}")
+
+	/*
+	 * @GetMapping("/users/{id}")
+	 * 
+	 * @PreAuthorize("permitAll()") public ResponseEntity<User>
+	 * getTenantById(@PathVariable(value = "id") Long TenantId) throws
+	 * ResourceNotFoundException { Optional<User> user =
+	 * userRepository.findById(TenantId); TenantBooking tenantBooking =
+	 * tenantBookingRepo.getOne(TenantId); user. .orElseThrow(() -> new
+	 * ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
+	 * return ResponseEntity.ok().body(user); }
+	 */
+
+	@GetMapping("users/{id}")
 	@PreAuthorize("permitAll()")
-	public ResponseEntity<User> getTenantById(@PathVariable(value = "id") Long TenantId)
-			throws ResourceNotFoundException {
-		User user = userRepository.findById(TenantId)
-				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
-		return ResponseEntity.ok().body(user);
-	}
-	
-	@GetMapping("user/{id}")
-	@PreAuthorize("permitAll()")
-	public User getUser(@PathVariable(value="id") Long userId)throws IOException{
-		User responseUser=userRepository.getOne(userId);
-		tenantBookingRepo.findByTenantId(userId).forEach(tenant->{
-			responseUser.getTenantBooking();
-		});
-		
+	public User getUser(@PathVariable(value = "id") Long userId) throws IOException {
+		User responseUser = userRepository.getOne(userId);
+		System.out.println(responseUser.getRole());
+		if (responseUser.getRole().equals(NSConstants.ROLE_GUEST)
+				|| responseUser.getRole().equals(NSConstants.ROLE_TENANT)) {
+			TenantBooking tenantBooking = tenantBookingRepo.getOne(userId);
+			responseUser.setTenantBooking(tenantBooking);
+			tenantBookingRepo.findByTenantId(userId).forEach(tenant -> {
+				responseUser.getTenantBooking();
+			});
+		}
+
 		return responseUser;
-		
+
 	}
-	
+
 	@GetMapping("/users/byname/{name}")
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<User> getTenantByName(@PathVariable(value = "name") String name)
 			throws ResourceNotFoundException {
-		User user = userRepository.findByName(name); 
+		User user = userRepository.findByName(name);
 		return ResponseEntity.ok().body(user);
 	}
 
@@ -155,39 +163,37 @@ public class UserController {
 		logger.info("OUT::POST:://users/uploadImage/{cat}/{id}::uploadIdproofImage::" + id + "::" + cat);
 
 	}
-	
+
 	// API for available beds to guest
 	@GetMapping("/users/guest-reserve-bed/{hostelId}")
 	@PreAuthorize("permitAll()")
-	public List<AvailableBedsUtil> getAvailableBed(@PathVariable("hostelId") Long hostelId)throws NSException{
-	
-		return bedAvailabilityService.getAllAvailableBed( hostelId);
-		
+	public List<AvailableBedsUtil> getAvailableBed(@PathVariable("hostelId") Long hostelId) throws NSException {
+
+		return bedAvailabilityService.getAllAvailableBed(hostelId);
+
 	}
-	
+
 	// API for book the bed by guest
-	
+
 	@PostMapping("/users/bed-booking")
 	@PreAuthorize("permitAll()")
-	public TenantBooking postBedBookingDetails(@Valid @RequestBody TenantBooking tenantBooking )throws NSException{
-		
+	public TenantBooking postBedBookingDetails(@Valid @RequestBody TenantBooking tenantBooking) throws NSException {
+
 		return bedAvailabilityService.saveBookedBedDetails(tenantBooking);
 	}
-	
-	//API for save amount who's payment by guest for booked bed
+
+	// API for save amount who's payment by guest for booked bed
 	@PostMapping("/users/guest-payment")
 	@PreAuthorize("permitAll()")
-	public Payment postSaveAmountDetails(@Valid @RequestBody Payment payment )throws NSException{
-		
+	public Payment postSaveAmountDetails(@Valid @RequestBody Payment payment) throws NSException {
+
 		return bedAvailabilityService.saveAmountDetails(payment);
 	}
-	
-	
 
 	/*
-	 * @PostMapping("/users") public Tenant createUser(@RequestBody Tenant tenant)
-	 * { System.out.println("User : " + tenant); return
-	 * tenantRepository.save(tenant); }
+	 * @PostMapping("/users") public Tenant createUser(@RequestBody Tenant tenant) {
+	 * System.out.println("User : " + tenant); return tenantRepository.save(tenant);
+	 * }
 	 */
 
 	@PutMapping("/users/{Id}")
@@ -202,7 +208,7 @@ public class UserController {
 		user.setContactNumber(user.getContactNumber());
 		user.setDob(user.getDob());
 		user.setEmailId(user.getEmailId());
-      user.setPermanentAddress(user.getPermanentAddress());
+		user.setPermanentAddress(user.getPermanentAddress());
 		final User updatedTenant = userRepository.save(user);
 		return ResponseEntity.ok(updatedTenant);
 	}
