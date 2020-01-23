@@ -20,6 +20,7 @@ import com.srans.nestserver.model.User;
 import com.srans.nestserver.model.UserSubscription;
 import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
+import com.srans.nestserver.repository.VacationRepository;
 import com.srans.nestserver.util.MailTemplates;
 import com.srans.nestserver.util.NSConstants;
 import com.srans.nestserver.util.PasswordGenerator;
@@ -47,6 +48,9 @@ public class TenantService {
 
 	@Autowired
 	private PaymentRepository paymentRepo;
+	
+	@Autowired
+	private VacationRepository vacationRepo;
 
 	public boolean triggerAlertEmail(User responseTenant) {
 
@@ -156,6 +160,10 @@ public class TenantService {
 
 			if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)) {
 
+				Character approvedStatus=vacationRepo.checkApprovedStatus(responseTenant.getUserId());
+				if(approvedStatus=='Y') {
+					message=SMSTemplates.VACATE_TENANT_MESSAGE_TEMPLATE;
+				}
 				message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE
 						.replaceAll("##USER_NAME##", responseTenant.getName())
 						.replaceAll("##PASSWORD##", responseTenant.getName()).replaceAll("##HOSTEL_NAME##", "NIODS")

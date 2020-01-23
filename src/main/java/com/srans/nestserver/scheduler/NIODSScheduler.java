@@ -23,7 +23,7 @@ import com.srans.nestserver.repository.BedRepository;
 import com.srans.nestserver.repository.PaymentRepository;
 
 /**
- * @author user
+ * @author manish
  *
  */
 @Component
@@ -47,21 +47,21 @@ public class NIODSScheduler {
 	}
 
 	// Fire The Schedular Every Day On 23:59 AM(Night)
-	@Scheduled(cron ="${nidos.cron.trigger}" )
+	@Scheduled(cron = "${nidos.cron.bed-reservation-trigger}")
 	public void updateBedStatusAfterSevenDays() throws ResourceNotFoundException {
 
 		List<Object> bedsDetails = paymentRepository.guestBedInfo();
 		for (Iterator<Object> iterator = bedsDetails.iterator(); iterator.hasNext();) {
 			Object[] object = (Object[]) iterator.next();
 			for (int i = 0; i < object.length; i++) {
-				NIODSScheduler obj = new NIODSScheduler();
+
 				if (i == 0) {
 					bookingDate = (Date) object[i];
 					System.out.println(bookingDate);
 
-					LocalDate today = obj.convertToLocalDateViaInstant(bookingDate);
+					LocalDate today = convertToLocalDateViaInstant(bookingDate);
 					nextWeek = today.plus(1, ChronoUnit.WEEKS);
-					//System.out.println(nextWeek.plusDays(1));
+					// System.out.println(nextWeek.plusDays(1));
 
 					if (nextWeek.isEqual(LocalDate.now())) {
 						System.out.println(" ");
@@ -86,12 +86,11 @@ public class NIODSScheduler {
 		}
 	}
 
-	/*
-	 * @Scheduled(cron = "${nidos.cron.trigger}") public void
-	 * generateInvoiceOntime() throws MessagingException {
-	 * //System.out.println("hey brother");
-	 * 
-	 * }
-	 */
+	@Scheduled(cron = "${nidos.cron.tenant-invoice-trigger}")
+	public void generateInvoiceOntime() throws MessagingException {
+		
+		
+
+	}
 
 }

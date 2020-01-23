@@ -35,13 +35,18 @@ public class NotificationController {
 	public List<Notification> getAllUserNotification(@PathVariable(value = "userId") Long userId) throws NSException {
 		logger.info("In::getAllNotificationsOfUser::" );
 		List<Object[]> response = notificationRepo.getAllNotification(userId);
-		List<Notification> l1=new ArrayList<>();
+		System.out.println(response.size());
+		List<Notification> l1 =new ArrayList<>();
+		Notification notifications = null;
 		 for(Object[] s:response) {		
-			 Notification notifications=new Notification();
+			 
+			 notifications =new Notification();
 			 notifications.setId(((BigInteger) s[0]).longValue());
 			 notifications.setMessage((String) s[1]);
 			 l1.add(notifications);
+			 
 		 }
+		 
 		
 		logger.info("Out::getAllNotificationsOfUser::"+response );
 		return l1 ;

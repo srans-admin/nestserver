@@ -25,5 +25,7 @@ public class SMSTemplates {
 	public static final String GUEST_SUBSCRIPTION_TEMPLATE="Hello ##USER_NAME##, \n"+
 	                                                          "Thank you for booking bed.\n"+
 			                                                   "@Team Srans"                 ;
+	
+	public static final String VACATE_TENANT_MESSAGE_TEMPLATE="Thank you for visiting the hostel";
 
 }

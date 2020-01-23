@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -84,36 +83,21 @@ public class UserController {
 		return userRepository.findAll();
 	}
 
-	/*
-	 * @GetMapping("/users/{id}")
-	 * 
-	 * @PreAuthorize("permitAll()") public ResponseEntity<User>
-	 * getTenantById(@PathVariable(value = "id") Long TenantId) throws
-	 * ResourceNotFoundException { Optional<User> user =
-	 * userRepository.findById(TenantId); TenantBooking tenantBooking =
-	 * tenantBookingRepo.getOne(TenantId); user. .orElseThrow(() -> new
-	 * ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
-	 * return ResponseEntity.ok().body(user); }
-	 */
-
-	@GetMapping("users/{id}")
+	@GetMapping("/users/{id}")
 	@PreAuthorize("permitAll()")
-	public User getUser(@PathVariable(value = "id") Long userId) throws IOException {
-		User responseUser = userRepository.getOne(userId);
-		System.out.println(responseUser.getRole());
-		if (responseUser.getRole().equals(NSConstants.ROLE_GUEST)
-				|| responseUser.getRole().equals(NSConstants.ROLE_TENANT)) {
-			TenantBooking tenantBooking = tenantBookingRepo.getOne(userId);
-			responseUser.setTenantBooking(tenantBooking);
-			tenantBookingRepo.findByTenantId(userId).forEach(tenant -> {
-				responseUser.getTenantBooking();
-			});
-		}
-
-		return responseUser;
-
+	public User getTenantById(@PathVariable(value = "id") Long TenantId)
+			throws ResourceNotFoundException {
+		User user = userRepository.getOne(TenantId);
+		
+		tenantBookingRepo.findByTenantId(TenantId).forEach(tenantbooking->{
+			user.setTenantBooking(tenantbooking);
+		});
+		
+				
+		return user;
 	}
 
+	
 	@GetMapping("/users/byname/{name}")
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<User> getTenantByName(@PathVariable(value = "name") String name)

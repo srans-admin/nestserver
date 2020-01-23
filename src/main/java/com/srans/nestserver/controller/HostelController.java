@@ -76,12 +76,13 @@ public class HostelController {
 	@Autowired
 	private SubAdminService adminService = new SubAdminService();
 
-	@GetMapping("/hostels")
-	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
-	// @PreAuthorize("permitAll()")
-	public List<Hostel> getAllHostels() {
-		return hostelRepository.findAll();
-	}
+	/*
+	 * @GetMapping("/hostels")
+	 * 
+	 * @PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	 * // @PreAuthorize("permitAll()") public List<Hostel> getAllHostels() { return
+	 * hostelRepository.findAll(); }
+	 */
 
 	// Get All Consolidated Hostel Details
 	@GetMapping("/hostels/consolidated-hostel-info")
@@ -186,9 +187,9 @@ public class HostelController {
 	}
 
 	//Get Hostel Details For Admin And SubAdmin
-	@GetMapping("/hostels/admin/{id}")
+	@GetMapping("/hostels")
 	@PreAuthorize("permitAll()")
-	public List<Hostel> getHostelForAdmin(@PathVariable("id") Long adminId) {
+	public List<Hostel> getHostelForAdmin(@RequestParam("id")  Long adminId) {
 		List<Hostel> hostelData = hostelService.getHostelByAdminId(adminId);
 		return (hostelData);
 
