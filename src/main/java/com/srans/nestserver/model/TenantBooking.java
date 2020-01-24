@@ -60,10 +60,6 @@ public class TenantBooking extends AuditModel {
 	@Transient
 	private Payment payment;
 
-	/*
-	 * @Transient private List<Payment> payment;
-	 */
-
 	@Column
 	private String createdBy;
 	@Column
@@ -261,6 +257,10 @@ public class TenantBooking extends AuditModel {
 
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	@Override

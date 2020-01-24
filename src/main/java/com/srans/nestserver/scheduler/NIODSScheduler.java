@@ -21,6 +21,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.srans.nestserver.communication.NiodsMailer;
+import com.srans.nestserver.communication.NiodsSmsGateway;
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.BedRepository;
@@ -29,6 +31,8 @@ import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.UserRepository;
 import com.srans.nestserver.service.TenantService;
+import com.srans.nestserver.util.MailTemplates;
+import com.srans.nestserver.util.SMSTemplates;
 
 /**
  * @author manish
@@ -57,6 +61,12 @@ public class NIODSScheduler {
 
 	@Autowired
 	private UserRepository userRepo;
+
+	@Autowired
+	private NiodsMailer niodsMailer;
+
+	@Autowired
+	private NiodsSmsGateway niodsSmsGateway;
 
 	Date bookingDate = null;
 	Long bedId = null;
@@ -104,17 +114,26 @@ public class NIODSScheduler {
 	@Scheduled(cron = "${nidos.cron.tenant-invoice-trigger}")
 	public void generateInvoiceOntime() throws MessagingException {
 
+	
+
 		try {
 
-			Long[] hostelId = hostelRepo.getAllHostelId();
-			for (Long hid : hostelId) {
-
-				Long[] tenantId = tenantBookRepo.getAllTenantId(hid);
-				for (Long tid : tenantId) {
-					User userInfo = userRepo.getOne(tid);
-					tenantService.triggerAlertEmail(userInfo);
-				}
-
+			Long[] tenantId = tenantBookRepo.getAllTenantId();
+			for (Long tid : tenantId) {
+				User userInfo = userRepo.getOne(tid);
+				String email = userInfo.getEmailId();
+				String subject = "Invoice";
+				String ccMail = null;
+				String bccMail = null;
+				String message = MailTemplates.TENANT_INVOICE_TEMPLATE.replaceAll("##USER_NAME##", "rahul")
+						.replaceAll("##PASSWORD##", "1234").replaceAll("##HOSTEL_NAME##", "NIODS");
+				niodsMailer.sendEmail(email, subject, ccMail, bccMail, message);
+				//trigger Email
+				tenantService.triggerSMS(userInfo);
+				
+				//Trigger SMS
+				String invoiceMessage = SMSTemplates.TENANT_INVOICE_TEMPLATE;
+				niodsSmsGateway.sendSMS("" + userInfo.getContactNumber(), invoiceMessage);
 			}
 
 		} catch (Exception e) {
@@ -122,4 +141,5 @@ public class NIODSScheduler {
 		}
 
 	}
+
 }

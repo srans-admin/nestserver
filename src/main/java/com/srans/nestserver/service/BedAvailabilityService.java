@@ -84,8 +84,15 @@ public class BedAvailabilityService {
 
 	public TenantBooking saveBookedBedDetails(@Valid TenantBooking tenantBooking) {
 
-		TenantBooking guestBooking = new TenantBooking();
-		guestBooking = tenantBookRepository.saveAndFlush(tenantBooking);
+		TenantBooking guestBooking = tenantBookRepository.saveAndFlush(tenantBooking);
+
+		/*
+		 * guestBooking.getPayment().forEach(payment ->{
+		 * payment.setRoomBedId(guestBooking.getRoomBedId());
+		 * paymentRepository.save(payment); });
+		 */
+
+		paymentRepository.save(guestBooking.getPayment());
 
 		User userResponse = new User();
 

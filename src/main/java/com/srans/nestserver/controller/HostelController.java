@@ -186,7 +186,7 @@ public class HostelController {
 
 	}
 
-	//Get Hostel Details For Admin And SubAdmin
+	//Get Hostel Details For Admin 
 	@GetMapping("/hostels")
 	@PreAuthorize("permitAll()")
 	public List<Hostel> getHostelForAdmin(@RequestParam("id")  Long adminId) {
