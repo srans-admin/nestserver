@@ -184,16 +184,18 @@ public class UserController {
 	@PutMapping("/users/{Id}")
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<User> updateUser(@PathVariable(value = "Id") Long TenantId,
-			@Valid @RequestBody User tenantDetails) throws ResourceNotFoundException {
+			@Valid @RequestBody User userDetails) throws ResourceNotFoundException {
 		User user = userRepository.findById(TenantId)
 				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
 
-		user.setUserId(user.getUserId());
-		user.setBloodGroup(user.getBloodGroup());
-		user.setContactNumber(user.getContactNumber());
-		user.setDob(user.getDob());
-		user.setEmailId(user.getEmailId());
-		user.setPermanentAddress(user.getPermanentAddress());
+		user.setUserId(userDetails.getUserId());
+		user.setBloodGroup(userDetails.getBloodGroup());
+		user.setContactNumber(userDetails.getContactNumber());
+		user.setDob(userDetails.getDob());
+		user.setEmailId(userDetails.getEmailId());
+      user.setPermanentAddress(userDetails.getPermanentAddress());
+
+
 		final User updatedTenant = userRepository.save(user);
 		return ResponseEntity.ok(updatedTenant);
 	}
