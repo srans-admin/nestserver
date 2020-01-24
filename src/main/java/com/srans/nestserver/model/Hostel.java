@@ -15,6 +15,11 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "hostel")
 public class Hostel implements Serializable {
+	/**
+	 * @author user
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -63,8 +68,14 @@ public class Hostel implements Serializable {
 
 
 
+	@Column
+	private Long adminId;
+
 	@Transient
 	private List<Floor> floors;
+	
+	@Transient
+	private List<SubAdminDetails> subAdminDetails;
 
 	public Hostel() {
 		super();
@@ -72,12 +83,18 @@ public class Hostel implements Serializable {
 		this.hostelAddress = "";
 		this.hostelownername = "";
 		this.hostelType = "";
-		this.numOfFloors=0;
+		this.numOfFloors = 0;
 		this.floors = new ArrayList<>();
+		this.subAdminDetails=new ArrayList<>();
 	}
 
+	
+
 	public Hostel(Long id, String hostelName, String hostelAddress, String hostelType, Integer numOfFloors, boolean tv,
-			boolean fridge, boolean ac, boolean mineralWater, boolean parking, boolean gym,String hostelownername,Long hostelownerid,  List<Floor> floors) {
+ 
+			boolean fridge, boolean ac, boolean mineralWater, boolean parking, boolean gym, Long adminId,
+			List<Floor> floors, List<SubAdminDetails> subAdminDetails) {
+ 
 		super();
 		this.id = id;
 		this.hostelName = hostelName;
@@ -90,10 +107,14 @@ public class Hostel implements Serializable {
 		this.mineralWater = mineralWater;
 		this.parking = parking;
 		this.gym = gym;
+		this.adminId = adminId;
 		this.floors = floors;
-		this.hostelownername=hostelownername;
-		this.hostelownerid=hostelownerid;
+ 
+		this.subAdminDetails = subAdminDetails;
+ 
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -210,39 +231,24 @@ public class Hostel implements Serializable {
 	
 	
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Hostel [id=");
-		builder.append(id);
-		builder.append(", hostelName=");
-		builder.append(hostelName);
-		builder.append(", hostelAddress=");
-		builder.append(hostelAddress);
-		builder.append(", hostelType=");
-		builder.append(hostelType);
-		builder.append(", numOfFloors=");
-		builder.append(numOfFloors);
-		builder.append(", tv=");
-		builder.append(tv);
-		builder.append(", fridge=");
-		builder.append(fridge);
-		builder.append(", ac=");
-		builder.append(ac);
-		builder.append(", mineralWater=");
-		builder.append(mineralWater);
-		builder.append(", parking=");
-		builder.append(parking);
-		builder.append(", gym=");
-		builder.append(gym);
-		builder.append(", floors=");
-		builder.append(floors);
-		builder.append(",hostelownername=");
-		builder.append(hostelownername);
-		builder.append(",hostelownerid=");
-		builder.append(hostelownerid);
-		builder.append("]");
-		return builder.toString();
+	public Long getAdminId() {
+		return adminId;
 	}
 
+	public void setAdminId(Long adminId) {
+		this.adminId = adminId;
+	}
+	
+	public List<SubAdminDetails> getAdminDetails() {
+		return subAdminDetails;
+	}
+
+
+
+	public void setAdminDetails(List<SubAdminDetails> subAdminDetails) {
+		this.subAdminDetails = subAdminDetails;
+	}
+ 
+
+	
 }

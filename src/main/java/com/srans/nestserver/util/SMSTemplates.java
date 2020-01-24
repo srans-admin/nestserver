@@ -18,8 +18,15 @@ public class SMSTemplates {
 	
 	public static final String TENANT_CREDETIALS = "Hello ##USER_NAME##,\n YOUR User ID: ##USER_ID## and Temp Password : ##TEMP_PASSWORD## "; 
 	
-	public static final String TENANT_INVOICE_TEMPLATE= " "; 
+	public static final String TENANT_INVOICE_TEMPLATE= "Hello, \n "+
+	                                                     "Your monthly invoice has generated pls check in you mail id"; 
 	
 	public static final String ADMIN_SUBSCRIPTION_TEMPLATE=" ";
+	
+	public static final String GUEST_SUBSCRIPTION_TEMPLATE="Hello ##USER_NAME##, \n"+
+	                                                          "Thank you for booking bed.\n"+
+			                                                   "@Team Srans"                 ;
+	
+	public static final String VACATE_TENANT_MESSAGE_TEMPLATE="Thank you for visiting the hostel";
 
 }

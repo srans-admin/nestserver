@@ -68,7 +68,7 @@ public class UserService {
 		logger.debug("In::");
 		switch (user.getRole()) {
 
-		case NSConstants.ROLE_USER:
+		case NSConstants.ROLE_GUEST:
 			user = processGuestOps(user);
 			break;
 
@@ -103,10 +103,17 @@ public class UserService {
 			responseTenant = userRepository.save(user);
 
 			if (responseTenant.getUserId() != -1) {
+ 
 
+				System.out.println(responseTenant.getUserId());
+ 
 				// STEP-2
+ 
 				user.getTenantBooking().setTenantId(responseTenant.getUserId());
-				TenantBooking tenantBooking = tenantBookRepository.save(user.getTenantBooking());
+				TenantBooking tenantBooking = new TenantBooking();
+				tenantBooking = tenantBookRepository.save(user.getTenantBooking());
+
+				System.out.println(user.getTenantBooking());
 
 				// Update Bed with alloted_state as N
 				Bed bed = new Bed();
@@ -119,18 +126,26 @@ public class UserService {
 
 				responseTenant.setTenantBooking(tenantBooking);
 				responseTenant.setBed(bedRepository.saveAndFlush(bed));
-
-				// STEP-3 : Save Payment Information
+ 
+				// STEP-4: Save Payment Information
+ 
+ 
 				responseTenant.setPayment(paymentRepository.save(user.getPayment()));
 
 				// STEP-4 : Now drop an email to tenant
 				if (responseTenant.getEmailId() != null && !responseTenant.getEmailId().isEmpty()) {
 					tenantService.triggerAlertEmail(responseTenant);
+
+					// STEP-2 : Prepare one Notification to SuperAdmin(s)
+					notificationService.addTenantNotifictaion(responseTenant);
 				}
 
 				// STEP-5 : Now drop an SMS to tenant
 				if (!("" + responseTenant.getContactNumber()).isEmpty()) {
 					tenantService.triggerSMS(responseTenant);
+
+					// STEP- : Post this info to UAA
+					tenantToUaaService.postUserToUaa(responseTenant);
 				}
 
 				// STEP-6 : Post this info to UAA
@@ -142,7 +157,9 @@ public class UserService {
 			}
 
 		} catch (Exception e) {
+ 
 			// TODO Auto-generated catch block
+ 
 			e.printStackTrace();
 		}
 		logger.debug("Out::processTenantOps");
@@ -164,11 +181,12 @@ public class UserService {
 				tenantService.triggerAlertEmail(responseTenant);
 			}
 
-			/*
-			 * //STEP-3 : Now drop an SMS to tenant
-			 * if(!(""+responseTenant.getContactNumber()).isEmpty()){
-			 * tenantService.triggerSMS(responseTenant); }
-			 */
+ 
+			// STEP-3 : Now drop an SMS to tenant
+			if (!("" + responseTenant.getContactNumber()).isEmpty()) {
+				tenantService.triggerSMS(responseTenant);
+			}
+ 
 
 			// STEP-4 : Post this info to UAA
 			tenantToUaaService.postUserToUaa(responseTenant);
@@ -196,20 +214,20 @@ public class UserService {
 
 			if (responseTenant.getUserId() != -1) {
 
-				/*`
-				 * //STEP-4 : Now drop an email to tenant if(responseTenant.getEmailId() != null
-				 * && !responseTenant.getEmailId().isEmpty()){
-				 * tenantService.triggerAlertEmail(responseTenant); }
-				 */
+ 
+				// STEP-2 : Now drop an SMS to tenant
+				if (!("" + responseTenant.getContactNumber()).isEmpty()) {
+					tenantService.triggerSMS(responseTenant);
 
-				/*
-				 * //STEP-5 : Now drop an SMS to tenant
-				 * if(!(""+responseTenant.getContactNumber()).isEmpty()){
-				 * tenantService.triggerSMS(responseTenant); }
-				 */
+					// STEP-3 : Post this info to UAA
+					tenantToUaaService.postUserToUaa(responseTenant);
+				}
+ 
 
-				// STEP-6 : Post this info to UAA
-				tenantToUaaService.postUserToUaa(responseTenant);
+				// STEP-3 :Now drop an email to tenant
+				if (responseTenant.getEmailId() != null && !responseTenant.getEmailId().isEmpty()) {
+					tenantService.triggerAlertEmail(responseTenant);
+				}
 
 			} else {
 				throw new NSException("Unable to save tenant ");

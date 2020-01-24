@@ -22,12 +22,12 @@ public abstract class AuditModel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name = "created_at", nullable = false, updatable = false)
 	@CreatedDate
 	private Date createdAt;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name = "updated_at", nullable = false)
 	@LastModifiedDate
 	private Date updatedAt;

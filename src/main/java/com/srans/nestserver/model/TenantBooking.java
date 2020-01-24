@@ -1,5 +1,6 @@
  package com.srans.nestserver.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "tenantbooking")
@@ -24,92 +26,86 @@ public class TenantBooking extends AuditModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bookingId;
 
-	@Column private Long tenantId;
-	@Column private Long hostelId;
-	@Column private Long floorId;
-	@Column private Long roomId;
-	@Column private Long roomBedId;
-	@Column private Long roomRent;
-	
-	@Column private Date allotedFrom; 
-	@Column private Date allotedTill;
-
-	
-	//TODO : Why do we need these??
-	@Column private String tenantName;  
-	 
-	@Column private String roomName;  
-	@Column private String active; 
-	@Column private String bedPosition; 
-	@Column private String roomType; 
-	@Column private String floorName;
-
-	
-	
-	
-
-	//@Transient
-	//private List<Payment> payment;
-	
 	@Column
-	private String createdBy; 
+	private Long tenantId;
 	@Column
-	private String modifiedBy; 
-	 
-	 
+	private Long hostelId;
+	@Column
+	private Long floorId;
+	@Column
+	private Long roomId;
+	@Column
+	private Long roomBedId;
+	@Column
+	private Long roomRent;
+	@Column
+	private Date allotedFrom;
+	@Column
+	private Date allotedTill;
+	@Column
+	private String tenantName;
+	@Column
+	private String roomName;
+	@Column
+	private String active;
+	@Column
+	private String bedPosition;
+	@Column
+	private String roomType;
+	@Column
+	private String floorName;
+	@Column
+	private Long guestId;
+
+	@Transient
+	private Payment payment;
+
+	@Column
+	private String createdBy;
+	@Column
+	private String modifiedBy;
+
 	public TenantBooking() {
 		super();
 		this.tenantId = 0L;
 		this.tenantName = "";
 		this.allotedFrom = null;
-		this.active="0";
-		this.allotedTill=null;
-		this.bedPosition="";
-		this.floorName="";
-		this.roomBedId=0L;
-		this.tenantName="";
-		//this.payment = new ArrayList();
+		this.active = "0";
+		this.allotedTill = null;
+		this.bedPosition = "";
+		this.floorName = "";
+		this.roomBedId = 0L;
+		this.tenantName = "";
+		this.guestId = 0L;
+		this.payment = null;
 
 	}
 
-	
-
-	public TenantBooking(Long bookingId, Long tenantId, String tenantName, Date allotedFrom, Long roomId,
-			String roomName, String createdBy, String modifiedBy, String active, Date allotedTill, Long roomBedId,
-			String bedPosition, String roomType, String floorName, Long floorId, Long roomRent, List<Payment> payment) {
+	public TenantBooking(Long bookingId, Long tenantId, Long hostelId, Long floorId, Long roomId, Long roomBedId,
+			Long roomRent, Date allotedFrom, Date allotedTill, String tenantName, String roomName, String active,
+			String bedPosition, String roomType, String floorName, Long guestId, Payment payment, String createdBy,
+			String modifiedBy) {
 		super();
 		this.bookingId = bookingId;
 		this.tenantId = tenantId;
-		this.tenantName = tenantName;
-		this.allotedFrom = allotedFrom;
+		this.hostelId = hostelId;
+		this.floorId = floorId;
 		this.roomId = roomId;
-		this.roomName = roomName;
-		this.createdBy = createdBy;
-		this.modifiedBy = modifiedBy;
-		this.active = active;
-		this.allotedTill = allotedTill;
 		this.roomBedId = roomBedId;
+		this.roomRent = roomRent;
+		this.allotedFrom = allotedFrom;
+		this.allotedTill = allotedTill;
+		this.tenantName = tenantName;
+		this.roomName = roomName;
+		this.active = active;
 		this.bedPosition = bedPosition;
 		this.roomType = roomType;
 		this.floorName = floorName;
-		this.floorId = floorId;
-		this.roomRent = roomRent;
-		//this.payment = payment;
+		this.guestId = guestId;
+		this.payment = payment;
+		this.createdBy = createdBy;
+		this.modifiedBy = modifiedBy;
 	}
-
-
-
-	public Long getHostelId() {
-		return hostelId;
-	}
-
-
-
-	public void setHostelId(Long hostelId) {
-		this.hostelId = hostelId;
-	}
-
-
 
 	public Long getBookingId() {
 		return bookingId;
@@ -117,14 +113,6 @@ public class TenantBooking extends AuditModel {
 
 	public void setBookingId(Long bookingId) {
 		this.bookingId = bookingId;
-	}
-	
-	public Long getRoomRent() {
-		return roomRent;
-	}
-
-	public void setRoomRent(Long roomRent) {
-		this.roomRent = roomRent;
 	}
 
 	public Long getTenantId() {
@@ -135,20 +123,20 @@ public class TenantBooking extends AuditModel {
 		this.tenantId = tenantId;
 	}
 
-	public String getTenantName() {
-		return tenantName;
+	public Long getHostelId() {
+		return hostelId;
 	}
 
-	public void setTenantName(String tenantName) {
-		this.tenantName = tenantName;
+	public void setHostelId(Long hostelId) {
+		this.hostelId = hostelId;
 	}
 
-	public Date getAllotedFrom() {
-		return allotedFrom;
+	public Long getFloorId() {
+		return floorId;
 	}
 
-	public void setAllotedFrom(Date allotedFrom) {
-		this.allotedFrom = allotedFrom;
+	public void setFloorId(Long floorId) {
+		this.floorId = floorId;
 	}
 
 	public Long getRoomId() {
@@ -159,36 +147,28 @@ public class TenantBooking extends AuditModel {
 		this.roomId = roomId;
 	}
 
-	public String getRoomName() {
-		return roomName;
+	public Long getRoomBedId() {
+		return roomBedId;
 	}
 
-	public void setRoomName(String roomName) {
-		this.roomName = roomName;
+	public void setRoomBedId(Long roomBedId) {
+		this.roomBedId = roomBedId;
 	}
 
-	public String getCreatedBy() {
-		return createdBy;
+	public Long getRoomRent() {
+		return roomRent;
 	}
 
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
+	public void setRoomRent(Long roomRent) {
+		this.roomRent = roomRent;
 	}
 
-	public String getModifiedBy() {
-		return modifiedBy;
+	public Date getAllotedFrom() {
+		return allotedFrom;
 	}
 
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public String getActive() {
-		return active;
-	}
-
-	public void setActive(String active) {
-		this.active = active;
+	public void setAllotedFrom(Date allotedFrom) {
+		this.allotedFrom = allotedFrom;
 	}
 
 	public Date getAllotedTill() {
@@ -199,12 +179,28 @@ public class TenantBooking extends AuditModel {
 		this.allotedTill = allotedTill;
 	}
 
-	public Long getRoomBedId() {
-		return roomBedId;
+	public String getTenantName() {
+		return tenantName;
 	}
 
-	public void setRoomBedId(Long roomBedId) {
-		this.roomBedId = roomBedId;
+	public void setTenantName(String tenantName) {
+		this.tenantName = tenantName;
+	}
+
+	public String getRoomName() {
+		return roomName;
+	}
+
+	public void setRoomName(String roomName) {
+		this.roomName = roomName;
+	}
+
+	public String getActive() {
+		return active;
+	}
+
+	public void setActive(String active) {
+		this.active = active;
 	}
 
 	public String getBedPosition() {
@@ -231,32 +227,55 @@ public class TenantBooking extends AuditModel {
 		this.floorName = floorName;
 	}
 
-	public Long getFloorId() {
-		return floorId;
+	public Long getGuestId() {
+		return guestId;
 	}
 
-	public void setFloorId(Long floorId) {
-		this.floorId = floorId;
+	public void setGuestId(Long guestId) {
+		this.guestId = guestId;
 	}
 
-	 
+	public Payment getPayment() {
+		return payment;
+	}
 
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
 
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("TenantBooking [bookingId=").append(bookingId).append(", tenantId=").append(tenantId)
-				.append(", tenantName=").append(tenantName).append(", allotedFrom=").append(allotedFrom)
-				.append(", roomId=").append(roomId).append(", roomName=").append(roomName).append(", createdBy=")
-				.append(createdBy).append(", modifiedBy=").append(modifiedBy).append(", active=").append(active)
-				.append(", allotedTill=").append(allotedTill).append(", roomBedId=").append(roomBedId)
-				.append(", bedPosition=").append(bedPosition).append(", roomType=").append(roomType)
-				.append(", floorName=").append(floorName).append(", floorId=").append(floorId).append(", roomRent=")
-				.append(roomRent).append("]");
+				.append(", hostelId=").append(hostelId).append(", floorId=").append(floorId).append(", roomId=")
+				.append(roomId).append(", roomBedId=").append(roomBedId).append(", roomRent=").append(roomRent)
+				.append(", allotedFrom=").append(allotedFrom).append(", allotedTill=").append(allotedTill)
+				.append(", tenantName=").append(tenantName).append(", roomName=").append(roomName).append(", active=")
+				.append(active).append(", bedPosition=").append(bedPosition).append(", roomType=").append(roomType)
+				.append(", floorName=").append(floorName).append(", guestId=").append(guestId).append(", payment=")
+				.append(payment).append(", createdBy=").append(createdBy).append(", modifiedBy=").append(modifiedBy)
+				.append("]");
 		return builder.toString();
 	}
-
-	
 
 }
