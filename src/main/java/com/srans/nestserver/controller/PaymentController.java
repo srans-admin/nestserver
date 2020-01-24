@@ -1,13 +1,15 @@
 package com.srans.nestserver.controller;
 
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +35,13 @@ import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.repository.UserRepository;
-import com.srans.nestserver.service.SubscriptionService;
-import com.srans.nestserver.util.NSException;
+import com.srans.nestserver.util.HistoryUtil;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1")
 public class PaymentController {
-Logger logger = LoggerFactory.getLogger(RolesController.class);
+//Logger logger = LoggerFactory.getLogger(RolesController.class);
 	@Autowired
 	private PaymentRepository paymentRepository;
 
@@ -55,26 +56,46 @@ Logger logger = LoggerFactory.getLogger(RolesController.class);
 
 	@Autowired
 	private UserRepository userRepository;
-	
-	@Autowired
-	private SubscriptionService subscriptionService;
-
-	// Update approved status
-		@PostMapping("/payment/approved-status")
-		@PreAuthorize("permitAll()")
-		public Payment savePayment(@Valid @RequestBody Payment payment) throws NSException {
-
-			logger.info("IN::POST::/users::savePayment::" + payment);
-	         
-			payment = subscriptionService.processOfApproving(payment);
-
-			logger.info("OUT::POST::/users::saveUser::" + payment);
-			return payment;
-		}
 
 	@GetMapping("/payment")
 	public List<Payment> getAllPayment() {
 		return paymentRepository.findAll();
+	}
+	
+
+	@GetMapping("payments/history/{id}")
+	@PreAuthorize("permitAll()")
+	// @PreAuthorize("permitAll()")
+	public List<HistoryUtil> getPaymentHistoryDetail(@PathVariable(value = "id") Long userId)
+			throws ResourceNotFoundException {
+		List<Object> historyInfo = paymentRepository.getDataForpaymentHistory(userId);
+		List<HistoryUtil> getPaymentHistory = new ArrayList<>();
+
+		for (Iterator<Object> iterator = historyInfo.iterator(); iterator.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			HistoryUtil historyUtil = new HistoryUtil();
+		
+			for (int i = 0; i < object.length; i++) {
+				switch (i) {
+				case 0:
+					historyUtil.setRoomType((String) object[i]);
+					break;
+				case 1:
+					historyUtil.setAmount(((BigInteger)object[i]).longValue());
+					break;
+				case 2:
+					historyUtil.setCreatedAt((Timestamp) object[i]);
+					break;
+				
+				default:
+					break;
+				}
+			}
+			getPaymentHistory.add(historyUtil);
+		}
+
+		return (getPaymentHistory);
+
 	}
 
 	@GetMapping("payment/hostels/floor/{id}/room/{room_id}")
@@ -88,6 +109,24 @@ Logger logger = LoggerFactory.getLogger(RolesController.class);
 		Room room = roomRepository.findById(room_id).orElseThrow(() -> new ResourceNotFoundException(
 				"Floor not found for this Floorid :: " + floor_id + "Floor not found for this Floor id::" + room_id));
 		return ResponseEntity.ok().body(room);
+	}
+
+	@GetMapping("payments/users/bycontactNumbers/{contactNumber}")
+	@PreAuthorize("permitAll()")
+//@PreAuthorize("permitAll()")
+	public ResponseEntity<User> getTenantBycontactNumber(@PathVariable(value = "contactNumber") Long contactNumber)
+			throws ResourceNotFoundException {
+		User user = userRepository.findByContactNumber(contactNumber);
+		return ResponseEntity.ok().body(user);
+	}
+
+	@GetMapping("payments/users/byname/{name}")
+	@PreAuthorize("permitAll()")
+//@PreAuthorize("permitAll()")
+	public ResponseEntity<User> getTenantByName(@PathVariable(value = "name") String name)
+			throws ResourceNotFoundException {
+		User user = userRepository.findByName(name);
+		return ResponseEntity.ok().body(user);
 	}
 
 	/*
@@ -134,6 +173,8 @@ Logger logger = LoggerFactory.getLogger(RolesController.class);
 		payment.setTransactionId(paymentDetails.getTransactionId());
 		payment.setBankName(paymentDetails.getBankName());
 		payment.setDate(paymentDetails.getDate());
+		payment.setDepositAmount(payment.getDepositAmount());
+		payment.setDiscountAmount(payment.getDiscountAmount());
 		final Payment updatedpayment = paymentRepository.save(payment);
 		return ResponseEntity.ok(payment);
 	}
@@ -163,5 +204,4 @@ Logger logger = LoggerFactory.getLogger(RolesController.class);
 	public List<Object[]> getRoomdetails(@PathVariable(value = "id") Long hostelId) {
 		return hostelRepository.getRoomDetails(hostelId);
 	}
-
 }

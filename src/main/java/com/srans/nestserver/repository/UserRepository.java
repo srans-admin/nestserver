@@ -15,18 +15,34 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Autowired 
 	TenantBookRepository tenantBookRepository = null; 
 	
+	@Autowired
+	public PaymentRepository paymentRepository=null;
 	
 	@Query(value="SELECT u FROM User u WHERE u.name=?1") 
 	public User findByName(String name);
 	
+	
+	/*
+	 * @Query(
+	 * value="SELECT room_name, room_type, date, ammount, deposit_amount, payment_through FROM PAYMENT where user_id=?1"
+	 * ) public User findByuserid(Long userId);
+	 * 
+	 */
+	
 	@Query(value="SELECT u FROM User u WHERE u.role=?1") 
 	public List<User> getUsersByRole(String role);
-	
+ 
 	// Geting All Consolidated Hostel Details 
 	@Query(value = "select t1.id, t1.hostel_name, t1.Hostel_address,t1.admin_id, t2.name, t2.email_id, t2.contact_number, t2.subscriptions, t3.ammount from hostel t1 inner join srans_user t2\r\n" + 
 			"	on t1.admin_id=t2.user_id inner join payment t3 on t2.user_id=t3.admin_id where t2.role=?1", nativeQuery = true)
 	public List<Object> getConsolidatedHostel(String role);
+ 
 	
+	
+	/*
+	 * @Query(value="SELECT * FROM PAYMENT WHERE userid=?1," nativeQuery = true)
+	 * public User findByUserid(Long userId);
+	 */
   
 	/*
 	@Query(value = "SELECT hostel_name FROM Hostel", nativeQuery = true)
