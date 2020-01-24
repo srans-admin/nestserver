@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "payment")
+@Table(name = "payments")
 public class Payment extends AuditModel {
 
 	/**
@@ -31,7 +31,7 @@ public class Payment extends AuditModel {
 	private String name;
 
 	@Column
-	private String ammountType;
+	private String amountType;
 
 	@Column
 	private String roomName;
@@ -40,13 +40,13 @@ public class Payment extends AuditModel {
 	private String roomType;
 
 	@Column
-	private Long ammount;
+	private Long amount;
 
 	@Column
 	private Long discount;
 
 	@Column
-	private String paymentThrough;
+	private String paymentType;
 
 	@Column
 	private Long transactionId;
@@ -69,20 +69,20 @@ public class Payment extends AuditModel {
 
 	}
 
-	public Payment(Long id, Long userId, Long bookingid, String name, String ammountType, String roomName,
-			String roomType, Long ammount, Long discount, String paymentThrough, Long transactionId, String bankName,
+	public Payment(Long id, Long userId, Long bookingid, String name, String amountType, String roomName,
+			String roomType, Long amount, Long discount, String paymentType, Long transactionId, String bankName,
 			String date, Long adminId, Long depositAmount, Long discountAmount) {
 		super();
 		this.id = id;
 		this.userId = userId;
 		this.bookingid = bookingid;
 		this.name = name;
-		this.ammountType = ammountType;
+		this.amountType = amountType;
 		this.roomName = roomName;
 		this.roomType = roomType;
-		this.ammount = ammount;
+		this.amount = amount;
 		this.discount = discount;
-		this.paymentThrough = paymentThrough;
+		this.paymentType = paymentType;
 		this.transactionId = transactionId;
 		this.bankName = bankName;
 		this.date = date;
@@ -123,12 +123,12 @@ public class Payment extends AuditModel {
 		this.name = name;
 	}
 
-	public String getAmmountType() {
-		return ammountType;
+	public String getAmountType() {
+		return amountType;
 	}
 
-	public void setAmmountType(String ammountType) {
-		this.ammountType = ammountType;
+	public void setAmountType(String amountType) {
+		this.amountType = amountType;
 	}
 
 	public String getRoomName() {
@@ -147,12 +147,12 @@ public class Payment extends AuditModel {
 		this.roomType = roomType;
 	}
 
-	public Long getAmmount() {
-		return ammount;
+	public Long getAmount() {
+		return amount;
 	}
 
-	public void setAmmount(Long ammount) {
-		this.ammount = ammount;
+	public void setAmount(Long amount) {
+		this.amount = amount;
 	}
 
 	public Long getDiscount() {
@@ -163,12 +163,12 @@ public class Payment extends AuditModel {
 		this.discount = discount;
 	}
 
-	public String getPaymentThrough() {
-		return paymentThrough;
+	public String getPaymentType() {
+		return paymentType;
 	}
 
-	public void setPaymentThrough(String paymentThrough) {
-		this.paymentThrough = paymentThrough;
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
 	}
 
 	public Long getTransactionId() {
@@ -227,13 +227,12 @@ public class Payment extends AuditModel {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Payment [id=").append(id).append(", userId=").append(userId).append(", bookingid=")
-				.append(bookingid).append(", name=").append(name).append(", ammountType=").append(ammountType)
-				.append(", roomName=").append(roomName).append(", roomType=").append(roomType).append(", ammount=")
-				.append(ammount).append(", discount=").append(discount).append(", paymentThrough=")
-				.append(paymentThrough).append(", transactionId=").append(transactionId).append(", bankName=")
-				.append(bankName).append(", date=").append(date).append(", adminId=").append(adminId)
-				.append(", depositAmount=").append(depositAmount).append(", discountAmount=").append(discountAmount)
-				.append("]");
+				.append(bookingid).append(", name=").append(name).append(", amountType=").append(amountType)
+				.append(", roomName=").append(roomName).append(", roomType=").append(roomType).append(", amount=")
+				.append(amount).append(", discount=").append(discount).append(", paymentType=").append(paymentType)
+				.append(", transactionId=").append(transactionId).append(", bankName=").append(bankName)
+				.append(", date=").append(date).append(", adminId=").append(adminId).append(", depositAmount=")
+				.append(depositAmount).append(", discountAmount=").append(discountAmount).append("]");
 		return builder.toString();
 	}
 

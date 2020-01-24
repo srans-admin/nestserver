@@ -1,9 +1,6 @@
 package com.srans.nestserver.util;
 
-import java.sql.Timestamp;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.Date;
 
 import com.srans.nestserver.model.AuditModel;
 
@@ -15,13 +12,13 @@ public class ComplaintHistoryUtil extends AuditModel {
 	private static final long serialVersionUID = 1L;
 
 	private String description;
-	private Timestamp createdAt;
+	private Date createdAt;
 
 	public ComplaintHistoryUtil() {
 		super();
 	}
 
-	public ComplaintHistoryUtil(String description, Timestamp createdAt) {
+	public ComplaintHistoryUtil(String description, Date createdAt) {
 		super();
 		this.description = description;
 		this.createdAt = createdAt;
@@ -35,11 +32,11 @@ public class ComplaintHistoryUtil extends AuditModel {
 		this.description = description;
 	}
 
-	public Timestamp getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Timestamp createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 

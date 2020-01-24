@@ -31,7 +31,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 	@Autowired
 	public PaymentRepository paymentRepository=null;
 	
-	@Query(value ="SELECT room_type,ammount, created_at from payment where user_Id=?1 order by created_at desc;",nativeQuery = true)
+	@Query(value ="SELECT room_type,amount, created_at from payments where user_Id=?1 order by created_at desc;",nativeQuery = true)
 	public List<Object> getDataForpaymentHistory(Long userId);
 	
 	@Query(value="SELECT room_type FROM ROOM WHERE id=?1", nativeQuery=true)

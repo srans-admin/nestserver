@@ -61,13 +61,14 @@ public class TenantBookingController {
 		User responsetenant=userRepository.save(user); 
  
 		tenantBookRepository.save(user.getTenantBooking());
-		 
+		logger.info("OUT::POST::/TenantBooking::saveTenantBooking::" + responsetenant);
 		return responsetenant;
 			
 		}
 	
 	@GetMapping("/tenantbooking")
 	public List<User> getAllPosts() {
+		logger.info("Get all tenantbooking");
 		return userRepository.findAll();
 		
 		

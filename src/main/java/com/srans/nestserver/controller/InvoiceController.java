@@ -72,14 +72,19 @@ public class InvoiceController {
 
 	@GetMapping("/invoice")
 	public List<Invoice> getAllInvoice() {
+		logger.info("all invoices");
 		return invoiceRepository.findAll();
 	}
 
 	@GetMapping("/invoice/{id}")
 	public ResponseEntity<Invoice> getInvoicesById(@PathVariable(value = "id") long invoiceId)
 			throws ResourceNotFoundException {
+		logger.info("In::Id::" + invoiceId);
+
 		Invoice invoice = invoiceRepository.findById(invoiceId)
 				.orElseThrow(() -> new ResourceNotFoundException("invoice not found for this id :: " + invoiceId));
+		logger.info("Out::invoice::" + invoice);
+
 		return ResponseEntity.ok().body(invoice);
 	}
 
@@ -87,42 +92,30 @@ public class InvoiceController {
 	public ResponseEntity<Room> getFloorById(@PathVariable(value = "id") long floor_id,
 
 			@PathVariable(value = "room_id") long room_id) {
+		logger.info("In::Invoice::" + room_id  + "::" +floor_id);
 		if (!floorRepository.existsById(floor_id)) {
 			throw new ResourceNotFoundException("FloorId " + floor_id + " not found");
+
 		}
 
 		Room room = roomRepository.findById(room_id).orElseThrow(() -> new ResourceNotFoundException(
 				"Floor not found for this Floorid :: " + floor_id + "Floor not found for this Floor id::" + room_id));
+		logger.info("Out::room::" + room);
+
 		return ResponseEntity.ok().body(room);
 	}
 
 	@PostMapping("/invoice")
-	public Invoice createinvoice(@Valid @RequestBody Invoice invoice) {
-		return invoiceRepository.save(invoice);
+	public Invoice createinvoice(@Valid @RequestBody Invoice invoice)
+	{
+		logger.info("IN::POST::/invoice::saveInvoice::" + invoice);
+
+		invoice = invoiceRepository.save(invoice);
+		logger.info("OUT::POST::/invoice::saveInvoice::" + invoice);
+		return invoice;
+
 	}
 
-	@PutMapping("/invoice/{id}")
-	public ResponseEntity<Invoice> updateInvoice(@PathVariable(value = "id") long invoiceId,
-
-			@Valid @RequestBody Invoice invoiceDetails) throws ResourceNotFoundException {
-		Invoice invoice = invoiceRepository.findById(invoiceId)
-				.orElseThrow(() -> new ResourceNotFoundException("invoice not found for this id :: " + invoiceId));
-
-		invoice.setPaymentType(invoiceDetails.getPaymentType());
-		invoice.setActive(invoiceDetails.getActive());
-		invoice.setModifiedBy(invoiceDetails.getModifiedBy());
-		invoice.setModifiedDate(invoiceDetails.getModifiedDate());
-		invoice.setCreatedBy(invoiceDetails.getCreatedBy());
-		invoice.setCreatedDateTime(invoiceDetails.getCreatedDateTime());
-		invoice.setInvoiceDescripition(invoiceDetails.getInvoiceDescripition());
-		invoice.setInvoiceDate(invoiceDetails.getInvoiceDate());
-		invoice.setRoomRent(invoiceDetails.getRoomRent());
-		invoice.setDiscountAmount(invoiceDetails.getDiscountAmount());
-		invoice.setDueAmount(invoiceDetails.getDueAmount());
-
-		final Invoice updatedInvoice = invoiceRepository.save(invoice);
-		return ResponseEntity.ok(updatedInvoice);
-	}
 
 	@DeleteMapping("/invoice/{id}")
 	public Map<String, Boolean> deleteinvoice(@PathVariable(value = "id") long invoiceId)
@@ -201,6 +194,7 @@ public class InvoiceController {
 			}
 
 		}
+
 
 		return invoice;
 	}

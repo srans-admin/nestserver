@@ -36,11 +36,11 @@ public class ExpenseController {
 
 	@PostMapping("/expenses")
 	@PreAuthorize("permitAll()")
-	public Expense createExpense( @Valid @RequestBody Expense expense) {
+	public Expense createExpense(@Valid @RequestBody Expense expense) {
 		logger.info("IN::POST::/expenses::saveExpense::" + expense);
-		
+
 		expense = expensesRepository.save(expense);
-		
+
 		logger.info("OUT::POST::/expenses::saveExpense::" + expense);
 		return expense;
 	}
@@ -48,15 +48,19 @@ public class ExpenseController {
 	@GetMapping("/expenses")
 	@PreAuthorize("permitAll()")
 	public List<Expense> getAllExpenses() {
-
+     logger.info("get all expenses");
 		return expensesRepository.findAll();
 	}
 
 	@GetMapping("expenses/{id}")
 	@PreAuthorize("permitAll()")
 	public List<Expense> getExpensesData(@PathVariable(value = "id") Long hostelId) {
+		logger.info("IN::expenses::" + hostelId);
 
-		return expensesRepository.getExpenses(hostelId);
+		List<Expense> expenses = expensesRepository.getExpenses(hostelId);
+		logger.info("OUT::expenses::" + hostelId);
+		return expenses;
+
 	}
 
 	@PutMapping("/expenses/{id}")
@@ -68,7 +72,7 @@ public class ExpenseController {
 
 		expenses.setExpenseType(expensesDetails.getExpenseType());
 		expenses.setAmount(expensesDetails.getAmount());
-		//expenses.setHostelName(expensesDetails.getHostelName());
+		// expenses.setHostelName(expensesDetails.getHostelName());
 		final Expense updatedExpenses = expensesRepository.save(expenses);
 		return ResponseEntity.ok(updatedExpenses);
 	}

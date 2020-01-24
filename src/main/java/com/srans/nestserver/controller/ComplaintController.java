@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Complaint;
 import com.srans.nestserver.model.ComplaintComment;
-import com.srans.nestserver.model.ComplaintWapper;
+import com.srans.nestserver.model.ComplaintWrapper;
 import com.srans.nestserver.repository.ComplaintCommentsRepository;
 import com.srans.nestserver.repository.ComplaintRepository;
 import com.srans.nestserver.repository.UserRepository;
@@ -37,69 +37,85 @@ import com.srans.nestserver.util.ComplaintHistoryUtil;
 @RestController
 @RequestMapping("/api/v1")
 public class ComplaintController {
-	
+
 	private Logger logger = LoggerFactory.getLogger(ComplaintController.class);
-	
+
 	@Autowired
 	private ComplaintRepository complaintRepository;
 
 	@Autowired
 	private ComplaintCommentsRepository complaintCommentsRepository;
 
-	
 	@Autowired
 	public UserRepository userRepository = null;
-	 
+
 	@GetMapping("/complaints")
 	@PreAuthorize("permitAll()")
-	public List<ComplaintWapper> getAllComplaints(@RequestParam("uid") long userId, @RequestParam("role") String role) {
-		
-		logger.info("IN::complaints::"+userId+"::"+role);
-		List<ComplaintWapper> complaintWapper= new ArrayList<>();
-		
+	public List<ComplaintWrapper> getAllComplaints(@RequestParam("uid") long userId,
+			@RequestParam("role") String role) {
+
+		logger.info("IN::complaints::" + userId + "::" + role);
+		List<ComplaintWrapper> complaintWapper = new ArrayList<>();
+
 		List<Complaint> complaints = null;
-		if(role != null && role.equalsIgnoreCase("ADMIN")) {
+		if (role != null && role.equalsIgnoreCase("ADMIN")) {
 			complaints = complaintRepository.getCompliantsForAdmin(userId);
-		}else {
-			complaints = complaintRepository.getCompliantsForUser(userId);
+		} else {
+			Optional<List<Complaint>> complaintsOpt = null;
+			try {
+				complaintsOpt = complaintRepository.getCompliantsForUser(userId);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			complaints = complaintsOpt.get();
 		}
-		
-		for(Complaint complaint : complaints) {
-			
-			ComplaintWapper currComplaintWapper = new ComplaintWapper(); 
+
+		for (Complaint complaint : complaints) {
+
+			ComplaintWrapper currComplaintWapper = new ComplaintWrapper();
 			currComplaintWapper.setComplaint(complaint);
-			currComplaintWapper.setComplaintComments(complaintCommentsRepository.getAllComments(complaint.getId()));  
-		
+			currComplaintWapper.setComplaintComments(complaintCommentsRepository.getAllComments(complaint.getId()));
+
 			complaintWapper.add(currComplaintWapper);
-		} 
-		
-	    logger.info("OUT::complaints::"+complaintWapper);
+		}
+
+		logger.info("OUT::complaints::" + complaintWapper);
 		return complaintWapper;
 	}
-	
-	
+
 	@PostMapping("/complaints")
 	@PreAuthorize("permitAll()")
 	public Complaint createComplaint(@Valid @RequestBody Complaint complaint) throws Exception {
-		
-		//Find AdminId from UserRepo and save 
+
+//Find AdminId from UserRepo and save 
 		Optional<Object> adminId = complaintRepository.getAdminIdForUser(complaint.getUserId());
-		
-		if(adminId.isPresent()) {
-			complaint.setAdminId((Long)adminId.get());
-		}else {
-			throw new Exception("Unable to find Admin Id for the user : "+complaint.getUserId());
+
+		System.out.println("adminId s : " + adminId);
+		if (adminId.isPresent()) {
+
+			Object aid = adminId.get();
+			if (aid instanceof String) {
+				complaint.setAdminId(Long.parseLong((String) aid));
+				;
+			}
+//complaint.setAdminId((Long)adminId.get());
+		} else {
+			throw new Exception("Unable to find Admin Id for the user : " + complaint.getUserId());
 		}
-		
+
 		return complaintRepository.save(complaint);
 	}
-	
-	
+
 	@PostMapping("/complaint-comments")
 	@PreAuthorize("permitAll()")
-	public ComplaintComment addCommentOnComplaint(@Valid @RequestBody ComplaintComment complaintComment) throws Exception {
-		
-		return complaintCommentsRepository.save(complaintComment); 
+	public ComplaintComment addCommentOnComplaint(@Valid @RequestBody ComplaintComment complaintComment)
+	
+
+			throws Exception {
+		  logger.info("IN::POST::/complaintComment::saveComplaintComment::" + complaintComment);
+      	complaintComment = complaintCommentsRepository.save(complaintComment);
+				logger.info("OUT::POST::/complaintComment::saveComplaintComment::" + complaintComment);
+            return complaintComment;
 	}
 
 	@DeleteMapping("/complaints/{id}")
@@ -114,9 +130,6 @@ public class ComplaintController {
 		response.put("deleted", Boolean.TRUE);
 		return response;
 	}
-	
-	
-	
 
 	@GetMapping("/complaints/complainthistory/{id}")
 	@PreAuthorize("permitAll()")
@@ -147,6 +160,6 @@ public class ComplaintController {
 
 		return (getComplaintHistory);
 
-	} 
-	
+	}
+
 }

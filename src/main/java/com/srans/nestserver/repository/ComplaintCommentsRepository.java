@@ -13,18 +13,17 @@ import com.srans.nestserver.model.ComplaintComment;
 @Repository
 public interface ComplaintCommentsRepository extends JpaRepository<ComplaintComment, Long >{
 
-	
-	@Query(value="SELECT h.adminid , tb.tenant_id, cmpt.description, cmpt.status FROM HOSTEL h,complaints cmpt, tenantbooking tb WHERE tb.hostel_id = h.id  and	 tb.tenant_id = cmpt.userid	and tb.tenant_id= ?1", nativeQuery = true)
-	public Long adminid(Long adminid); 
-	
-	@Query(value="SELECT cc FROM ComplaintComment cc WHERE cc.complaintId=?1 ORDER by resolutionDate", nativeQuery=true)
-	public List<ComplaintComment> getAllComments(Long commentId );
-	
-	
-	
-	
+
+@Query(value="SELECT h.adminid , tb.tenant_id, cmpt.description, cmpt.status FROM HOSTEL h,complaints cmpt, tenantbooking tb WHERE tb.hostel_id = h.id and	tb.tenant_id = cmpt.userid	and tb.tenant_id= ?1", nativeQuery = true)
+public Long adminid(Long adminid); 
+
+@Query(value="SELECT cc FROM ComplaintComment cc WHERE cc.complaintId=?1 ORDER by resolutionDate")
+public List<ComplaintComment> getAllComments(Long commentId );
+
+
 	/*
-	/*
+	 * /*
+	 * 
 	 * @Query(value =
 	 * "SELECT hostel_owner_id FROM HOSTEL WHERE hostel_id IN ('SELECT hostel_id FROM TENANTBOOKING where user_id=?1')"
 	 * , nativeQuery = true) public Long hostelownerid(Long hostel_owner_id);
@@ -37,7 +36,5 @@ public interface ComplaintCommentsRepository extends JpaRepository<ComplaintComm
 	 * 
 	 * public Long id(Long hostel_id);
 	 */
-	
-	
 
 }

@@ -18,15 +18,9 @@ public class Hostel implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	
-	private Long hostelownerid;
-	
+
 	@Column
 	private String hostelName;
-	
-	@Column
-	private String hostelownername;
 
 	@Column
 	private String hostelAddress;
@@ -50,21 +44,12 @@ public class Hostel implements Serializable {
 	@Column
 	private boolean gym;
 
-	@Transient
-	private List<Floor> floors;
-
-	public Hostel() {
-		super();
-		this.hostelName = "";
-		this.hostelAddress = "";
-		this.hostelownername = "";
-		this.hostelType = "";
-		this.numOfFloors=0;
-		this.floors = new ArrayList<>();
-	}
+	@Column
+	private long adminId;
 
 	public Hostel(Long id, String hostelName, String hostelAddress, String hostelType, Integer numOfFloors, boolean tv,
-			boolean fridge, boolean ac, boolean mineralWater, boolean parking, boolean gym,String hostelownername,Long hostelownerid,  List<Floor> floors) {
+			boolean fridge, boolean ac, boolean mineralWater, boolean parking, boolean gym, long adminId,
+			List<Floor> floors) {
 		super();
 		this.id = id;
 		this.hostelName = hostelName;
@@ -77,9 +62,28 @@ public class Hostel implements Serializable {
 		this.mineralWater = mineralWater;
 		this.parking = parking;
 		this.gym = gym;
+		this.adminId = adminId;
 		this.floors = floors;
-		this.hostelownername=hostelownername;
-		this.hostelownerid=hostelownerid;
+	}
+
+	public long getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(long adminId) {
+		this.adminId = adminId;
+	}
+
+	@Transient
+	private List<Floor> floors;
+
+	public Hostel() {
+		super();
+		this.hostelName = "";
+		this.hostelAddress = "";
+		this.hostelType = "";
+		this.numOfFloors = 0;
+		this.floors = new ArrayList<>();
 	}
 
 	public Long getId() {
@@ -92,23 +96,6 @@ public class Hostel implements Serializable {
 
 	public String getHostelName() {
 		return hostelName;
-	}
-
-	public String getHostelownername() {
-		return hostelownername;
-	}
-
-	public void setHostelownername(String hostelownername) {
-		this.hostelownername = hostelownername;
-	}
-	
-
-	public Long getHostelownerid() {
-		return hostelownerid;
-	}
-
-	public void setHostelownerid(Long hostelownerid) {
-		this.hostelownerid = hostelownerid;
 	}
 
 	public void setHostelName(String hostelName) {
@@ -129,14 +116,6 @@ public class Hostel implements Serializable {
 
 	public void setHostelType(String hostelType) {
 		this.hostelType = hostelType;
-	}
-
-	public List<Floor> getfloors() {
-		return floors;
-	}
-
-	public void setfloors(List<Floor> floors) {
-		this.floors = floors;
 	}
 
 	public Integer getNumOfFloors() {
@@ -195,6 +174,14 @@ public class Hostel implements Serializable {
 		this.gym = gym;
 	}
 
+	public List<Floor> getFloors() {
+		return floors;
+	}
+
+	public void setFloors(List<Floor> floors) {
+		this.floors = floors;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -220,14 +207,12 @@ public class Hostel implements Serializable {
 		builder.append(parking);
 		builder.append(", gym=");
 		builder.append(gym);
+		builder.append(", adminId=");
+		builder.append(adminId);
 		builder.append(", floors=");
 		builder.append(floors);
-		builder.append(",hostelownername=");
-		builder.append(hostelownername);
-		builder.append(",hostelownerid=");
-		builder.append(hostelownerid);
 		builder.append("]");
 		return builder.toString();
 	}
-
 }
+	

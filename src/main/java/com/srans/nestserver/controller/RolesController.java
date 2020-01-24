@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +31,13 @@ import com.srans.nestserver.repository.RoleRepository;
 @RestController
 @RequestMapping("/api/v1")
 public class RolesController {
-	//Logger logger = LoggerFactory.getLogger(RolesController.class);
+	Logger logger = LoggerFactory.getLogger(RolesController.class);
 	@Autowired
 	private RoleRepository roleRepository;
 	
 	@GetMapping("/roles")
 	public List<Role> getAllRoles() {
+		logger.info("get all roles");
 		return roleRepository.findAll();
 	}
 	
@@ -49,7 +52,13 @@ public class RolesController {
 
 	@PostMapping("/roles")
 	public Role createRole(@Valid @RequestBody Role role) {
-		return roleRepository.save(role);
+		logger.info("IN::POST::/role::saveRole::" + role);
+
+		role = roleRepository.save(role);
+		logger.info("OUT::POST::/role::saveRole::" + role);
+		  return role;
+
+		
 	}
 
 	@PutMapping("/roles/{id}")

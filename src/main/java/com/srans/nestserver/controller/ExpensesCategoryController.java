@@ -36,14 +36,20 @@ public class ExpensesCategoryController {
 	@PostMapping("/categories")
 	@PreAuthorize("permitAll()")
 	public ExpensesCategory createExpenseType(@Valid @RequestBody ExpensesCategory expensescategory) {
+		logger.info("IN::POST::/expensescategory::saveExpenseCategory::" + expensescategory);
 
-		return expensescategoryRepository.save(expensescategory);
+		expensescategory = expensescategoryRepository.save(expensescategory);
+
+		logger.info("OUT::POST::/expensescategory::saveExpenseCategory::" + expensescategory);
+
+		return expensescategory;
+
 	}
 
 	@GetMapping("/categories")
 	@PreAuthorize("permitAll()")
 	public List<ExpensesCategory> getAllExpenseCategory() {
-
+     logger.info("get all expenses category");
 		return expensescategoryRepository.findAll();
 	}
 
@@ -51,13 +57,13 @@ public class ExpensesCategoryController {
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<ExpensesCategory> updateExpensesCategory(@PathVariable(value = "id") Long expensescategoryId,
 			@Valid @RequestBody ExpensesCategory expensescategoryDetails) throws ResourceNotFoundException {
-		ExpensesCategory expensescategory = expensescategoryRepository.findById(expensescategoryId).
-				orElseThrow(() -> new ResourceNotFoundException("ExpensesType not found for this id :: " + expensescategoryId));
+		ExpensesCategory expensescategory = expensescategoryRepository.findById(expensescategoryId).orElseThrow(
+				() -> new ResourceNotFoundException("ExpensesType not found for this id :: " + expensescategoryId));
 
 		expensescategory.setDescription(expensescategoryDetails.getDescription());
 		expensescategory.setTypeId(expensescategoryDetails.getTypeId());
 		expensescategory.setExpenseType(expensescategoryDetails.getExpenseType());
-	
+
 		final ExpensesCategory updatedExpensesCategory = expensescategoryRepository.save(expensescategory);
 		return ResponseEntity.ok(updatedExpensesCategory);
 	}

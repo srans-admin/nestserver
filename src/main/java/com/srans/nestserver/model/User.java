@@ -95,7 +95,7 @@ public class User implements Serializable {
 
 	@JsonInclude(Include.NON_NULL)
 	@Column(name = "floor")
-	private long floor;
+	private long floorId;
 
 	@JsonInclude(Include.NON_NULL)
 	@Column(name = "roomName")
@@ -114,8 +114,19 @@ public class User implements Serializable {
 	private long depositAmount;
 
 	@JsonInclude(Include.NON_NULL)
-	@Column(name = "paymentThrough")
-	private long paymentThrough;
+	@Column(name = "paymentType")
+	private long paymentType;
+	
+	
+	@JsonInclude(Include.NON_NULL)
+	@Column(name = "roomRent")
+	private long roomRent;
+	
+	
+	
+	
+	@Column(name = "adminId")
+	private long adminId;
 
 	@Transient
 	private TenantBooking tenantBooking;
@@ -125,6 +136,15 @@ public class User implements Serializable {
 
 	@Transient
 	private Bed bed;
+
+	@Transient
+	private Hostel hostel;
+
+	@Transient
+	private String floor;
+
+	@Transient
+	private Room room;
 
 	@JsonInclude(Include.NON_NULL)
 	@Column(name = "subscriptions")
@@ -140,6 +160,51 @@ public class User implements Serializable {
 	public User() {
 		super();
 
+	}
+
+	public User(Long userId, String name, String role, String status, Long contactNumber, String fatherName,
+			Long fatherphoneNumber, String motherName, long motherphoneNumber, String dob, long emergencyContactNumber,
+			String nameOfTheEmployer, String bloodGroup, String officeAddress, Long mobileNumber, String emailId,
+			String permanentAddress, String hostelName, long floorId, String roomName, String roomType, long date,
+			long depositAmount, long paymentType, long roomRent, long adminId, TenantBooking tenantBooking,
+			Payment payment, Bed bed, Hostel hostel, String floor, Room room, int subscriptions,
+			String subscriptionType, UserSubscription userSubscriptionWrapper) {
+		super();
+		this.userId = userId;
+		this.name = name;
+		this.role = role;
+		this.status = status;
+		this.contactNumber = contactNumber;
+		this.fatherName = fatherName;
+		this.fatherphoneNumber = fatherphoneNumber;
+		this.motherName = motherName;
+		this.motherphoneNumber = motherphoneNumber;
+		this.dob = dob;
+		this.emergencyContactNumber = emergencyContactNumber;
+		this.nameOfTheEmployer = nameOfTheEmployer;
+		this.bloodGroup = bloodGroup;
+		this.officeAddress = officeAddress;
+		this.mobileNumber = mobileNumber;
+		this.emailId = emailId;
+		this.permanentAddress = permanentAddress;
+		this.hostelName = hostelName;
+		this.floorId = floorId;
+		this.roomName = roomName;
+		this.roomType = roomType;
+		this.date = date;
+		this.depositAmount = depositAmount;
+		this.paymentType = paymentType;
+		this.roomRent = roomRent;
+		this.adminId = adminId;
+		this.tenantBooking = tenantBooking;
+		this.payment = payment;
+		this.bed = bed;
+		this.hostel = hostel;
+		this.floor = floor;
+		this.room = room;
+		this.subscriptions = subscriptions;
+		this.subscriptionType = subscriptionType;
+		this.userSubscriptionWrapper = userSubscriptionWrapper;
 	}
 
 	public Long getUserId() {
@@ -286,12 +351,12 @@ public class User implements Serializable {
 		this.hostelName = hostelName;
 	}
 
-	public long getFloor() {
-		return floor;
+	public long getFloorId() {
+		return floorId;
 	}
 
-	public void setFloor(long floor) {
-		this.floor = floor;
+	public void setFloorId(long floorId) {
+		this.floorId = floorId;
 	}
 
 	public String getRoomName() {
@@ -326,12 +391,28 @@ public class User implements Serializable {
 		this.depositAmount = depositAmount;
 	}
 
-	public long getPaymentThrough() {
-		return paymentThrough;
+	public long getPaymentType() {
+		return paymentType;
 	}
 
-	public void setPaymentThrough(long paymentThrough) {
-		this.paymentThrough = paymentThrough;
+	public void setPaymentType(long paymentType) {
+		this.paymentType = paymentType;
+	}
+
+	public long getRoomRent() {
+		return roomRent;
+	}
+
+	public void setRoomRent(long roomRent) {
+		this.roomRent = roomRent;
+	}
+
+	public long getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(long adminId) {
+		this.adminId = adminId;
 	}
 
 	public TenantBooking getTenantBooking() {
@@ -356,6 +437,30 @@ public class User implements Serializable {
 
 	public void setBed(Bed bed) {
 		this.bed = bed;
+	}
+
+	public Hostel getHostel() {
+		return hostel;
+	}
+
+	public void setHostel(Hostel hostel) {
+		this.hostel = hostel;
+	}
+
+	public String getFloor() {
+		return floor;
+	}
+
+	public void setFloor(String floor) {
+		this.floor = floor;
+	}
+
+	public Room getRoom() {
+		return room;
+	}
+
+	public void setRoom(Room room) {
+		this.room = room;
 	}
 
 	public int getSubscriptions() {
@@ -389,21 +494,77 @@ public class User implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("User [userId=").append(userId).append(", name=").append(name).append(", role=").append(role)
-				.append(", status=").append(status).append(", contactNumber=").append(contactNumber)
-				.append(", fatherName=").append(fatherName).append(", fatherphoneNumber=").append(fatherphoneNumber)
-				.append(", motherName=").append(motherName).append(", motherphoneNumber=").append(motherphoneNumber)
-				.append(", dob=").append(dob).append(", emergencyContactNumber=").append(emergencyContactNumber)
-				.append(", nameOfTheEmployer=").append(nameOfTheEmployer).append(", bloodGroup=").append(bloodGroup)
-				.append(", officeAddress=").append(officeAddress).append(", mobileNumber=").append(mobileNumber)
-				.append(", emailId=").append(emailId).append(", permanentAddress=").append(permanentAddress)
-				.append(", hostelName=").append(hostelName).append(", floor=").append(floor).append(", roomName=")
-				.append(roomName).append(", roomType=").append(roomType).append(", date=").append(date)
-				.append(", depositAmount=").append(depositAmount).append(", paymentThrough=").append(paymentThrough)
-				.append(", tenantBooking=").append(tenantBooking).append(", payment=").append(payment).append(", bed=")
-				.append(bed).append(", subscriptions=").append(subscriptions).append(", subscriptionType=")
-				.append(subscriptionType).append(", userSubscriptionWrapper=").append(userSubscriptionWrapper)
-				.append("]");
+		builder.append("User [userId=");
+		builder.append(userId);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", role=");
+		builder.append(role);
+		builder.append(", status=");
+		builder.append(status);
+		builder.append(", contactNumber=");
+		builder.append(contactNumber);
+		builder.append(", fatherName=");
+		builder.append(fatherName);
+		builder.append(", fatherphoneNumber=");
+		builder.append(fatherphoneNumber);
+		builder.append(", motherName=");
+		builder.append(motherName);
+		builder.append(", motherphoneNumber=");
+		builder.append(motherphoneNumber);
+		builder.append(", dob=");
+		builder.append(dob);
+		builder.append(", emergencyContactNumber=");
+		builder.append(emergencyContactNumber);
+		builder.append(", nameOfTheEmployer=");
+		builder.append(nameOfTheEmployer);
+		builder.append(", bloodGroup=");
+		builder.append(bloodGroup);
+		builder.append(", officeAddress=");
+		builder.append(officeAddress);
+		builder.append(", mobileNumber=");
+		builder.append(mobileNumber);
+		builder.append(", emailId=");
+		builder.append(emailId);
+		builder.append(", permanentAddress=");
+		builder.append(permanentAddress);
+		builder.append(", hostelName=");
+		builder.append(hostelName);
+		builder.append(", floorId=");
+		builder.append(floorId);
+		builder.append(", roomName=");
+		builder.append(roomName);
+		builder.append(", roomType=");
+		builder.append(roomType);
+		builder.append(", date=");
+		builder.append(date);
+		builder.append(", depositAmount=");
+		builder.append(depositAmount);
+		builder.append(", paymentType=");
+		builder.append(paymentType);
+		builder.append(", roomRent=");
+		builder.append(roomRent);
+		builder.append(", adminId=");
+		builder.append(adminId);
+		builder.append(", tenantBooking=");
+		builder.append(tenantBooking);
+		builder.append(", payment=");
+		builder.append(payment);
+		builder.append(", bed=");
+		builder.append(bed);
+		builder.append(", hostel=");
+		builder.append(hostel);
+		builder.append(", floor=");
+		builder.append(floor);
+		builder.append(", room=");
+		builder.append(room);
+		builder.append(", subscriptions=");
+		builder.append(subscriptions);
+		builder.append(", subscriptionType=");
+		builder.append(subscriptionType);
+		builder.append(", userSubscriptionWrapper=");
+		builder.append(userSubscriptionWrapper);
+		builder.append("]");
 		return builder.toString();
 	}
 

@@ -1,4 +1,4 @@
-package com.srans.nestserver.model;
+   package com.srans.nestserver.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
