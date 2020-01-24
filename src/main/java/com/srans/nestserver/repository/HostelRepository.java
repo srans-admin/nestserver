@@ -56,6 +56,10 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 	@Query(value = "select assign_hostel_ids from admin_details where sub_admin_id=?1", nativeQuery = true)
 	public Long[] getSubAdminId(Long adminId);
 	
+	@Query(value = "select id from hostel", nativeQuery = true)
+	public Long[] getAllHostelId();
+	
+	
 	
 	
 

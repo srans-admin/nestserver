@@ -67,8 +67,9 @@ public class TenantService {
 			ccMail = null;
 			bccMail = null;
 			System.out.println(responseTenant.getRole());
+			Long checkId=0L;
 
-			if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)) {
+			if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)&&vacationRepo.checkTenantId(responseTenant.getUserId())!=0 ) {
 
 				message = MailTemplates.ADMIN_VACATED_NOTIFICATION_TEMPLATE.replaceAll("##NAME##",
 						responseTenant.getName());
@@ -80,8 +81,14 @@ public class TenantService {
 				// responseTenant.getTenantBooking().getFloorName())
 				// .replaceAll("##ROOM_RENT##", "" +
 				// responseTenant.getTenantBooking().getRoomRent());
+			  
+			 
 
-			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_USER)) {
+			} 
+			else if(responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)&&vacationRepo.checkTenantId(responseTenant.getUserId())==0 ) {
+				message=MailTemplates.TENANT_INVOICE_TEMPLATE;
+			}
+			else if (responseTenant.getRole().endsWith(NSConstants.ROLE_USER)) {
 				message = MailTemplates.TENANT_REGISTRATION_TEMPLATE
 						.replaceAll("##USER_NAME##", " " + responseTenant.getName())
 						.replaceAll("##PASSWORD##", responseTenant.getName()).replaceAll("##HOSTEL_NAME##", "NIODS");

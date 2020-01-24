@@ -13,14 +13,22 @@ import java.util.List;
 
 import javax.mail.MessagingException;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
+import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.BedRepository;
+import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.PaymentRepository;
+import com.srans.nestserver.repository.TenantBookRepository;
+import com.srans.nestserver.repository.UserRepository;
+import com.srans.nestserver.service.TenantService;
 
 /**
  * @author manish
@@ -37,6 +45,18 @@ public class NIODSScheduler {
 
 	@Autowired
 	private BedRepository bedRepository;
+
+	@Autowired
+	private HostelRepository hostelRepo;
+
+	@Autowired
+	private TenantBookRepository tenantBookRepo;
+
+	@Autowired
+	private TenantService tenantService;
+
+	@Autowired
+	private UserRepository userRepo;
 
 	Date bookingDate = null;
 	Long bedId = null;
@@ -61,11 +81,6 @@ public class NIODSScheduler {
 
 					LocalDate today = convertToLocalDateViaInstant(bookingDate);
 					nextWeek = today.plus(1, ChronoUnit.WEEKS);
-					// System.out.println(nextWeek.plusDays(1));
-
-					if (nextWeek.isEqual(LocalDate.now())) {
-						System.out.println(" ");
-					}
 
 				} else if (i == 1) {
 					bedId = ((BigInteger) object[i]).longValue();
@@ -88,9 +103,23 @@ public class NIODSScheduler {
 
 	@Scheduled(cron = "${nidos.cron.tenant-invoice-trigger}")
 	public void generateInvoiceOntime() throws MessagingException {
-		
-		
+
+		try {
+
+			Long[] hostelId = hostelRepo.getAllHostelId();
+			for (Long hid : hostelId) {
+
+				Long[] tenantId = tenantBookRepo.getAllTenantId(hid);
+				for (Long tid : tenantId) {
+					User userInfo = userRepo.getOne(tid);
+					tenantService.triggerAlertEmail(userInfo);
+				}
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
-
 }
