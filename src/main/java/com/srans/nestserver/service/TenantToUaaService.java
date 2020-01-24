@@ -37,6 +37,9 @@ public class TenantToUaaService {
 	@Autowired
 	private PasswordGenerator passwordGenerator;
 	
+	@Autowired
+	private TenantService tenantService;
+	
 	
 	
 	@Value("${uaa-server-url:http://localhost:9090/uaa-server}")
@@ -80,7 +83,14 @@ public class TenantToUaaService {
 					.replaceAll("##USER_ID##", uaaUser.getUsername())
 					.replaceAll("##TEMP_PASSWORD##", uaaUser.getPassword());
 			//}
+			 
+				
 			niodsSmsGateway.sendSMS(""+user.getContactNumber(),message);
+			
+			
+			if (user.getEmailId() != null && !user.getEmailId().isEmpty()) { 
+				tenantService.triggerAlertEmail(user);
+			}
 			
 			logger.debug("Out::postUserToUaa");
 			

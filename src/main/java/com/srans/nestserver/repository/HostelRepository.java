@@ -62,32 +62,7 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 	public Long[] getSubAdminId(Long adminId);
 	
 	@Query(value = "select id from hostel", nativeQuery = true)
-	public Long[] getAllHostelId();
-	
-	
-	
-	
+	public Long[] getAllHostelId(); 
 
-	public default Hostel saveWholeObject(Hostel hostel){
-		
-		Hostel tmpHostel = new Hostel();
-		
-		tmpHostel = this.save(hostel);
-		
-	    hostel.getfloors().forEach( floor -> floorRepository.saveWholeObject(floor));
-		
-	    tmpHostel.setfloors(hostel.getfloors());
-	    
-		return tmpHostel;
-		
-	}
-
-
-	public Optional<Hostel> findByhostelownerid(long hostelownerid);
-
-	
-
-
-	
-
+	public Optional<Hostel> findByhostelownerid(long hostelownerid);  
 }

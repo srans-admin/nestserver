@@ -138,15 +138,8 @@ public class Hostel implements Serializable {
 
 	public void setHostelType(String hostelType) {
 		this.hostelType = hostelType;
-	}
-
-	public List<Floor> getfloors() {
-		return floors;
-	}
-
-	public void setfloors(List<Floor> floors) {
-		this.floors = floors;
-	}
+	} 
+	 
 
 	public Integer getNumOfFloors() {
 		return numOfFloors;

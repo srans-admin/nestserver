@@ -102,7 +102,7 @@ public class HostelController {
 		Hostel responseHostel = hostelRepository.getOne(hostelId);
 
 		floorRepository.findByHostelId(hostelId).forEach(floor -> {
-			responseHostel.getfloors().add(floor);
+			responseHostel.getFloors().add(floor);
 			roomRepository.findByFloorId(floor.getId()).forEach(room -> {
 				floor.getRooms().add(room);
 				bedRepository.findByRoomId(room.getId()).forEach(bed -> {
@@ -131,7 +131,7 @@ public class HostelController {
 		Hostel responseHostel = hostelRepository.save(hostel);
 
 		// SAVE Database stuff here
-		responseHostel.getfloors().forEach(floor -> {
+		responseHostel.getFloors().forEach(floor -> {
 			floor.setHostelId(responseHostel.getId());
 			Floor resFloor = floorRepository.save(floor);
 

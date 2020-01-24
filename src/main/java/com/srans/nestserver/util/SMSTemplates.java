@@ -14,19 +14,23 @@ public class SMSTemplates {
 																"Looking forward to serve you better.\n"+
 																"\n"+
 																"Thanks\n"+
-																"@Team Srans ";
+																"--\n@Team NIODS";
 	
-	public static final String TENANT_CREDETIALS = "Hello ##USER_NAME##,\n YOUR User ID: ##USER_ID## and Temp Password : ##TEMP_PASSWORD## "; 
+	public static final String TENANT_CREDETIALS = "Dear ##USER_NAME##,\nYour User ID: ##USER_ID## \nTemp Password : ##TEMP_PASSWORD## \n--\n@Team NIODS \nWe recommend you to change passowrd on first login.\n"; 
 	
-	public static final String TENANT_INVOICE_TEMPLATE= "Hello, \n "+
-	                                                     "Your monthly invoice has generated pls check in you mail id"; 
+	public static final String TENANT_INVOICE_TEMPLATE= "Dear User, \n"+
+	                                                     "Your monthly invoice has been generated, pleasee check your registered email for more information \n--\n@Team NIODS"; 
 	
 	public static final String ADMIN_SUBSCRIPTION_TEMPLATE=" ";
 	
-	public static final String GUEST_SUBSCRIPTION_TEMPLATE="Hello ##USER_NAME##, \n"+
-	                                                          "Thank you for booking bed.\n"+
-			                                                   "@Team Srans"                 ;
+	public static final String GUEST_TEMPLATE="Hello ##USER_NAME##, \n"+
+	                                                          "Thank you for choosing NIDOS.\n"+
+	                                                          "YOUR User ID: ##USER_ID##  \nTemp Password : ##TEMP_PASSWORD##"+
+	                                                          "We recommend you to change passowrd on first login.\n"+
+			                                                   "--\n@Team NIODS"                 ;
 	
 	public static final String VACATE_TENANT_MESSAGE_TEMPLATE="Thank you for visiting the hostel";
+	
+ 
 
 }

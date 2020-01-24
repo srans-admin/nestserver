@@ -39,7 +39,6 @@ import com.srans.nestserver.service.BedAvailabilityService;
 import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.service.UserService;
 import com.srans.nestserver.util.AvailableBedsUtil;
-import com.srans.nestserver.util.NSConstants;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -77,19 +76,19 @@ public class UserController {
 	}
 
 	@GetMapping("/users")
-	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
-	// @PreAuthorize("permitAll()")
+	//@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+    @PreAuthorize("permitAll()")
 	public List<User> getAllTenants() {
 		return userRepository.findAll();
 	}
 
 	@GetMapping("/users/{id}")
 	@PreAuthorize("permitAll()")
-	public User getTenantById(@PathVariable(value = "id") Long TenantId)
+	public User getTenantById(@PathVariable(value = "id") Long tenantId)
 			throws ResourceNotFoundException {
-		User user = userRepository.getOne(TenantId);
+		User user = userRepository.getOne(tenantId);
 		
-		tenantBookingRepo.findByTenantId(TenantId).forEach(tenantbooking->{
+		tenantBookingRepo.findByTenantId(tenantId).forEach(tenantbooking->{
 			user.setTenantBooking(tenantbooking);
 		});
 		
@@ -181,34 +180,34 @@ public class UserController {
 	 * }
 	 */
 
-	@PutMapping("/users/{Id}")
+	@PutMapping("/users/{id}")
 	@PreAuthorize("permitAll()")
-	public ResponseEntity<User> updateUser(@PathVariable(value = "Id") Long TenantId,
+	public ResponseEntity<User> updateUser(@PathVariable(value = "id") Long tenantId,
 			@Valid @RequestBody User userDetails) throws ResourceNotFoundException {
-		User user = userRepository.findById(TenantId)
-				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
+		/*User user = userRepository.findById(tenantId)
+				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + tenantId));
 
 		user.setUserId(userDetails.getUserId());
 		user.setBloodGroup(userDetails.getBloodGroup());
 		user.setContactNumber(userDetails.getContactNumber());
 		user.setDob(userDetails.getDob());
 		user.setEmailId(userDetails.getEmailId());
-      user.setPermanentAddress(userDetails.getPermanentAddress());
+      user.setPermanentAddress(userDetails.getPermanentAddress());*/
 
 
-		final User updatedTenant = userRepository.save(user);
+		final User updatedTenant = userRepository.save(userDetails);
 		return ResponseEntity.ok(updatedTenant);
 	}
 
-	@DeleteMapping("/users/{Id}")
+	@DeleteMapping("/users/{id}")
 	@PreAuthorize("permitAll()")
-	public <tenantRepository> Map<String, Boolean> deleteUser(@PathVariable(value = "Id") Long TenantId)
+	public <tenantRepository> Map<String, Boolean> deleteUser(@PathVariable(value = "id") Long tenantId)
 			throws ResourceNotFoundException {
 		@SuppressWarnings("unused")
-		User user = userRepository.findById(TenantId)
-				.orElseThrow(() -> new ResourceNotFoundException("SransUser not found for this id :: " + TenantId));
+		User user = userRepository.findById(tenantId)
+				.orElseThrow(() -> new ResourceNotFoundException("SransUser not found for this id :: " + tenantId));
 
-		userRepository.deleteById(TenantId);
+		userRepository.deleteById(tenantId);
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
 		return response;

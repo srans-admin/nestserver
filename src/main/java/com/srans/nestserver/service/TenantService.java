@@ -4,6 +4,9 @@
 package com.srans.nestserver.service;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 
@@ -12,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import com.srans.nestserver.communication.NiodsMailer;
 import com.srans.nestserver.communication.NiodsSmsGateway;
@@ -51,6 +56,36 @@ public class TenantService {
 
 	@Autowired
 	private VacationRepository vacationRepo;
+	
+	
+	@Autowired
+    private TemplateEngine templateEngine;
+
+	
+	
+	/**
+	 * 
+	 * @param templateFileName Name of the template file without extension
+	 * @param text
+	 * @return
+	 */
+    public String getTemplate(String templateFileName, User user)
+    {
+    	logger.trace("In::");
+        Map<String, Object> reqParamtersMap = new HashMap<>(); 
+        
+        reqParamtersMap.put("name", user.getName()); 
+        reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());  
+         
+        String output = this.templateEngine.process(templateFileName, new Context(Locale.getDefault(), reqParamtersMap));
+
+        reqParamtersMap = null;
+        
+        logger.trace("Out::");
+        return output;
+    }
+	 
+    
 
 	public boolean triggerAlertEmail(User responseTenant) {
 
@@ -63,11 +98,11 @@ public class TenantService {
 			String email, subject, ccMail, bccMail, message = null;
 			email = responseTenant.getEmailId();
 			System.out.println(email);
-			subject = "Welcome to Hostel ";
+			subject = "NIDOS Confirmation";
 			ccMail = null;
 			bccMail = null;
 			System.out.println(responseTenant.getRole());
-			Long checkId = 0L;
+			//Long checkId = 0L;
 
 			if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)
 					&& vacationRepo.checkTenantId(responseTenant.getUserId()) != 0) {
@@ -86,17 +121,22 @@ public class TenantService {
 			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)
 					&& vacationRepo.checkTenantId(responseTenant.getUserId()) == 0) {
 				message = MailTemplates.TENANT_INVOICE_TEMPLATE;
-			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_USER)) {
-				message = MailTemplates.TENANT_REGISTRATION_TEMPLATE
+			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_USER) || responseTenant.getRole().endsWith(NSConstants.ROLE_GUEST)) {
+				/*message = MailTemplates.TENANT_REGISTRATION_TEMPLATE
 						.replaceAll("##USER_NAME##", " " + responseTenant.getName())
 						.replaceAll("##PASSWORD##", responseTenant.getName()).replaceAll("##HOSTEL_NAME##", "NIODS");
 
 			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_GUEST)) {
-
+*/
 				try {
-					TenantBooking guestInfo = new TenantBooking();
+				 
 
-					if (tenantBookRepository.findGuestId(responseTenant.getUserId()) != 0 && paymentRepo.findRoomBedId(
+					message = this.getTemplate("guest_confirmation", responseTenant);
+					
+					/*
+					 TenantBooking guestInfo = new TenantBooking();
+					 
+					 if (tenantBookRepository.findGuestId(responseTenant.getUserId()) != 0 && paymentRepo.findRoomBedId(
 							tenantBookRepository.getOne(responseTenant.getUserId()).getRoomBedId()) == 0) {
 						guestInfo = tenantBookRepository.getOne(responseTenant.getUserId());
 						message = MailTemplates.GUEST_BOOKING_TEMPLATE.replaceAll("##NAME##", responseTenant.getName())
@@ -107,9 +147,7 @@ public class TenantService {
 					} else if (responseTenant.getUserId() != null
 							&& tenantBookRepository.findGuestId(responseTenant.getUserId()) == 0) {
 
-						String s = responseTenant.getUserSubscriptionWrapper().getUser().getPassword();
-						System.out.println(s);
-
+						String s = responseTenant.getUserSubscriptionWrapper().getUser().getPassword(); 
 						message = MailTemplates.GUEST_REGISTRATION_TEMPLATE
 								.replaceAll("##NAME##", responseTenant.getName())
 								.replaceAll("##USER_NAME##", responseTenant.getName()).replaceAll("##PASSWORD##", s);
@@ -123,7 +161,7 @@ public class TenantService {
 								.replaceAll("##roomId##", (guestInfo.getRoomId()).toString())
 								.replaceAll("##roomBedId##", (guestInfo.getRoomBedId()).toString());
 
-					}
+					}*/
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -134,6 +172,7 @@ public class TenantService {
 			}
 			niodsMailer.sendEmail(email, subject, ccMail, bccMail, message);
 
+			System.out.println("EMIAL SENT ----------------------------------");
 			emailStatus = true;
 
 			logger.debug("Out::triggerAlertEmail");
@@ -185,10 +224,8 @@ public class TenantService {
 				message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE;
 
 			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_GUEST)) {
-				message = SMSTemplates.GUEST_SUBSCRIPTION_TEMPLATE.replaceAll("USER_NAME", responseTenant.getName());
-			}
-
-			else {
+				message = SMSTemplates.GUEST_TEMPLATE.replaceAll("USER_NAME", responseTenant.getName());
+			} else {
 				message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE;
 			}
 
