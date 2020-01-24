@@ -70,43 +70,28 @@ public class User implements Serializable {
 	private String emailId;
 
 	@Column(name = "permanentAddress")
-	private String permanentAddress;
-
- 
-	@Column(name = "subscriptions")
-	private Long subscriptions;
-
-	@Column(name = "subscriptionType")
-	private String subscriptionType;
- 
-	@JsonInclude(Include.NON_NULL)
+	private String permanentAddress; 
+	
 	@Column(name = "hostelName")
 	private String hostelName;
-
-	@JsonInclude(Include.NON_NULL)
+ 
 	@Column(name = "floor")
 	private long floor;
-
-	@JsonInclude(Include.NON_NULL)
+ 
 	@Column(name = "roomName")
 	private String roomName;
-
-	@JsonInclude(Include.NON_NULL)
+ 
 	@Column(name = "roomType")
 	private String roomType;
-
-	@JsonInclude(Include.NON_NULL)
+ 
 	@Column(name = "date")
 	private long date;
-
-	@JsonInclude(Include.NON_NULL)
+ 
 	@Column(name = "depositAmount")
 	private long depositAmount;
-
-	@JsonInclude(Include.NON_NULL)
-	@Column(name = "paymentThrough")
-	private long paymentThrough;
  
+	@Column(name = "paymentThrough")
+	private long paymentThrough; 
 
 	@Transient
 	private TenantBooking tenantBooking;
@@ -116,12 +101,10 @@ public class User implements Serializable {
 
 	@Transient
 	private Bed bed;
- 
-	@JsonInclude(Include.NON_NULL)
+  
 	@Column(name = "subscriptions")
 	private int subscriptions;
-
-	@JsonInclude(Include.NON_NULL)
+ 
 	@Column(name = "subscriptionType")
 	private String subscriptionType;
 
@@ -137,7 +120,7 @@ public class User implements Serializable {
 	public User(Long userId, String name, String role, String status, Long contactNumber, String fatherName,
 			Long fatherphoneNumber, String motherName, long motherphoneNumber, String dob, long emergencyContactNumber,
 			String nameOfTheEmployer, String bloodGroup, String officeAddress, Long mobileNumber, String emailId,
-			String permanentAddress, Long subscriptions, String subscriptionType, TenantBooking tenantBooking,
+			String permanentAddress, int subscriptions, String subscriptionType, TenantBooking tenantBooking,
 			Payment payment, Bed bed, UserSubscription userSubscriptionWrapper) {
 		super();
 		this.userId = userId;
@@ -300,27 +283,8 @@ public class User implements Serializable {
 
 	public void setPermanentAddress(String permanentAddress) {
 		this.permanentAddress = permanentAddress;
-	}
- 
-	public Long getSubscriptions() {
-		return subscriptions;
-	}
-
-	public void setSubscriptions(Long subscriptions) {
-		this.subscriptions = subscriptions;
-	}
-
-	public String getSubscriptionType() {
-		return subscriptionType;
-	}
-
-	public void setSubscriptionType(String subscriptionType) {
-		this.subscriptionType = subscriptionType;
-	}
-
-	public TenantBooking getTenantBooking() {
-		return tenantBooking;
- 
+	} 
+  
 	public String getHostelName() {
 		return hostelName;
  
@@ -432,6 +396,76 @@ public class User implements Serializable {
 		return serialVersionUID;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("User [userId=");
+		builder.append(userId);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", role=");
+		builder.append(role);
+		builder.append(", status=");
+		builder.append(status);
+		builder.append(", contactNumber=");
+		builder.append(contactNumber);
+		builder.append(", fatherName=");
+		builder.append(fatherName);
+		builder.append(", fatherphoneNumber=");
+		builder.append(fatherphoneNumber);
+		builder.append(", motherName=");
+		builder.append(motherName);
+		builder.append(", motherphoneNumber=");
+		builder.append(motherphoneNumber);
+		builder.append(", dob=");
+		builder.append(dob);
+		builder.append(", emergencyContactNumber=");
+		builder.append(emergencyContactNumber);
+		builder.append(", nameOfTheEmployer=");
+		builder.append(nameOfTheEmployer);
+		builder.append(", bloodGroup=");
+		builder.append(bloodGroup);
+		builder.append(", officeAddress=");
+		builder.append(officeAddress);
+		builder.append(", mobileNumber=");
+		builder.append(mobileNumber);
+		builder.append(", emailId=");
+		builder.append(emailId);
+		builder.append(", permanentAddress=");
+		builder.append(permanentAddress);
+		builder.append(", hostelName=");
+		builder.append(hostelName);
+		builder.append(", floor=");
+		builder.append(floor);
+		builder.append(", roomName=");
+		builder.append(roomName);
+		builder.append(", roomType=");
+		builder.append(roomType);
+		builder.append(", date=");
+		builder.append(date);
+		builder.append(", depositAmount=");
+		builder.append(depositAmount);
+		builder.append(", paymentThrough=");
+		builder.append(paymentThrough);
+		builder.append(", tenantBooking=");
+		builder.append(tenantBooking);
+		builder.append(", payment=");
+		builder.append(payment);
+		builder.append(", bed=");
+		builder.append(bed);
+		builder.append(", subscriptions=");
+		builder.append(subscriptions);
+		builder.append(", subscriptionType=");
+		builder.append(subscriptionType);
+		builder.append(", userSubscriptionWrapper=");
+		builder.append(userSubscriptionWrapper);
+		builder.append("]");
+		return builder.toString();
+	}
+
+	
+	
+	
  
 
 }

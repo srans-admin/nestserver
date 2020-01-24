@@ -111,14 +111,7 @@ public class PaymentController {
 		return ResponseEntity.ok().body(room);
 	}
 
-	@GetMapping("payments/users/bycontactNumbers/{contactNumber}")
-	@PreAuthorize("permitAll()")
-//@PreAuthorize("permitAll()")
-	public ResponseEntity<User> getTenantBycontactNumber(@PathVariable(value = "contactNumber") Long contactNumber)
-			throws ResourceNotFoundException {
-		User user = userRepository.findByContactNumber(contactNumber);
-		return ResponseEntity.ok().body(user);
-	}
+ 
 
 	@GetMapping("payments/users/byname/{name}")
 	@PreAuthorize("permitAll()")

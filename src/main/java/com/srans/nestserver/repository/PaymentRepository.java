@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import com.srans.nestserver.model.Payment;
  
-import com.srans.nestserver.model.TenantBooking;
- 
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
@@ -51,15 +49,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 	@Query(value="select count(room_bed_id) from payment where room_bed_id=?1",nativeQuery=true)
 	public Long findRoomBedId(Long bedId);
 	
-	
-	
-	
-	@Query(value="SELECT u FROM User u WHERE u.contactNumber=?1")
-	public User findByContactNumber(Long contactNumber);
-  
-	
-
-	@Query(value="SELECT u FROM User u WHERE u.name=?1") 
-	public User findByName(String name);
+	 
 	
 }

@@ -219,6 +219,7 @@ public class Payment extends AuditModel {
 
 	public void setRoomBedId(Long roomBedId) {
 		this.roomBedId = roomBedId;
+	}
  
 	public Long getDepositAmount() {
 		return depositAmount;
@@ -240,6 +241,52 @@ public class Payment extends AuditModel {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Payment [id=");
+		builder.append(id);
+		builder.append(", userId=");
+		builder.append(userId);
+		builder.append(", bookingid=");
+		builder.append(bookingid);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", ammountType=");
+		builder.append(ammountType);
+		builder.append(", roomName=");
+		builder.append(roomName);
+		builder.append(", roomType=");
+		builder.append(roomType);
+		builder.append(", ammount=");
+		builder.append(ammount);
+		builder.append(", discount=");
+		builder.append(discount);
+		builder.append(", paymentThrough=");
+		builder.append(paymentThrough);
+		builder.append(", transactionId=");
+		builder.append(transactionId);
+		builder.append(", bankName=");
+		builder.append(bankName);
+		builder.append(", date=");
+		builder.append(date);
+		builder.append(", adminId=");
+		builder.append(adminId);
+		builder.append(", depositAmount=");
+		builder.append(depositAmount);
+		builder.append(", discountAmount=");
+		builder.append(discountAmount);
+		builder.append(", roomBedId=");
+		builder.append(roomBedId);
+		builder.append("]");
+		return builder.toString();
+	}
+	
+	
+	
+	
 
  
 

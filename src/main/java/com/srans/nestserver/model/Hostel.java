@@ -22,16 +22,12 @@ public class Hostel implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
+	private Long id; 
 	
 	private Long hostelownerid;
 	
 	@Column
-	private String hostelName;
-	
-	@Column
-	private String hostelownername;
+	private String hostelName; 
 
 	@Column
 	private String hostelAddress;
@@ -56,20 +52,7 @@ public class Hostel implements Serializable {
 	private boolean gym;
 	
 	@Column
-	private long adminId;
-
-	public long getAdminId() {
-		return adminId;
-	}
-
-	public void setAdminId(long adminId) {
-		this.adminId = adminId;
-	}
-
-
-
-	@Column
-	private Long adminId;
+	private long adminId; 
 
 	@Transient
 	private List<Floor> floors;
@@ -80,8 +63,7 @@ public class Hostel implements Serializable {
 	public Hostel() {
 		super();
 		this.hostelName = "";
-		this.hostelAddress = "";
-		this.hostelownername = "";
+		this.hostelAddress = ""; 
 		this.hostelType = "";
 		this.numOfFloors = 0;
 		this.floors = new ArrayList<>();
@@ -127,14 +109,7 @@ public class Hostel implements Serializable {
 	public String getHostelName() {
 		return hostelName;
 	}
-
-	public String getHostelownername() {
-		return hostelownername;
-	}
-
-	public void setHostelownername(String hostelownername) {
-		this.hostelownername = hostelownername;
-	}
+ 
 	
 
 	public Long getHostelownerid() {
@@ -231,6 +206,36 @@ public class Hostel implements Serializable {
 	
 	
 
+	public List<Floor> getFloors() {
+		return floors;
+	}
+
+
+
+	public void setFloors(List<Floor> floors) {
+		this.floors = floors;
+	}
+
+
+
+	public List<SubAdminDetails> getSubAdminDetails() {
+		return subAdminDetails;
+	}
+
+
+
+	public void setSubAdminDetails(List<SubAdminDetails> subAdminDetails) {
+		this.subAdminDetails = subAdminDetails;
+	}
+
+
+
+	public void setAdminId(long adminId) {
+		this.adminId = adminId;
+	}
+
+
+
 	public Long getAdminId() {
 		return adminId;
 	}
@@ -248,7 +253,48 @@ public class Hostel implements Serializable {
 	public void setAdminDetails(List<SubAdminDetails> subAdminDetails) {
 		this.subAdminDetails = subAdminDetails;
 	}
+
+
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Hostel [id=");
+		builder.append(id);
+		builder.append(", hostelownerid=");
+		builder.append(hostelownerid);
+		builder.append(", hostelName=");
+		builder.append(hostelName);
+		builder.append(", hostelAddress=");
+		builder.append(hostelAddress);
+		builder.append(", hostelType=");
+		builder.append(hostelType);
+		builder.append(", numOfFloors=");
+		builder.append(numOfFloors);
+		builder.append(", tv=");
+		builder.append(tv);
+		builder.append(", fridge=");
+		builder.append(fridge);
+		builder.append(", ac=");
+		builder.append(ac);
+		builder.append(", mineralWater=");
+		builder.append(mineralWater);
+		builder.append(", parking=");
+		builder.append(parking);
+		builder.append(", gym=");
+		builder.append(gym);
+		builder.append(", adminId=");
+		builder.append(adminId);
+		builder.append(", floors=");
+		builder.append(floors);
+		builder.append(", subAdminDetails=");
+		builder.append(subAdminDetails);
+		builder.append("]");
+		return builder.toString();
+	}
  
 
+	
+	
 	
 }
