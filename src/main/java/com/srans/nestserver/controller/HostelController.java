@@ -3,6 +3,7 @@ package com.srans.nestserver.controller;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -26,16 +27,23 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
+import com.srans.nestserver.model.SubAdminDetails;
 import com.srans.nestserver.model.Floor;
 import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.Invoice;
 import com.srans.nestserver.model.Room;
+import com.srans.nestserver.model.User;
+import com.srans.nestserver.repository.SubAdminDetailsRepository;
 import com.srans.nestserver.repository.BedRepository;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.RoomRepository;
+import com.srans.nestserver.service.HostelService;
 import com.srans.nestserver.service.NotificationService;
 import com.srans.nestserver.service.StorageService;
+import com.srans.nestserver.service.SubAdminService;
+import com.srans.nestserver.service.UserService;
+import com.srans.nestserver.util.ConsolidatedHostel;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -43,7 +51,7 @@ import com.srans.nestserver.util.NSException;
 @RestController
 public class HostelController {
 	private Logger logger = LoggerFactory.getLogger(HostelController.class);
-	
+
 	@Autowired
 	private NotificationService notificationService;
 
@@ -62,20 +70,37 @@ public class HostelController {
 	@Autowired
 	private StorageService storageService;
 
-	@GetMapping("/hostels")
-	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
-	//@PreAuthorize("permitAll()")
-	public List<Hostel> getAllHostels() {
-		return hostelRepository.findAll();
+	@Autowired
+	private HostelService hostelService;
+
+
+	@Autowired
+	private SubAdminService adminService = new SubAdminService();
+
+	/*
+	 * @GetMapping("/hostels")
+	 * 
+	 * @PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	 * // @PreAuthorize("permitAll()") public List<Hostel> getAllHostels() { return
+	 * hostelRepository.findAll(); }
+	 */
+
+	// Get All Consolidated Hostel Details
+	@GetMapping("/hostels/consolidated-hostel-info")
+	@PreAuthorize("permitAll()")
+
+	public List<ConsolidatedHostel> getAllHostelSubscriptionDetails() {
+
+		return hostelService.getHostelDetails();
 	}
 
 	@GetMapping("/hostels/{id}")
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
-	//@PreAuthorize("permitAll()")
+	// @PreAuthorize("permitAll()")
 	public Hostel getHostel(@PathVariable(value = "id") Long hostelId) throws IOException {
 
 		Hostel responseHostel = hostelRepository.getOne(hostelId);
-		
+
 		floorRepository.findByHostelId(hostelId).forEach(floor -> {
 			responseHostel.getfloors().add(floor);
 			roomRepository.findByFloorId(floor.getId()).forEach(room -> {
@@ -85,7 +110,7 @@ public class HostelController {
 				});
 			});
 		});
-		
+
 		return responseHostel;
 	}
 
@@ -97,15 +122,15 @@ public class HostelController {
 	 * @throws NSException
 	 */
 	@PostMapping("/hostels")
-	//@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	// @PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
 	@PreAuthorize("permitAll()")
 	public Hostel saveHostel(@Valid @RequestBody Hostel hostel) throws NSException {
 
 		logger.info("IN::POST::/hostels::saveHostel::" + hostel);
 
 		Hostel responseHostel = hostelRepository.save(hostel);
-		// SAVE Database stuff here
 
+		// SAVE Database stuff here
 		responseHostel.getfloors().forEach(floor -> {
 			floor.setHostelId(responseHostel.getId());
 			Floor resFloor = floorRepository.save(floor);
@@ -124,10 +149,10 @@ public class HostelController {
 			});
 
 		});
-		
-		//Sending notification to superadmin
+
+		// Sending notification to superadmin
 		notificationService.addHostelNotifictaion(responseHostel);
-				
+
 		logger.info("OUT::POST::/hostels::saveHostel::" + hostel);
 		return responseHostel;
 	}
@@ -137,6 +162,15 @@ public class HostelController {
 	
 	
 	
+
+	// Assign Multiple hostel for multiple admin
+	@PostMapping("/hostels/assign/")
+	@PreAuthorize("permitAll()")
+	public SubAdminDetails assignHostel(@Valid @RequestBody SubAdminDetails subAdminDetails) {
+
+		subAdminDetails = adminService.subAdminProcess(subAdminDetails);
+		return subAdminDetails;
+	}
 
 	@PostMapping("/hostels/{id}/upload/{cat}")
 	@PreAuthorize("permitAll()")
@@ -156,6 +190,23 @@ public class HostelController {
 
 		return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG)
 				.body(new InputStreamResource(storageService.retriveHostelImage(id, cat)));
+
+	}
+
+	//Get Hostel Details For Admin 
+	@GetMapping("/hostels")
+	@PreAuthorize("permitAll()")
+	public List<Hostel> getHostelForAdmin(@RequestParam("id")  Long adminId) {
+		List<Hostel> hostelData = hostelService.getHostelByAdminId(adminId);
+		return (hostelData);
+
+	}
+
+	@GetMapping("/hostels/admin1/{id}")
+	@PreAuthorize("permitAll()")
+	public Optional<Hostel> getHostelForAdmin1(@PathVariable("id") Long adminId) {
+
+		return hostelRepository.findById(adminId);
 
 	}
 

@@ -31,9 +31,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	@Query(value="SELECT u FROM User u WHERE u.role=?1") 
 	public List<User> getUsersByRole(String role);
-	
-	@Query(value="SELECT u FROM User u WHERE u.contactNumber=?1")
-	public User findByContactNumber(Long contactNumber);
+ 
+	// Geting All Consolidated Hostel Details 
+	@Query(value = "select t1.id, t1.hostel_name, t1.Hostel_address,t1.admin_id, t2.name, t2.email_id, t2.contact_number, t2.subscriptions, t3.ammount from hostel t1 inner join srans_user t2\r\n" + 
+			"	on t1.admin_id=t2.user_id inner join payment t3 on t2.user_id=t3.admin_id where t2.role=?1", nativeQuery = true)
+	public List<Object> getConsolidatedHostel(String role);
+ 
 	
 	
 	/*

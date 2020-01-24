@@ -1,6 +1,7 @@
 package com.srans.nestserver.model;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "bed")
-public class Bed extends AuditModel implements Serializable{
+public class Bed extends AuditModel implements Serializable {
 
 	/**
 	 * @author Manish
@@ -39,7 +40,7 @@ public class Bed extends AuditModel implements Serializable{
 	String position;
 
 	@Column
-	String vacatedDate;
+	Date vacatedDate;
 
 	@Column
 	Integer bedNo;
@@ -47,19 +48,17 @@ public class Bed extends AuditModel implements Serializable{
 	public Bed() {
 		super();
 		this.hostelId = -1L;
-		this.floorId= -1L;
-		this.roomId=-1L;
-		this.alloted='N';
-		this.position="L";
-		this.vacatedDate="";
-		this.bedNo=1;
-		
-		
+		this.floorId = -1L;
+		this.roomId = -1L;
+		this.alloted = 'N';
+		this.position = "L";
+		this.vacatedDate = null;
+		this.bedNo = 1;
 
 	}
 
-	public Bed(Long id, Long hostelId, Long floorId, Long roomId, Character alloted, String position,
-			String vacatedDate, Integer bedNo, String roomType) {
+	public Bed(Long id, Long hostelId, Long floorId, Long roomId, Character alloted, String position, Date vacatedDate,
+			Integer bedNo) {
 		super();
 		this.id = id;
 		this.hostelId = hostelId;
@@ -119,45 +118,29 @@ public class Bed extends AuditModel implements Serializable{
 		this.position = position;
 	}
 
-	public String getVacatedDate() {
+	public Date getVacatedDate() {
 		return vacatedDate;
 	}
 
-	public void setVacatedDate(String vacatedDate) {
+	public void setVacatedDate(Date vacatedDate) {
 		this.vacatedDate = vacatedDate;
 	}
 
-	public Integer getRoomNo() {
+	public Integer getBedNo() {
 		return bedNo;
 	}
 
-	public void setRoomNo(Integer bedNo) {
+	public void setBedNo(Integer bedNo) {
 		this.bedNo = bedNo;
 	}
-
-	
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Bed [id=");
-		builder.append(id);
-		builder.append(", hostelId=");
-		builder.append(hostelId);
-		builder.append(", floorId=");
-		builder.append(floorId);
-		builder.append(", roomId=");
-		builder.append(roomId);
-		builder.append(", alloted=");
-		builder.append(alloted);
-		builder.append(", position=");
-		builder.append(position);
-		builder.append(", vacatedDate=");
-		builder.append(vacatedDate);
-		builder.append(", bedNo=");
-		builder.append(bedNo);
-		builder.append(", roomType=");
-		builder.append("]");
+		builder.append("Bed [id=").append(id).append(", hostelId=").append(hostelId).append(", floorId=")
+				.append(floorId).append(", roomId=").append(roomId).append(", alloted=").append(alloted)
+				.append(", position=").append(position).append(", vacatedDate=").append(vacatedDate).append(", bedNo=")
+				.append(bedNo).append("]");
 		return builder.toString();
 	}
 

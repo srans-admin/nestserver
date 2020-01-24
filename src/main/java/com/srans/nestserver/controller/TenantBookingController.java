@@ -29,51 +29,48 @@ public class TenantBookingController {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
-	private TenantBookRepository tenantBookRepository; 
-/*
-	
-	@GetMapping("tenantbooking/hostelName")
-	public List<String> findAll() {
-		return tenantRepository.getAllHostelName();
+	private TenantBookRepository tenantBookRepository;
+	/*
+	 * 
+	 * @GetMapping("tenantbooking/hostelName") public List<String> findAll() {
+	 * return tenantRepository.getAllHostelName();
+	 * 
+	 * }
+	 * 
+	 * @GetMapping("tenantbooking/hostelName/{hostelname}/bed") public
+	 * List<Object[]> getNumOfFloor(@PathVariable(value = "hostelname") String
+	 * hostelname) {
+	 * 
+	 * 
+	 * Long HostelId=tenantRepository.getHostelId(hostelname);
+	 * 
+	 * System.out.println(HostelId);
+	 * 
+	 * return tenantRepository.getBedInfo(HostelId);
+	 * 
+	 * }
+	 */
 
-	}
-
-	@GetMapping("tenantbooking/hostelName/{hostelname}/bed")
-	public List<Object[]> getNumOfFloor(@PathVariable(value = "hostelname") String hostelname) {
-	
-	
-		Long HostelId=tenantRepository.getHostelId(hostelname);
-		
-		System.out.println(HostelId);
-
-		return tenantRepository.getBedInfo(HostelId);
-
-	}*/
-	
 	@PostMapping("/tenantbooking")
 	@PreAuthorize("permitAll()")
 	public User bookTenant(@Valid @RequestBody User user) throws NSException {
-		
+
 		logger.info("IN::POST::/tenantbooking::bookTenant::" + user);
 
-		User responsetenant=userRepository.save(user); 
- 
+		User responsetenant = userRepository.save(user);
+
 		tenantBookRepository.save(user.getTenantBooking());
-		 
+
 		return responsetenant;
-			
-		}
-	
+
+	}
+
 	@GetMapping("/tenantbooking")
 	public List<User> getAllPosts() {
 		return userRepository.findAll();
-		
-		
+
 	}
-	
-	
-   
 
 }

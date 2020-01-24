@@ -64,14 +64,19 @@ public class Payment extends AuditModel {
 	@Column
 	private Long discountAmount;
 
+	@Column
+	private Long roomBedId;
+
 	public Payment() {
 		super();
 
 	}
 
-	public Payment(Long id, Long userId, Long bookingid, String name, String ammountType, String roomName,
-			String roomType, Long ammount, Long discount, String paymentThrough, Long transactionId, String bankName,
-			String date, Long adminId, Long depositAmount, Long discountAmount) {
+ 
+	public Payment(Long id, Long bookingid, String name, String ammountType, String roomName, String roomType,
+			Long ammount, Long discount, String paymentThrough, Long transactionId, String bankName, String date,
+			Long adminId, Long roomBedId) {
+ 
 		super();
 		this.id = id;
 		this.userId = userId;
@@ -87,8 +92,12 @@ public class Payment extends AuditModel {
 		this.bankName = bankName;
 		this.date = date;
 		this.adminId = adminId;
+ 
+		this.roomBedId = roomBedId;
+ 
 		this.depositAmount = depositAmount;
 		this.discountAmount = discountAmount;
+ 
 	}
 
 	public Long getId() {
@@ -203,6 +212,14 @@ public class Payment extends AuditModel {
 		this.adminId = adminId;
 	}
 
+ 
+	public Long getRoomBedId() {
+		return roomBedId;
+	}
+
+	public void setRoomBedId(Long roomBedId) {
+		this.roomBedId = roomBedId;
+ 
 	public Long getDepositAmount() {
 		return depositAmount;
 	}
@@ -217,24 +234,13 @@ public class Payment extends AuditModel {
 
 	public void setDiscountAmount(Long discountAmount) {
 		this.discountAmount = discountAmount;
+ 
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Payment [id=").append(id).append(", userId=").append(userId).append(", bookingid=")
-				.append(bookingid).append(", name=").append(name).append(", ammountType=").append(ammountType)
-				.append(", roomName=").append(roomName).append(", roomType=").append(roomType).append(", ammount=")
-				.append(ammount).append(", discount=").append(discount).append(", paymentThrough=")
-				.append(paymentThrough).append(", transactionId=").append(transactionId).append(", bankName=")
-				.append(bankName).append(", date=").append(date).append(", adminId=").append(adminId)
-				.append(", depositAmount=").append(depositAmount).append(", discountAmount=").append(discountAmount)
-				.append("]");
-		return builder.toString();
-	}
+ 
 
 }

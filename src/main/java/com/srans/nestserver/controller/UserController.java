@@ -1,7 +1,6 @@
 package com.srans.nestserver.controller;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,17 +30,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
-import com.srans.nestserver.model.Bed;
-import com.srans.nestserver.model.User;
+import com.srans.nestserver.model.Payment;
 import com.srans.nestserver.model.TenantBooking;
-import com.srans.nestserver.repository.BedRepository;
-import com.srans.nestserver.repository.PaymentRepository;
+import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.UserRepository;
+import com.srans.nestserver.service.BedAvailabilityService;
 import com.srans.nestserver.service.StorageService;
-import com.srans.nestserver.service.TenantService;
-import com.srans.nestserver.service.TenantToUaaService;
 import com.srans.nestserver.service.UserService;
+import com.srans.nestserver.util.AvailableBedsUtil;
 import com.srans.nestserver.util.NSConstants;
 import com.srans.nestserver.util.NSException;
 
@@ -57,48 +54,55 @@ public class UserController {
 
 	@Autowired
 	private StorageService storageService;
- 
+
 	@Autowired
 	private UserService userService = new UserService();
 
-	
+	@Autowired
+	private TenantBookRepository tenantBookingRepo;
+
+	@Autowired
+	private BedAvailabilityService bedAvailabilityService = new BedAvailabilityService();
+
 	@PostMapping("/users")
 	@PreAuthorize("permitAll()")
 	public User saveUser(@Valid @RequestBody User user) throws NSException {
 
 		logger.info("IN::POST::/users::saveUser::" + user);
-         
+
 		user = userService.processUser(user);
 
 		logger.info("OUT::POST::/users::saveUser::" + user);
 		return user;
 	}
-	 
-	
-	
 
 	@GetMapping("/users")
 	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
-	//@PreAuthorize("permitAll()")
+	// @PreAuthorize("permitAll()")
 	public List<User> getAllTenants() {
 		return userRepository.findAll();
 	}
-	
+
 	@GetMapping("/users/{id}")
 	@PreAuthorize("permitAll()")
-	public ResponseEntity<User> getTenantById(@PathVariable(value = "id") Long TenantId)
+	public User getTenantById(@PathVariable(value = "id") Long TenantId)
 			throws ResourceNotFoundException {
-		User user = userRepository.findById(TenantId)
-				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + TenantId));
-		return ResponseEntity.ok().body(user);
+		User user = userRepository.getOne(TenantId);
+		
+		tenantBookingRepo.findByTenantId(TenantId).forEach(tenantbooking->{
+			user.setTenantBooking(tenantbooking);
+		});
+		
+				
+		return user;
 	}
+
 	
 	@GetMapping("/users/byname/{name}")
 	@PreAuthorize("permitAll()")
-	//@PreAuthorize("permitAll()")
 	public ResponseEntity<User> getTenantByName(@PathVariable(value = "name") String name)
 			throws ResourceNotFoundException {
-		User user = userRepository.findByName(name); 
+		User user = userRepository.findByName(name);
 		return ResponseEntity.ok().body(user);
 	}
 	
@@ -145,10 +149,36 @@ public class UserController {
 
 	}
 
+	// API for available beds to guest
+	@GetMapping("/users/guest-reserve-bed/{hostelId}")
+	@PreAuthorize("permitAll()")
+	public List<AvailableBedsUtil> getAvailableBed(@PathVariable("hostelId") Long hostelId) throws NSException {
+
+		return bedAvailabilityService.getAllAvailableBed(hostelId);
+
+	}
+
+	// API for book the bed by guest
+
+	@PostMapping("/users/bed-booking")
+	@PreAuthorize("permitAll()")
+	public TenantBooking postBedBookingDetails(@Valid @RequestBody TenantBooking tenantBooking) throws NSException {
+
+		return bedAvailabilityService.saveBookedBedDetails(tenantBooking);
+	}
+
+	// API for save amount who's payment by guest for booked bed
+	@PostMapping("/users/guest-payment")
+	@PreAuthorize("permitAll()")
+	public Payment postSaveAmountDetails(@Valid @RequestBody Payment payment) throws NSException {
+
+		return bedAvailabilityService.saveAmountDetails(payment);
+	}
+
 	/*
-	 * @PostMapping("/users") public Tenant createUser(@RequestBody Tenant tenant)
-	 * { System.out.println("User : " + tenant); return
-	 * tenantRepository.save(tenant); }
+	 * @PostMapping("/users") public Tenant createUser(@RequestBody Tenant tenant) {
+	 * System.out.println("User : " + tenant); return tenantRepository.save(tenant);
+	 * }
 	 */
 
 	@PutMapping("/users/{Id}")
@@ -163,7 +193,7 @@ public class UserController {
 		user.setContactNumber(user.getContactNumber());
 		user.setDob(user.getDob());
 		user.setEmailId(user.getEmailId());
-      user.setPermanentAddress(user.getPermanentAddress());
+		user.setPermanentAddress(user.getPermanentAddress());
 		final User updatedTenant = userRepository.save(user);
 		return ResponseEntity.ok(updatedTenant);
 	}
