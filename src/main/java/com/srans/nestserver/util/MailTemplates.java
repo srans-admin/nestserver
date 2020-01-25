@@ -102,7 +102,7 @@ public class MailTemplates {
 	public static final String ADMIN_SUBSCRIPTION_TEMPLATE = "<html><head><title></title>" + "<body>" + "<div>"
 			+ "Dear ##NAME##," + "</div>"
 			+ "  <div> <p style='font-size: 18px; text-align: center; '>Your subscription request has been submitted.<br> "
-			+ " You can login using this username- ##USER_NAME##  and temprory password- ##PASSWORD## ." + "</p>"
+			+ " You can login using this username- ##USER_NAME##  and temprory password-  ." + "</p>"
 			+ "</div>" + "</body>" + "</head></html>";
 
 	public static final String ADMIN_VACATED_NOTIFICATION_TEMPLATE = "<html><head><title></title>" + "<body>" + "<div>"

@@ -1,6 +1,7 @@
 package com.srans.nestserver.model;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,8 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Entity
 @Table(name = "sransUser")
@@ -28,7 +27,6 @@ public class User implements Serializable {
 	@Column(name = "role")
 	private String role;
 
- 
 	@Column(name = "status")
 	private String status;
 
@@ -48,7 +46,7 @@ public class User implements Serializable {
 	private long motherphoneNumber;
 
 	@Column(name = "dob")
-	private String dob;
+	private Date dob;
 
 	@Column(name = "emergencyContactNumber")
 	private long emergencyContactNumber;
@@ -69,28 +67,28 @@ public class User implements Serializable {
 	private String emailId;
 
 	@Column(name = "permanentAddress")
-	private String permanentAddress; 
-	
+	private String permanentAddress;
+
 	@Column(name = "hostelName")
 	private String hostelName;
- 
+
 	@Column(name = "floor")
 	private long floor;
- 
+
 	@Column(name = "roomName")
 	private String roomName;
- 
+
 	@Column(name = "roomType")
 	private String roomType;
- 
-	@Column(name = "date")
-	private long date;
- 
+
+//	@Column(name = "date")
+//	private long date;
+
 	@Column(name = "depositAmount")
-	private long depositAmount;
- 
+	private Long depositAmount;
+
 	@Column(name = "paymentThrough")
-	private long paymentThrough; 
+	private long paymentThrough;
 
 	@Transient
 	private TenantBooking tenantBooking;
@@ -100,27 +98,26 @@ public class User implements Serializable {
 
 	@Transient
 	private Bed bed;
-  
+
 	@Column(name = "subscriptions")
 	private int subscriptions;
- 
+
 	@Column(name = "subscriptionType")
 	private String subscriptionType;
 
- 
 	@Transient
 	private UserSubscription userSubscriptionWrapper;
 
 	public User() {
- 
-	
+
 	}
 
 	public User(Long userId, String name, String role, String status, Long contactNumber, String fatherName,
-			Long fatherphoneNumber, String motherName, long motherphoneNumber, String dob, long emergencyContactNumber,
+			Long fatherphoneNumber, String motherName, long motherphoneNumber, Date dob, long emergencyContactNumber,
 			String nameOfTheEmployer, String bloodGroup, String officeAddress, Long mobileNumber, String emailId,
-			String permanentAddress, int subscriptions, String subscriptionType, TenantBooking tenantBooking,
-			Payment payment, Bed bed, UserSubscription userSubscriptionWrapper) {
+			String permanentAddress, String hostelName, long floor, String roomName, String roomType,
+			Long depositAmount, long paymentThrough, TenantBooking tenantBooking, Payment payment, Bed bed,
+			int subscriptions, String subscriptionType, UserSubscription userSubscriptionWrapper) {
 		super();
 		this.userId = userId;
 		this.name = name;
@@ -139,13 +136,18 @@ public class User implements Serializable {
 		this.mobileNumber = mobileNumber;
 		this.emailId = emailId;
 		this.permanentAddress = permanentAddress;
-		this.subscriptions = subscriptions;
-		this.subscriptionType = subscriptionType;
+		this.hostelName = hostelName;
+		this.floor = floor;
+		this.roomName = roomName;
+		this.roomType = roomType;
+		this.depositAmount = depositAmount;
+		this.paymentThrough = paymentThrough;
 		this.tenantBooking = tenantBooking;
 		this.payment = payment;
 		this.bed = bed;
+		this.subscriptions = subscriptions;
+		this.subscriptionType = subscriptionType;
 		this.userSubscriptionWrapper = userSubscriptionWrapper;
- 
 	}
 
 	public Long getUserId() {
@@ -220,14 +222,6 @@ public class User implements Serializable {
 		this.motherphoneNumber = motherphoneNumber;
 	}
 
-	public String getDob() {
-		return dob;
-	}
-
-	public void setDob(String dob) {
-		this.dob = dob;
-	}
-
 	public long getEmergencyContactNumber() {
 		return emergencyContactNumber;
 	}
@@ -282,11 +276,11 @@ public class User implements Serializable {
 
 	public void setPermanentAddress(String permanentAddress) {
 		this.permanentAddress = permanentAddress;
-	} 
-  
+	}
+
 	public String getHostelName() {
 		return hostelName;
- 
+
 	}
 
 	public void setHostelName(String hostelName) {
@@ -305,10 +299,9 @@ public class User implements Serializable {
 		return roomName;
 	}
 
- 
 	public void setRoomName(String roomName) {
 		this.roomName = roomName;
- 
+
 	}
 
 	public String getRoomType() {
@@ -318,22 +311,8 @@ public class User implements Serializable {
 	public void setRoomType(String roomType) {
 		this.roomType = roomType;
 	}
- 
-	public long getDate() {
-		return date;
-	}
 
-	public void setDate(long date) {
-		this.date = date;
-	}
-
-	public long getDepositAmount() {
-		return depositAmount;
-	}
-
-	public void setDepositAmount(long depositAmount) {
-		this.depositAmount = depositAmount;
-	}
+	
 
 	public long getPaymentThrough() {
 		return paymentThrough;
@@ -395,6 +374,21 @@ public class User implements Serializable {
 		return serialVersionUID;
 	}
 
+	public Date getDob() {
+		return dob;
+	}
+
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+	public Long getDepositAmount() {
+		return depositAmount;
+	}
+
+	public void setDepositAmount(Long depositAmount) {
+		this.depositAmount = depositAmount;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -440,8 +434,6 @@ public class User implements Serializable {
 		builder.append(roomName);
 		builder.append(", roomType=");
 		builder.append(roomType);
-		builder.append(", date=");
-		builder.append(date);
 		builder.append(", depositAmount=");
 		builder.append(depositAmount);
 		builder.append(", paymentThrough=");
@@ -462,10 +454,6 @@ public class User implements Serializable {
 		return builder.toString();
 	}
 
-	
-	
-	
- 
+
 
 }
- 

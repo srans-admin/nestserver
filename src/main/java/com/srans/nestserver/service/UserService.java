@@ -128,25 +128,25 @@ public class UserService {
 				responseTenant.setTenantBooking(tenantBooking);
 				responseTenant.setBed(bedRepository.saveAndFlush(bed));
  
-				// STEP-4: Save Payment Information
+				// STEP-3: Save Payment Information
  
  
 				responseTenant.setPayment(paymentRepository.save(user.getPayment()));
 
 				// STEP-4 : Now drop an email to tenant
 				if (responseTenant.getEmailId() != null && !responseTenant.getEmailId().isEmpty()) {
-					tenantService.triggerAlertEmail(responseTenant);
+					//tenantService.triggerAlertEmail(responseTenant);
 
-					// STEP-2 : Prepare one Notification to SuperAdmin(s)
+					// STEP-5 : Prepare one Notification to SuperAdmin(s)
 					notificationService.addTenantNotifictaion(responseTenant);
 				}
 
-				// STEP-5 : Now drop an SMS to tenant
+				// STEP-6 : Now drop an SMS to tenant
 				if (!("" + responseTenant.getContactNumber()).isEmpty()) {
 					tenantService.triggerSMS(responseTenant);
 				}
 
-				// STEP-6 : Post this info to UAA 
+				// STEP-7 : Post this info to UAA 
 				tenantToUaaService.postUserToUaa(responseTenant);
 
 			} else {
