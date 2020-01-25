@@ -39,6 +39,7 @@ import com.srans.nestserver.service.BedAvailabilityService;
 import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.service.UserService;
 import com.srans.nestserver.util.AvailableBedsUtil;
+import com.srans.nestserver.util.NSConstants;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -78,8 +79,19 @@ public class UserController {
 	@GetMapping("/users")
 	//@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
     @PreAuthorize("permitAll()")
-	public List<User> getAllTenants() {
-		return userRepository.findAll();
+	public List<User> getAllTenants(@RequestParam("adminId") Long adminId, @RequestParam("type") String type) {
+	 
+		List<User> users = null;
+		
+		if(type != null && type.equalsIgnoreCase(NSConstants.ROLE_TENANT)){
+			users = userRepository.getUsersForAdmin(adminId, type);
+			
+		} else if(type != null && type.equalsIgnoreCase(NSConstants.ROLE_GUEST)){
+			users = userRepository.getUsersByRole(NSConstants.ROLE_GUEST);
+			
+		}
+		
+		return users;
 	}
 
 	@GetMapping("/users/{id}")
