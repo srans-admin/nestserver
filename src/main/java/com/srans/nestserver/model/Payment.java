@@ -31,7 +31,7 @@ public class Payment extends AuditModel {
 	private String name;
 
 	@Column
-	private String ammountType;
+	private String amountType;
 
 	@Column
 	private String roomName;
@@ -40,7 +40,7 @@ public class Payment extends AuditModel {
 	private String roomType;
 
 	@Column
-	private Long ammount;
+	private Long roomRent;
 
 	@Column
 	private Long discount;
@@ -72,32 +72,27 @@ public class Payment extends AuditModel {
 
 	}
 
- 
-	public Payment(Long id, Long bookingid, String name, String ammountType, String roomName, String roomType,
-			Long ammount, Long discount, String paymentThrough, Long transactionId, String bankName, String date,
-			Long adminId, Long roomBedId) {
- 
+	public Payment(Long id, Long userId, Long bookingid, String name, String amountType, String roomName,
+			String roomType, Long roomRent, Long discount, String paymentThrough, Long transactionId, String bankName,
+			String date, Long adminId, Long depositAmount, Long discountAmount, Long roomBedId) {
 		super();
 		this.id = id;
 		this.userId = userId;
 		this.bookingid = bookingid;
 		this.name = name;
-		this.ammountType = ammountType;
+		this.amountType = amountType;
 		this.roomName = roomName;
 		this.roomType = roomType;
-		this.ammount = ammount;
+		this.roomRent = roomRent;
 		this.discount = discount;
 		this.paymentThrough = paymentThrough;
 		this.transactionId = transactionId;
 		this.bankName = bankName;
 		this.date = date;
 		this.adminId = adminId;
- 
-		this.roomBedId = roomBedId;
- 
 		this.depositAmount = depositAmount;
 		this.discountAmount = discountAmount;
- 
+		this.roomBedId = roomBedId;
 	}
 
 	public Long getId() {
@@ -132,12 +127,12 @@ public class Payment extends AuditModel {
 		this.name = name;
 	}
 
-	public String getAmmountType() {
-		return ammountType;
+	public String getAmountType() {
+		return amountType;
 	}
 
-	public void setAmmountType(String ammountType) {
-		this.ammountType = ammountType;
+	public void setAmountType(String amountType) {
+		this.amountType = amountType;
 	}
 
 	public String getRoomName() {
@@ -156,12 +151,12 @@ public class Payment extends AuditModel {
 		this.roomType = roomType;
 	}
 
-	public Long getAmmount() {
-		return ammount;
+	public Long getRoomRent() {
+		return roomRent;
 	}
 
-	public void setAmmount(Long ammount) {
-		this.ammount = ammount;
+	public void setRoomRent(Long roomRent) {
+		this.roomRent = roomRent;
 	}
 
 	public Long getDiscount() {
@@ -212,15 +207,6 @@ public class Payment extends AuditModel {
 		this.adminId = adminId;
 	}
 
- 
-	public Long getRoomBedId() {
-		return roomBedId;
-	}
-
-	public void setRoomBedId(Long roomBedId) {
-		this.roomBedId = roomBedId;
-	}
- 
 	public Long getDepositAmount() {
 		return depositAmount;
 	}
@@ -235,13 +221,19 @@ public class Payment extends AuditModel {
 
 	public void setDiscountAmount(Long discountAmount) {
 		this.discountAmount = discountAmount;
- 
+	}
+
+	public Long getRoomBedId() {
+		return roomBedId;
+	}
+
+	public void setRoomBedId(Long roomBedId) {
+		this.roomBedId = roomBedId;
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-
 
 	@Override
 	public String toString() {
@@ -254,14 +246,14 @@ public class Payment extends AuditModel {
 		builder.append(bookingid);
 		builder.append(", name=");
 		builder.append(name);
-		builder.append(", ammountType=");
-		builder.append(ammountType);
+		builder.append(", amountType=");
+		builder.append(amountType);
 		builder.append(", roomName=");
 		builder.append(roomName);
 		builder.append(", roomType=");
 		builder.append(roomType);
-		builder.append(", ammount=");
-		builder.append(ammount);
+		builder.append(", roomRent=");
+		builder.append(roomRent);
 		builder.append(", discount=");
 		builder.append(discount);
 		builder.append(", paymentThrough=");
@@ -283,11 +275,6 @@ public class Payment extends AuditModel {
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
-	
-	
 
  
-
 }

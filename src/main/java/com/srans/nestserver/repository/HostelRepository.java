@@ -15,7 +15,6 @@ import com.srans.nestserver.model.Hostel;
 @Repository
 public interface HostelRepository extends JpaRepository<Hostel, Long> {
 	
-	
 
 	@Autowired 
 	public FloorRepository floorRepository = null ; 
