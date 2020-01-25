@@ -73,7 +73,8 @@ public class TenantService {
 		Map<String, Object> reqParamtersMap = new HashMap<>();
 
 		reqParamtersMap.put("name", user.getName());
-		reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());
+		//reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());
+		
 
 		String output = this.templateEngine.process(templateFileName,
 				new Context(Locale.getDefault(), reqParamtersMap));
@@ -99,9 +100,10 @@ public class TenantService {
 			ccMail = null;
 			bccMail = null;
 			System.out.println(responseTenant.getRole());
-			// Long checkId = 0L;
+			 Long checkId = vacationRepo.checkTenantId(responseTenant.getUserId());
+			 System.out.println(checkId);
 
-			if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)) {
+			if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)&& checkId==0) {
 
 				/*
 				 * Hostel hostel =
@@ -121,6 +123,13 @@ public class TenantService {
 				message = this.getTemplate("guest_confirmation", responseTenant);
 
 			}
+			
+			else if(responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)&& checkId!=0) {
+				//message=MailTemplates.ADMIN_VACATED_NOTIFICATION_TEMPLATE.replaceAll("##NAME##", responseTenant.getName());
+				message = this.getTemplate("vacation_confirmation", responseTenant);
+			}
+			
+			
 
 			else if (responseTenant.getRole().endsWith(NSConstants.ROLE_ADMIN)) {
 				message = MailTemplates.ADMIN_SUBSCRIPTION_TEMPLATE.replaceAll("##USER_NAME##", responseTenant.getName())
