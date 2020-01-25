@@ -27,13 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
-import com.srans.nestserver.model.SubAdminDetails;
 import com.srans.nestserver.model.Floor;
 import com.srans.nestserver.model.Hostel;
-import com.srans.nestserver.model.Invoice;
 import com.srans.nestserver.model.Room;
-import com.srans.nestserver.model.User;
-import com.srans.nestserver.repository.SubAdminDetailsRepository;
+import com.srans.nestserver.model.SubAdminDetails;
 import com.srans.nestserver.repository.BedRepository;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
@@ -42,7 +39,6 @@ import com.srans.nestserver.service.HostelService;
 import com.srans.nestserver.service.NotificationService;
 import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.service.SubAdminService;
-import com.srans.nestserver.service.UserService;
 import com.srans.nestserver.util.ConsolidatedHostel;
 import com.srans.nestserver.util.NSException;
 
@@ -196,8 +192,8 @@ public class HostelController {
 	//Get Hostel Details For Admin 
 	@GetMapping("/hostels")
 	@PreAuthorize("permitAll()")
-	public List<Hostel> getHostelForAdmin(@RequestParam("id")  Long adminId) {
-		List<Hostel> hostelData = hostelService.getHostelByAdminId(adminId);
+	public List<Hostel> getHostelsBasedOnRole(@RequestParam("id")  Long id,@RequestParam("role") String role ) {
+		List<Hostel> hostelData = hostelService.getHostelsBasedOnRole(id, role);
 		return (hostelData);
 
 	}
