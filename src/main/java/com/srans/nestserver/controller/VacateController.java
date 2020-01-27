@@ -53,7 +53,8 @@ public class VacateController {
 	@GetMapping("users/vacate/{id}")
 	@PreAuthorize("permitAll()")
 	public Vacation displayVacationDetails(@PathVariable(value = "id") Long tenantId) throws NSException {
-
+		logger.info("IN::displayVacationDetails::" + tenantId);
+		logger.info("OUT::displayVacationDetails::" + tenantId);
 		return vacateService.getVacationDetails(tenantId);
 
 	}
@@ -61,10 +62,9 @@ public class VacateController {
 	@GetMapping("users/vacate/approved/{id}")
 	@PreAuthorize("permitAll()")
 	public String vacationApproved(@PathVariable(value="id") Long tenantId)throws NSException{
+		logger.info("IN::vacationApproved::" + tenantId);
+		logger.info("OUT::vacationApproved::" + tenantId);
 		return vacateService.approveVacation(tenantId);
-		
-		
-		
 		
 	}
 

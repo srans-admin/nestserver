@@ -1,5 +1,11 @@
 package com.srans.nestserver.controller;
 
+
+
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +46,12 @@ import com.srans.nestserver.util.NSConstants;
 @RestController
 @RequestMapping("/api/v1")
 public class PaymentController {
+
 	
 	private Logger logger = LoggerFactory.getLogger(PaymentController.class);
 	
+
+
 	@Autowired
 	private PaymentRepository paymentRepository;
  
@@ -66,6 +75,62 @@ public class PaymentController {
 		}
 		return payments; 
 	} 
+
+	
+
+	@GetMapping("payments/history/{id}")
+	@PreAuthorize("permitAll()")
+	// @PreAuthorize("permitAll()")
+	public List<HistoryUtil> getPaymentHistoryDetail(@PathVariable(value = "id") Long userId)
+			throws ResourceNotFoundException {
+		logger.info("IN::getPaymentHistoryDetail::" + userId);
+
+		List<Object> historyInfo = paymentRepository.getDataForpaymentHistory(userId);
+		List<HistoryUtil> getPaymentHistory = new ArrayList<>();
+
+		for (Iterator<Object> iterator = historyInfo.iterator(); iterator.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			HistoryUtil historyUtil = new HistoryUtil();
+		
+			for (int i = 0; i < object.length; i++) {
+				switch (i) {
+				case 0:
+					historyUtil.setRoomType((String) object[i]);
+					break;
+				case 1:
+					historyUtil.setAmount(((BigInteger)object[i]).longValue());
+					break;
+				case 2:
+					historyUtil.setCreatedAt((Date) object[i]);
+					break;
+				
+				default:
+					break;
+				}
+			}
+			getPaymentHistory.add(historyUtil);
+		}
+		logger.info("OUT::getPaymentHistoryDetail::" + userId);
+
+		return (getPaymentHistory);
+
+	}
+
+	@GetMapping("payment/hostels/floor/{id}/room/{room_id}")
+	public ResponseEntity<Room> getFloorById(@PathVariable(value = "id") Long floor_id,
+
+			@PathVariable(value = "room_id") Long room_id) {
+		if (!floorRepository.existsById(floor_id)) {
+			throw new ResourceNotFoundException("FloorId " + floor_id + " not found");
+		}
+		logger.info("IN::getFloorById::" + floor_id);
+
+		Room room = roomRepository.findById(room_id).orElseThrow(() -> new ResourceNotFoundException(
+				"Floor not found for this Floorid :: " + floor_id + "Floor not found for this Floor id::" + room_id));
+		logger.info("IN::getFloorById::" + room_id);
+		return ResponseEntity.ok().body(room);
+	}
+
  
 	@PostMapping("/payments")
 	@PreAuthorize("permitAll()")
@@ -98,18 +163,17 @@ public class PaymentController {
 		return ResponseEntity.ok().body(payment);
 	}
 
-	
-	
+
 
 	/*
 	 * @PutMapping("/payment/{id}") public ResponseEntity<Payment>
 	 * updatePayment(@PathVariable(value = "id") Long payment_Id,
-	 *
+
 	 * @Valid @RequestBody Payment paymentDetails) throws ResourceNotFoundException
 	 * { Payment payment = paymentRepository.findById(payment_Id) .orElseThrow(() ->
 	 * new ResourceNotFoundException("Payment not found for this id :: " +
 	 * payment_Id));
-	 *
+
 	 * payment.setPaymentThrough(paymentDetails.getPaymentThrough());
 	 * payment.setTransactionId(paymentDetails.getTransactionId());
 	 * payment.setBankName(paymentDetails.getBankName());
@@ -124,6 +188,7 @@ public class PaymentController {
 	public Map<String, Boolean> deletepayment(@PathVariable(value = "id") Long paymentId)
 			throws ResourceNotFoundException {
 		logger.info("IN::POST::/payment::deletepayment::" + paymentId);
+
 
 		Payment payment = paymentRepository.findById(paymentId)
 				.orElseThrow(() -> new ResourceNotFoundException("Payment not found for this id :: " + paymentId));

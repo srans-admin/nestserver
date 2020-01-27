@@ -3,6 +3,8 @@ package com.srans.nestserver.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +17,13 @@ import com.srans.nestserver.model.Contact;
 @RequestMapping("api/v1")
 @RestController
 public class ContactsController {
+	private Logger logger = LoggerFactory.getLogger(ContactsController.class);
 	
 	
 	@GetMapping("/contacts")
 	@PreAuthorize("permitAll()")
 	public List<Contact> getAll() {
+		logger.info("get all important contacts");
 		
 		//TODO Need to implement these..
 		List<Contact> contacts = new ArrayList<>();
