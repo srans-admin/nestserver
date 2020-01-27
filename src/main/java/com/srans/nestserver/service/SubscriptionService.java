@@ -28,6 +28,7 @@ public class SubscriptionService {
 
 		try {
 			responsePayment = paymentRepository.save(payment);
+
 			if (responsePayment.getAmountType().equalsIgnoreCase(NSConstants.PAYMENT_TYPE_SUBSCRIPTION)) {
 				
 				User needTobeUpdatedUser = new User();
@@ -36,9 +37,9 @@ public class SubscriptionService {
 				
 				userRepository.save(needTobeUpdatedUser); 
 				 
-			}else {
-				logger.warn("Unable to get any possible getAmmountType for the subscription " );
-			}
+			//}else {
+			//	logger.warn("Unable to get any possible getAmmountType for the subscription " );
+			//}
 
 		} catch (Exception e) {
 			e.printStackTrace();

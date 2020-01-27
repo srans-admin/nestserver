@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.model.User;
@@ -60,8 +61,13 @@ public class TenantBookingController {
 		logger.info("IN::POST::/tenantbooking::bookTenant::" + user);
 
 		User responsetenant = userRepository.save(user);
+		
+		if(responsetenant.getUserId() != -1) {
+			//user.getTenantBooking().set
+			tenantBookRepository.save(user.getTenantBooking());
+		}
 
-		tenantBookRepository.save(user.getTenantBooking());
+	
 
 		return responsetenant;
 
@@ -73,6 +79,7 @@ public class TenantBookingController {
 
 		return userRepository.findAll();
 
-	}
+	} 
+	 
 
 }

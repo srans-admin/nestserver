@@ -1,11 +1,12 @@
 package com.srans.nestserver.controller;
 
+
+
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +24,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 //import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,33 +40,42 @@ import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.repository.UserRepository;
 import com.srans.nestserver.util.HistoryUtil;
+import com.srans.nestserver.util.NSConstants;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1")
 public class PaymentController {
-Logger logger = LoggerFactory.getLogger(RolesController.class);
+
+	
+	private Logger logger = LoggerFactory.getLogger(PaymentController.class);
+	
+
+
 	@Autowired
 	private PaymentRepository paymentRepository;
-
+ 
 	@Autowired
-	private RoomRepository roomRepository;
-
-	@Autowired
-	private HostelRepository hostelRepository;
-
-	@Autowired
-	private FloorRepository floorRepository;
+	private HostelRepository hostelRepository; 
 
 	@Autowired
 	private UserRepository userRepository;
+ 
+	@GetMapping("/payments") 
+	@PreAuthorize("permitAll()") 
+	public List<Payment> getPaymentHistory(@RequestParam(value = "id") Long userId, @RequestParam(value = "role") String role) throws ResourceNotFoundException {
+		
+		List<Payment> payments = null;
+		logger.info("IN::GET::/payments::getPaymentHistory::" + userId+"::"+role);
+		if(role != null && role.equalsIgnoreCase(NSConstants.ROLE_TENANT)) {
+			payments = paymentRepository.getPaymentHistory(userId);
+		}else {
+			payments = paymentRepository.getAllUserPaymentsForAdmin(userId);
+			
+		}
+		return payments; 
+	} 
 
-	@GetMapping("/payment")
-	public List<Payment> getAllPayment() {
-		logger.info("get all payments" );
-
-		return paymentRepository.findAll();
-	}
 	
 
 	@GetMapping("payments/history/{id}")
@@ -122,10 +132,17 @@ Logger logger = LoggerFactory.getLogger(RolesController.class);
 	}
 
  
-
+	@PostMapping("/payments")
+	@PreAuthorize("permitAll()")
+	public Payment createPayment(@Valid @RequestBody Payment payment) {
+		logger.info("IN::POST::/payments::savePayment::" + payment);
+		logger.info("OUT::POST::/payments::savePayment::" + payment);
+		return paymentRepository.save(payment);
+	}
+	
 	@GetMapping("payments/users/byname/{name}")
 	@PreAuthorize("permitAll()")
-//@PreAuthorize("permitAll()")
+    //@PreAuthorize("permitAll()")
 	public ResponseEntity<User> getTenantByName(@PathVariable(value = "name") String name)
 			throws ResourceNotFoundException {
 		logger.info("IN::getTenantByName::" + name);
@@ -133,26 +150,7 @@ Logger logger = LoggerFactory.getLogger(RolesController.class);
 		logger.info("OUT::getTenantByName::" + name);
 		return ResponseEntity.ok().body(user);
 	}
-
-	/*
-	 * @GetMapping("/payment/roomName/{floor_id}") public Room
-	 * getroomNameByfloor_Id(@PathVariable(value = "id") Long id) { return
-	 * roomRepository.findById(id).orElse(null); }
-	 * 
-	 * 
-	 * 
-	 * @GetMapping("/payment/roomtype/room/{room_id}") public Payment
-	 * getAllroomTypeByPaymentId(@PathVariable(value = "id") Long id) { return
-	 * paymentRepository.findById(id).orElse(null); }
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @GetMapping("/payment/roomRent/room/{room_id}") public Payment
-	 * getroomRentByPaymentId(@PathVariable(value = "id") Long id) { return
-	 * paymentRepository.findById(id).orElse(null); }
-	 * 
-	 */
+ 
 
 	@GetMapping("/payment/{id}")
 	public ResponseEntity<Payment> getPaymentById(@PathVariable(value = "id") Long paymentId)
@@ -165,23 +163,17 @@ Logger logger = LoggerFactory.getLogger(RolesController.class);
 		return ResponseEntity.ok().body(payment);
 	}
 
-	@PreAuthorize("permitAll()")
-	@PostMapping("/payment")
-	public Payment createPayment(@Valid @RequestBody Payment payment) {
-		  logger.info("IN::POST::/payment::savePayment::" + payment);
-		  logger.info("OUT::POST::/payment::savePayment::" + payment);
-		return paymentRepository.save(payment);
-	}
+
 
 	/*
 	 * @PutMapping("/payment/{id}") public ResponseEntity<Payment>
 	 * updatePayment(@PathVariable(value = "id") Long payment_Id,
-	 * 
+
 	 * @Valid @RequestBody Payment paymentDetails) throws ResourceNotFoundException
 	 * { Payment payment = paymentRepository.findById(payment_Id) .orElseThrow(() ->
 	 * new ResourceNotFoundException("Payment not found for this id :: " +
 	 * payment_Id));
-	 * 
+
 	 * payment.setPaymentThrough(paymentDetails.getPaymentThrough());
 	 * payment.setTransactionId(paymentDetails.getTransactionId());
 	 * payment.setBankName(paymentDetails.getBankName());
@@ -195,7 +187,8 @@ Logger logger = LoggerFactory.getLogger(RolesController.class);
 	@DeleteMapping("/payment/{id}")
 	public Map<String, Boolean> deletepayment(@PathVariable(value = "id") Long paymentId)
 			throws ResourceNotFoundException {
-		  logger.info("IN::POST::/payment::deletepayment::" + paymentId);
+		logger.info("IN::POST::/payment::deletepayment::" + paymentId);
+
 
 		Payment payment = paymentRepository.findById(paymentId)
 				.orElseThrow(() -> new ResourceNotFoundException("Payment not found for this id :: " + paymentId));
@@ -210,7 +203,7 @@ Logger logger = LoggerFactory.getLogger(RolesController.class);
 	@GetMapping("payment/tenant/{Id}")
 	public ResponseEntity<User> getTenantById(@PathVariable(value = "Id") Long TenantId)
 			throws ResourceNotFoundException {
-		
+
 		logger.info("IN::getTenantById::" + TenantId);
 
 		User user = userRepository.findById(TenantId)

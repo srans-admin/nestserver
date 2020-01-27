@@ -103,10 +103,7 @@ public class UserService {
 			// STEP-1: Save User
 			responseTenant = userRepository.save(user);
 
-			if (responseTenant.getUserId() != -1) {
- 
-
-				System.out.println(responseTenant.getUserId());
+			if (responseTenant.getUserId() != -1) { 
  
 				// STEP-2
  
@@ -130,7 +127,7 @@ public class UserService {
  
 				// STEP-3: Save Payment Information
  
- 
+				user.getPayment().setUserId(responseTenant.getUserId());
 				responseTenant.setPayment(paymentRepository.save(user.getPayment()));
 
 				// STEP-4 : Now drop an email to tenant

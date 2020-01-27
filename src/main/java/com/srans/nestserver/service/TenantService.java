@@ -73,7 +73,7 @@ public class TenantService {
 		Map<String, Object> reqParamtersMap = new HashMap<>();
 
 		reqParamtersMap.put("name", user.getName());
-		//reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());
+		reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());
 		
 
 		String output = this.templateEngine.process(templateFileName,

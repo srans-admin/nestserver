@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class HistoryUtil {
 
-	private Long amount;
+	private Long roomRent;
 	private String roomType;
 	private String roomName;
 	private Date createdAt;
@@ -15,20 +15,24 @@ public class HistoryUtil {
 
 	}
 
-	public HistoryUtil(Long amount, String roomType, String roomName, Date createdAt) {
+
+	public HistoryUtil(Long roomRent, String roomType, String roomName, Date createdAt) {
+
 		super();
-		this.amount = amount;
+		this.roomRent = roomRent;
 		this.roomType = roomType;
 		this.roomName = roomName;
 		this.createdAt = createdAt;
 	}
+	
+	
 
-	public Long getAmount() {
-		return amount;
+	public Long getRoomRent() {
+		return roomRent;
 	}
 
-	public void setAmount(Long amount) {
-		this.amount = amount;
+	public void setRoomRent(Long roomRent) {
+		this.roomRent = roomRent;
 	}
 
 	public String getRoomType() {
@@ -58,6 +62,12 @@ public class HistoryUtil {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
+
+
+	 
+		
+	}
+
 		builder.append("HistoryUtil [amount=");
 		builder.append(amount);
 		builder.append(", roomType=");
