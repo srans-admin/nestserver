@@ -101,13 +101,9 @@ public class UserController {
 	public User getTenantById(@PathVariable(value = "id") Long tenantId)
 			throws ResourceNotFoundException {
 		logger.info("IN::getTenantById::"  +  tenantId);
-
-		User user = userRepository.getOne(tenantId);
-		
-		tenantBookingRepo.findByTenantId(tenantId).forEach(tenantbooking->{
-			user.setTenantBooking(tenantbooking);
-		});
-		
+		User user = userRepository.getOne(tenantId); 
+		user.setTenantBooking(tenantBookingRepo.getTenantBookedInfoForUser(tenantId)); 
+		 
 		logger.info("OUT::getTenantById::"  +  tenantId);
 		return user;
 	}
@@ -197,7 +193,8 @@ public class UserController {
 	public Payment postSaveAmountDetails(@Valid @RequestBody Payment payment) throws NSException {
 		logger.info("IN::POST::/users::postSaveAmountDetails::" + payment);
 		logger.info("OUT::POST::/users::postSaveAmountDetails::" + payment);
-		return bedAvailabilityService.saveAmountDetails(payment);
+		return null;//bedAvailabilityService.saveAmountDetails(payment);
+		 
 	}
 
 	/*

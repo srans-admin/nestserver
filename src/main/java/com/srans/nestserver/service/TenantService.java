@@ -76,6 +76,7 @@ public class TenantService {
 		if(user.getRole().endsWith(NSConstants.ROLE_TENANT)) {
 		reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());
 		reqParamtersMap.put("name", user.getName());
+ 
 		reqParamtersMap.put("hostel_name", (hostelRepo.getOne(user.getTenantBooking().getHostelId())).getHostelName());
 		reqParamtersMap.put("floor_number", user.getTenantBooking().getFloorId());
 		reqParamtersMap.put("room_number", user.getTenantBooking().getRoomId());
@@ -88,6 +89,7 @@ public class TenantService {
 			reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());
 
 		}
+ 
 		
 		else if(user.getRole().endsWith(NSConstants.ROLE_ADMIN)) {
 			reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());

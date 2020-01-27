@@ -104,31 +104,25 @@ public class BedAvailabilityService {
 	}
 
 	// Save Bed Booking Amount Details
-	public Payment saveAmountDetails(@Valid Payment payment) {
-		Payment guestPayment = new Payment();
-		guestPayment = paymentRepository.saveAndFlush(payment);
-
-		try {
-			if (payment.getRoomBedId() != null) {
-				bedRepository.findById(guestPayment.getRoomBedId()).map(bed -> {
-					bed.setAlloted('R');
-					return bedRepo.saveAndFlush(bed);
-				});
-
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-
-			Long guestId;
-			guestId = tenantBookRepository.findByGuestId(guestPayment.getRoomBedId());
-			User userInfo = new User();
-			userInfo = userRepository.getOne(guestId);
-			tenantService.triggerAlertEmail(userInfo);
-			tenantService.triggerSMS(userInfo);
-		}
-
-		return payment;
-
-	}
+	/*
+	 * public Payment saveAmountDetails(@Valid Payment payment) { Payment
+	 * guestPayment = new Payment(); guestPayment =
+	 * paymentRepository.saveAndFlush(payment);
+	 * 
+	 * try { if (payment.getRoomBedId() != null) {
+	 * bedRepository.findById(guestPayment.getRoomBedId()).map(bed -> {
+	 * bed.setAlloted('R'); return bedRepo.saveAndFlush(bed); });
+	 * 
+	 * } } catch (Exception e) { e.printStackTrace(); } finally {
+	 * 
+	 * Long guestId; guestId =
+	 * tenantBookRepository.findByGuestId(guestPayment.getRoomBedId()); User
+	 * userInfo = new User(); userInfo = userRepository.getOne(guestId);
+	 * tenantService.triggerAlertEmail(userInfo);
+	 * tenantService.triggerSMS(userInfo); }
+	 * 
+	 * return payment;
+	 * 
+	 * }
+	 */
 }
