@@ -1,33 +1,35 @@
 package com.srans.nestserver.util;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 public class HistoryUtil {
 
-	private Long amount;
+	private Long roomRent;
 	private String roomType;
 	private String roomName;
-	private Timestamp createdAt;
+	private Date createdAt;
 
 	public HistoryUtil() {
 		super();
 
 	}
 
-	public HistoryUtil(Long amount, String roomType, String roomName, Timestamp createdAt) {
+	public HistoryUtil(Long roomRent, String roomType, String roomName, Date createdAt) {
 		super();
-		this.amount = amount;
+		this.roomRent = roomRent;
 		this.roomType = roomType;
 		this.roomName = roomName;
 		this.createdAt = createdAt;
 	}
+	
+	
 
-	public Long getAmount() {
-		return amount;
+	public Long getRoomRent() {
+		return roomRent;
 	}
 
-	public void setAmount(Long amount) {
-		this.amount = amount;
+	public void setRoomRent(Long roomRent) {
+		this.roomRent = roomRent;
 	}
 
 	public String getRoomType() {
@@ -46,24 +48,22 @@ public class HistoryUtil {
 		this.roomName = roomName;
 	}
 
-	
-
-	public Timestamp getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Timestamp createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("HistoryUtil [amount=").append(amount).append(", roomType=").append(roomType)
+		builder.append("HistoryUtil [roomRent=").append(roomRent).append(", roomType=").append(roomType)
 				.append(", roomName=").append(roomName).append(", createdAt=").append(createdAt).append("]");
 		return builder.toString();
 	}
 
-	
-
-}
+	 
+		
+	}
