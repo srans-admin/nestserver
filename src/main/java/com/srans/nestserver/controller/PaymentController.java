@@ -2,10 +2,6 @@ package com.srans.nestserver.controller;
 
 
 
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,14 +28,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Payment;
-import com.srans.nestserver.model.Room;
 import com.srans.nestserver.model.User;
-import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.PaymentRepository;
-import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.repository.UserRepository;
-import com.srans.nestserver.util.HistoryUtil;
 import com.srans.nestserver.util.NSConstants;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -74,64 +66,8 @@ public class PaymentController {
 			
 		}
 		return payments; 
-	} 
-
-	
-
-	@GetMapping("payments/history/{id}")
-	@PreAuthorize("permitAll()")
-	// @PreAuthorize("permitAll()")
-	public List<HistoryUtil> getPaymentHistoryDetail(@PathVariable(value = "id") Long userId)
-			throws ResourceNotFoundException {
-		logger.info("IN::getPaymentHistoryDetail::" + userId);
-
-		List<Object> historyInfo = paymentRepository.getDataForpaymentHistory(userId);
-		List<HistoryUtil> getPaymentHistory = new ArrayList<>();
-
-		for (Iterator<Object> iterator = historyInfo.iterator(); iterator.hasNext();) {
-			Object[] object = (Object[]) iterator.next();
-			HistoryUtil historyUtil = new HistoryUtil();
-		
-			for (int i = 0; i < object.length; i++) {
-				switch (i) {
-				case 0:
-					historyUtil.setRoomType((String) object[i]);
-					break;
-				case 1:
-					historyUtil.setAmount(((BigInteger)object[i]).longValue());
-					break;
-				case 2:
-					historyUtil.setCreatedAt((Date) object[i]);
-					break;
-				
-				default:
-					break;
-				}
-			}
-			getPaymentHistory.add(historyUtil);
-		}
-		logger.info("OUT::getPaymentHistoryDetail::" + userId);
-
-		return (getPaymentHistory);
-
-	}
-
-	@GetMapping("payment/hostels/floor/{id}/room/{room_id}")
-	public ResponseEntity<Room> getFloorById(@PathVariable(value = "id") Long floor_id,
-
-			@PathVariable(value = "room_id") Long room_id) {
-		if (!floorRepository.existsById(floor_id)) {
-			throw new ResourceNotFoundException("FloorId " + floor_id + " not found");
-		}
-		logger.info("IN::getFloorById::" + floor_id);
-
-		Room room = roomRepository.findById(room_id).orElseThrow(() -> new ResourceNotFoundException(
-				"Floor not found for this Floorid :: " + floor_id + "Floor not found for this Floor id::" + room_id));
-		logger.info("IN::getFloorById::" + room_id);
-		return ResponseEntity.ok().body(room);
-	}
-
- 
+	}  
+  
 	@PostMapping("/payments")
 	@PreAuthorize("permitAll()")
 	public Payment createPayment(@Valid @RequestBody Payment payment) {
