@@ -87,11 +87,19 @@ public class HostelService {
 	}
 
 	// Display All Hostel For Admin
-	public List<Hostel> getHostelByAdminId(Long adminId) {
+	public List<Hostel> getHostelsBasedOnRole(Long adminId, String role) {
 
+		List<Hostel> hostelData = new ArrayList<Hostel>();
+		
+		if(role != null && ( role.equalsIgnoreCase(NSConstants.ROLE_GUEST) || role.equalsIgnoreCase(NSConstants.ROLE_USER ) )){
+			
+			hostelData = hostelRepository.findAll();
+			
+		}else {
+			
 		Long checkAdminId = hostelRepository.checkAdminId(adminId);
 		Long checkSubadminId = adminDetailsRepo.checkSubAdminDetails(adminId);
-		List<Hostel> hostelData = new ArrayList<Hostel>();
+		
 
 		if (checkAdminId != 0) {
 			List<Object> hosteDetails = hostelRepository.getHostelDetailsForAdmin(adminId);
@@ -131,12 +139,9 @@ public class HostelService {
 
 				hostelData.add(hostel);
 			}
-			return hostelData;
+			 
 
-		}
-
-		// Display All Hostel For Sub Admin
-		else if (checkSubadminId != 0) {
+		} else if (checkSubadminId != 0) {
 
 			Long[] getAssignHostelId = hostelRepository.getSubAdminId(adminId);
 
@@ -179,10 +184,9 @@ public class HostelService {
 					}
 					hostelData.add(hostel);
 
-				}
-
-			}
-
+				} 
+			} 
+		}
 		}
 		return hostelData;
 

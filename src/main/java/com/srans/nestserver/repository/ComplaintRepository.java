@@ -21,7 +21,7 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 	public List<Complaint> getCompliantsForAdmin(Long adminId );
 	
 	
-	@Query(value="SELECT h.adminid FROM  Hostel h JOIN tenantbooking tb on (tb.hostel_id = h.id and tb.tenant_id = ?1 )", nativeQuery=true)
+	@Query(value="SELECT h.admin_id FROM  Hostel h JOIN tenantbooking tb on (tb.hostel_id = h.id and tb.tenant_id = ?1 )", nativeQuery=true)
 	public Optional<Object> getAdminIdForUser(Long userId );
 	
 

@@ -64,6 +64,7 @@ public class VacateController {
 		
 		logger.info("OUT::POST::/users/vacation::displayVacationDetails::" + tenantId);
 
+		
 		return vacateService.getVacationDetails(tenantId);
 
 	}
@@ -73,10 +74,8 @@ public class VacateController {
 	public String vacationApproved(@PathVariable(value="id") Long tenantId)throws NSException{
 		logger.info("IN::POST::/users/vacation::vacationApproved::" + tenantId);
 		logger.info("OUT::POST::/users/vacation::vacationApproved::" + tenantId);
+
 		return vacateService.approveVacation(tenantId);
-		
-		
-		
 		
 	}
 

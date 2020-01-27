@@ -38,6 +38,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	public List<Object> getConsolidatedHostel(String role);
  
 	
+	@Query(value="SELECT u from TenantBooking tb "+
+	  "join User u on (tb.tenantId = u.userId and u.role=?2) "+
+	  "join Hostel h on (tb.hostelId = h.id and h.adminId = ?1) ") 
+	public List<User> getUsersForAdmin(long adminId, String role);
+	
+	
+	
 	
 	/*
 	 * @Query(value="SELECT * FROM PAYMENT WHERE userid=?1," nativeQuery = true)

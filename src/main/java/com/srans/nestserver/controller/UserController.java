@@ -39,6 +39,7 @@ import com.srans.nestserver.service.BedAvailabilityService;
 import com.srans.nestserver.service.StorageService;
 import com.srans.nestserver.service.UserService;
 import com.srans.nestserver.util.AvailableBedsUtil;
+import com.srans.nestserver.util.NSConstants;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -78,21 +79,36 @@ public class UserController {
 	@GetMapping("/users")
 	//@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
     @PreAuthorize("permitAll()")
-	public List<User> getAllTenants() {
-		return userRepository.findAll();
+	public List<User> getAllTenants(@RequestParam("adminId") Long adminId, @RequestParam("type") String type) {
+		//logger.info("IN::getAllTenants::"  + adminId "::" + type);
+
+		List<User> users = null;
+		
+		if(type != null && type.equalsIgnoreCase(NSConstants.ROLE_TENANT)){
+			users = userRepository.getUsersForAdmin(adminId, type);
+			logger.info("IN::getAllTenants::"  + adminId);
+		} else if(type != null && type.equalsIgnoreCase(NSConstants.ROLE_GUEST)){
+			users = userRepository.getUsersByRole(NSConstants.ROLE_GUEST);
+			
+		}
+		logger.info("OUT::getAllTenants::"  + adminId);
+
+		return users;
 	}
 
 	@GetMapping("/users/{id}")
 	@PreAuthorize("permitAll()")
 	public User getTenantById(@PathVariable(value = "id") Long tenantId)
 			throws ResourceNotFoundException {
+		logger.info("IN::getTenantById::"  +  tenantId);
+
 		User user = userRepository.getOne(tenantId);
 		
 		tenantBookingRepo.findByTenantId(tenantId).forEach(tenantbooking->{
 			user.setTenantBooking(tenantbooking);
 		});
 		
-				
+		logger.info("OUT::getTenantById::"  +  tenantId);
 		return user;
 	}
 
@@ -101,7 +117,10 @@ public class UserController {
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<User> getTenantByName(@PathVariable(value = "name") String name)
 			throws ResourceNotFoundException {
+		logger.info("IN::getTenantByName::"  +  name);
+
 		User user = userRepository.findByName(name);
+		logger.info("OUT::getTenantByName::"  +  name);
 		return ResponseEntity.ok().body(user);
 	}
 	
@@ -111,7 +130,7 @@ public class UserController {
 	public void storeTenantImage(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file,
 			@PathVariable("cat") String cat) throws NSException {
 
-		logger.info("In::POST::/users/{id}/upload/{cat}::uploadTenantImages::" + id + "::" + cat);
+		logger.info("IN::POST::/users/{id}/upload/{cat}::uploadTenantImages::" + id + "::" + cat);
 		storageService.storeTenantImage(file, cat, id);
 		logger.info("OUT::POST:://users/uploadImage/{cat}/{id}::uploadTenantImages::" + id + "::" + cat);
 
@@ -121,6 +140,8 @@ public class UserController {
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<InputStreamResource> retriveHostelImage(@PathVariable("id") Long id,
 			@PathVariable("cat") String cat) throws NSException, IOException {
+		logger.info("IN::POST::/users/{id}/retrive/{cat}::retriveHostelImage::" + id + "::" + cat);
+		logger.info("OUT::POST::/users/{id}/retrive/{cat}::retriveHostelImage::" + id + "::" + cat);
 
 		return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG)
 				.body(new InputStreamResource(storageService.retrivetenantImage(id, cat)));
@@ -131,7 +152,8 @@ public class UserController {
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<InputStreamResource> retriveIdproofImage(@PathVariable("id") Long id,
 			@PathVariable("cat") String cat) throws NSException, IOException {
-
+		logger.info("In::POST::/usersidproof/{id}/retrive/{cat}::retriveIdproofImage::" + id + "::" + cat);
+		logger.info("OUT::POST::/usersidproof/{id}/retrive/{cat}::retriveIdproofImage::" + id + "::" + cat);	
 		return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG)
 				.body(new InputStreamResource(storageService.retriveIdproofImage(id, cat)));
 
@@ -152,7 +174,8 @@ public class UserController {
 	@GetMapping("/users/guest-reserve-bed/{hostelId}")
 	@PreAuthorize("permitAll()")
 	public List<AvailableBedsUtil> getAvailableBed(@PathVariable("hostelId") Long hostelId) throws NSException {
-
+		logger.info("IN::getAvailableBed::"  +  hostelId);
+		logger.info("OUT::getAvailableBed::"  +  hostelId);
 		return bedAvailabilityService.getAllAvailableBed(hostelId);
 
 	}
@@ -162,6 +185,8 @@ public class UserController {
 	@PostMapping("/users/bed-booking")
 	@PreAuthorize("permitAll()")
 	public TenantBooking postBedBookingDetails(@Valid @RequestBody TenantBooking tenantBooking) throws NSException {
+		logger.info("IN::POST::/users::postBedBookingDetails::" + tenantBooking);
+		logger.info("OUT::POST::/users::postBedBookingDetails::" + tenantBooking);
 
 		return bedAvailabilityService.saveBookedBedDetails(tenantBooking);
 	}
@@ -170,7 +195,8 @@ public class UserController {
 	@PostMapping("/users/guest-payment")
 	@PreAuthorize("permitAll()")
 	public Payment postSaveAmountDetails(@Valid @RequestBody Payment payment) throws NSException {
-
+		logger.info("IN::POST::/users::postSaveAmountDetails::" + payment);
+		logger.info("OUT::POST::/users::postSaveAmountDetails::" + payment);
 		return bedAvailabilityService.saveAmountDetails(payment);
 	}
 
@@ -194,8 +220,11 @@ public class UserController {
 		user.setEmailId(userDetails.getEmailId());
       user.setPermanentAddress(userDetails.getPermanentAddress());*/
 
+		logger.info("IN::updateUser::"  +  tenantId);
 
 		final User updatedTenant = userRepository.save(userDetails);
+		logger.info("OUT::updateUser::"  +  tenantId);
+
 		return ResponseEntity.ok(updatedTenant);
 	}
 
@@ -203,6 +232,8 @@ public class UserController {
 	@PreAuthorize("permitAll()")
 	public <tenantRepository> Map<String, Boolean> deleteUser(@PathVariable(value = "id") Long tenantId)
 			throws ResourceNotFoundException {
+		logger.info("IN::POST::/users::deleteUser::" + tenantId);
+
 		@SuppressWarnings("unused")
 		User user = userRepository.findById(tenantId)
 				.orElseThrow(() -> new ResourceNotFoundException("SransUser not found for this id :: " + tenantId));
@@ -210,6 +241,7 @@ public class UserController {
 		userRepository.deleteById(tenantId);
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
+		logger.info("OUT::POST::/users::deleteUser::" + tenantId);
 		return response;
 	}
 
