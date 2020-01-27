@@ -36,13 +36,20 @@ public class ExpensesCategoryController {
 	@PostMapping("/categories")
 	@PreAuthorize("permitAll()")
 	public ExpensesCategory createExpenseType(@Valid @RequestBody ExpensesCategory expensescategory) {
+		logger.info("IN::POST::/expensescategory::saveExpenseCategory::" + expensescategory);
 
-		return expensescategoryRepository.save(expensescategory);
+		expensescategory = expensescategoryRepository.save(expensescategory);
+
+		logger.info("OUT::POST::/expensescategory::saveExpenseCategory::" + expensescategory);
+
+		return expensescategory;
+
 	}
 
 	@GetMapping("/categories")
 	@PreAuthorize("permitAll()")
 	public List<ExpensesCategory> getAllExpenseCategory() {
+		 logger.info("get all expenses category");
 
 		return expensescategoryRepository.findAll();
 	}
@@ -51,6 +58,8 @@ public class ExpensesCategoryController {
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<ExpensesCategory> updateExpensesCategory(@PathVariable(value = "id") Long expensescategoryId,
 			@Valid @RequestBody ExpensesCategory expensescategoryDetails) throws ResourceNotFoundException {
+		logger.info("IN::POST::/expensescategory::updateExpenseCategory::" + expensescategoryId);
+
 		ExpensesCategory expensescategory = expensescategoryRepository.findById(expensescategoryId).
 				orElseThrow(() -> new ResourceNotFoundException("ExpensesType not found for this id :: " + expensescategoryId));
 
@@ -59,6 +68,7 @@ public class ExpensesCategoryController {
 		expensescategory.setExpenseType(expensescategoryDetails.getExpenseType());
 	
 		final ExpensesCategory updatedExpensesCategory = expensescategoryRepository.save(expensescategory);
+		logger.info("OUT::POST::/expensescategory::updateExpenseCategory::" + expensescategoryId);
 		return ResponseEntity.ok(updatedExpensesCategory);
 	}
 
@@ -66,12 +76,16 @@ public class ExpensesCategoryController {
 	@PreAuthorize("permitAll()")
 	public Map<String, Boolean> deleteExpensesType(@PathVariable(value = "id") Long expensescategoryId)
 			throws ResourceNotFoundException {
+		logger.info("IN::POST::/expensescategory::deleteExpenseCategory::" + expensescategoryId);
+
 		ExpensesCategory expensescategory = expensescategoryRepository.findById(expensescategoryId).orElseThrow(
 				() -> new ResourceNotFoundException("ExpensesCategory not found for this id :: " + expensescategoryId));
 
 		expensescategoryRepository.delete(expensescategory);
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
+		logger.info("OUT::POST::/expensescategory::deleteExpenseCategory::" + expensescategoryId);
+
 		return response;
 	}
 }
