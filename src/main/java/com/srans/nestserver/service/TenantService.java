@@ -20,13 +20,11 @@ import org.thymeleaf.context.Context;
 
 import com.srans.nestserver.communication.NiodsMailer;
 import com.srans.nestserver.communication.NiodsSmsGateway;
-import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.VacationRepository;
-import com.srans.nestserver.util.MailTemplates;
 import com.srans.nestserver.util.NSConstants;
 import com.srans.nestserver.util.SMSTemplates;
 
@@ -68,13 +66,34 @@ public class TenantService {
 	 * @param text
 	 * @return
 	 */
+
+	Map<String, Object> reqParamtersMap;
+
 	public String getTemplate(String templateFileName, User user) {
 		logger.trace("In::");
-		Map<String, Object> reqParamtersMap = new HashMap<>();
+		reqParamtersMap = new HashMap<>();
 
+		if(user.getRole().endsWith(NSConstants.ROLE_TENANT)) {
+		reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());
 		reqParamtersMap.put("name", user.getName());
-		//reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());
+		reqParamtersMap.put("hostel_name", (hostelRepo.getOne(user.getTenantBooking().getHostelId())).getHostelName());
+		reqParamtersMap.put("floor_number", user.getTenantBooking().getFloorId());
+		reqParamtersMap.put("room_number", user.getTenantBooking().getRoomId());
+		reqParamtersMap.put("room_rent", user.getTenantBooking().getRoomRent());	
+		reqParamtersMap.put("bed", user.getTenantBooking().getRoomBedId());
+		}
+		else if(user.getRole().endsWith(NSConstants.ROLE_GUEST)) {
+			reqParamtersMap.put("name", user.getName());
+
+			reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());
+
+		}
 		
+		else if(user.getRole().endsWith(NSConstants.ROLE_ADMIN)) {
+			reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());
+			reqParamtersMap.put("name", user.getName());
+			reqParamtersMap.put("subscription", user.getSubscriptions());
+		}
 
 		String output = this.templateEngine.process(templateFileName,
 				new Context(Locale.getDefault(), reqParamtersMap));
@@ -100,94 +119,23 @@ public class TenantService {
 			ccMail = null;
 			bccMail = null;
 			System.out.println(responseTenant.getRole());
-			 Long checkId = vacationRepo.checkTenantId(responseTenant.getUserId());
-			 System.out.println(checkId);
+			Long checkId = vacationRepo.checkTenantId(responseTenant.getUserId());
+			System.out.println(checkId);
 
-			if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)&& checkId==0) {
+			if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT) && checkId == 0) {
 
-				/*
-				 * Hostel hostel =
-				 * hostelRepo.getOne(responseTenant.getTenantBooking().getHostelId()); message =
-				 * MailTemplates.TENANT_REGISTRATION_TEMPLATE .replaceAll("##USER_NAME##",
-				 * responseTenant.getName()) .replaceAll("##PASSWORD##",
-				 * responseTenant.getUserSubscriptionWrapper().getUser().getPassword())
-				 * .replaceAll("##ROOM_NUMBER##", "" +
-				 * responseTenant.getTenantBooking().getRoomName())
-				 * .replaceAll("##FLOOR_NUMBER##", "" +
-				 * responseTenant.getTenantBooking().getFloorName())
-				 * .replaceAll("##HOSTEL_NAME##", "" + hostel.getHostelName())
-				 * .replaceAll("##ROOM_RENT##", "" +
-				 * responseTenant.getTenantBooking().getRoomRent());
-				 */
-				
-				message = this.getTemplate("guest_confirmation", responseTenant);
+				message = this.getTemplate("tenant_booking", responseTenant);
 
 			}
-			
-			else if(responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)&& checkId!=0) {
-				//message=MailTemplates.ADMIN_VACATED_NOTIFICATION_TEMPLATE.replaceAll("##NAME##", responseTenant.getName());
-				message = this.getTemplate("vacation_confirmation", responseTenant);
-			}
-			
-			
 
 			else if (responseTenant.getRole().endsWith(NSConstants.ROLE_ADMIN)) {
-				message = MailTemplates.ADMIN_SUBSCRIPTION_TEMPLATE.replaceAll("##USER_NAME##", responseTenant.getName())
-																	.replaceAll("##PASSWORD##", responseTenant.getUserSubscriptionWrapper().getUser().getPassword());						                                                             ;
+				message = this.getTemplate("admin_subscription", responseTenant);
 			}
 
 			else if (responseTenant.getRole().endsWith(NSConstants.ROLE_USER)
 					|| responseTenant.getRole().endsWith(NSConstants.ROLE_GUEST)) {
-				/*
-				 * message = MailTemplates.TENANT_REGISTRATION_TEMPLATE
-				 * .replaceAll("##USER_NAME##", " " + responseTenant.getName())
-				 * .replaceAll("##PASSWORD##",
-				 * responseTenant.getName()).replaceAll("##HOSTEL_NAME##", "NIODS");
-				 * 
-				 * } else if (responseTenant.getRole().endsWith(NSConstants.ROLE_GUEST)) {
-				 */
-				try {
+				message = this.getTemplate("guest_confirmation", responseTenant);
 
-					message = this.getTemplate("guest_confirmation", responseTenant);
-
-					/*
-					 * TenantBooking guestInfo = new TenantBooking();
-					 * 
-					 * if (tenantBookRepository.findGuestId(responseTenant.getUserId()) != 0 &&
-					 * paymentRepo.findRoomBedId(
-					 * tenantBookRepository.getOne(responseTenant.getUserId()).getRoomBedId()) == 0)
-					 * { guestInfo = tenantBookRepository.getOne(responseTenant.getUserId());
-					 * message = MailTemplates.GUEST_BOOKING_TEMPLATE.replaceAll("##NAME##",
-					 * responseTenant.getName()) .replaceAll("##hostelId##",
-					 * (guestInfo.getHostelId()).toString()) .replaceAll("##floorName##",
-					 * guestInfo.getFloorName()) .replaceAll("##roomId##",
-					 * (guestInfo.getRoomId()).toString()) .replaceAll("##roomBedId##",
-					 * (guestInfo.getRoomBedId()).toString()); } else if (responseTenant.getUserId()
-					 * != null && tenantBookRepository.findGuestId(responseTenant.getUserId()) == 0)
-					 * {
-					 * 
-					 * String s =
-					 * responseTenant.getUserSubscriptionWrapper().getUser().getPassword(); message
-					 * = MailTemplates.GUEST_REGISTRATION_TEMPLATE .replaceAll("##NAME##",
-					 * responseTenant.getName()) .replaceAll("##USER_NAME##",
-					 * responseTenant.getName()).replaceAll("##PASSWORD##", s); } else if
-					 * (paymentRepo.findRoomBedId(
-					 * tenantBookRepository.getOne(responseTenant.getUserId()).getRoomBedId()) != 0)
-					 * { guestInfo = tenantBookRepository.getOne(responseTenant.getUserId());
-					 * 
-					 * message = MailTemplates.GUEST_AMOUNT_TEMPLATE.replaceAll("##NAME##",
-					 * responseTenant.getName()) .replaceAll("##hostelId##",
-					 * (guestInfo.getHostelId()).toString()) .replaceAll("##floorName##",
-					 * guestInfo.getFloorName()) .replaceAll("##roomId##",
-					 * (guestInfo.getRoomId()).toString()) .replaceAll("##roomBedId##",
-					 * (guestInfo.getRoomBedId()).toString());
-					 * 
-					 * }
-					 */
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 
 			} else {
 				message = "User added ...";
