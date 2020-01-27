@@ -28,7 +28,7 @@ public class SubscriptionService {
 
 		try {
 			responsePayment = paymentRepository.save(payment);
-			if (responsePayment.getAmmountType().equalsIgnoreCase(NSConstants.PAYMENT_TYPE_SUBSCRIPTION)) {
+			if (responsePayment.getAmountType().equalsIgnoreCase(NSConstants.PAYMENT_TYPE_SUBSCRIPTION)) {
 				
 				User needTobeUpdatedUser = new User();
 				needTobeUpdatedUser.setUserId(responsePayment.getAdminId());

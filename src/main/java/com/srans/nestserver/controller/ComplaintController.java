@@ -88,7 +88,8 @@ public class ComplaintController {
 	@PostMapping("/complaints")
 	@PreAuthorize("permitAll()")
 	public Complaint createComplaint(@Valid @RequestBody Complaint complaint) throws Exception {
-		
+		 logger.info("IN::POST::/complaints::saveComplaints::" + complaint);
+
 		//Find AdminId from UserRepo and save 
 		Optional<Object> adminId = complaintRepository.getAdminIdForUser(complaint.getUserId());
 		
@@ -103,7 +104,8 @@ public class ComplaintController {
 		}else {
 			throw new Exception("Unable to find Admin Id for the user : "+complaint.getUserId());
 		}
-		
+		 logger.info("IN::OUT::/complaints::saveComplaints::" + complaint);
+
 		return complaintRepository.save(complaint);
 	}
 	
@@ -111,55 +113,50 @@ public class ComplaintController {
 	@PostMapping("/complaint-comments")
 	@PreAuthorize("permitAll()")
 	public ComplaintComment addCommentOnComplaint(@Valid @RequestBody ComplaintComment complaintComment) throws Exception {
-		
-		return complaintCommentsRepository.save(complaintComment); 
-	}
-
+		 logger.info("IN::POST::/complaintComment::saveComplaintComment::" + complaintComment);
+	      	complaintComment = complaintCommentsRepository.save(complaintComment);
+					logger.info("OUT::POST::/complaintComment::saveComplaintComment::" + complaintComment);
+	            return complaintComment;
+		}
 	@DeleteMapping("/complaints/{id}")
 	@PreAuthorize("permitAll()")
 	public Map<String, Boolean> deleteComplaint(@PathVariable(value = "id") Long complaintsId)
 			throws ResourceNotFoundException {
+		 logger.info("IN::POST::/complaints::deleteComplaints::" + complaintsId);
 		Complaint complaint = complaintRepository.findById(complaintsId).orElseThrow(
 				() -> new ResourceNotFoundException("Complaints not found for this id :: " + complaintsId));
 
 		complaintRepository.delete(complaint);
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
+		logger.info("OUT::POST::/complaints::deleteComplaints::" + complaintsId);
 		return response;
 	}
 	
 	
 	
 
-	@GetMapping("/complaints/complainthistory/{id}")
-	@PreAuthorize("permitAll()")
-// @PreAuthorize("permitAll()")
-	public List<ComplaintHistoryUtil> getComplaintHistoryDetail(@PathVariable(value = "id") Long userId)
-			throws ResourceNotFoundException {
-		List<Object> complainthistoryInfo = complaintRepository.getDataForcomplaintHistory(userId);
-		List<ComplaintHistoryUtil> getComplaintHistory = new ArrayList<>();
-
-		for (Iterator<Object> iterator = complainthistoryInfo.iterator(); iterator.hasNext();) {
-			Object[] object = (Object[]) iterator.next();
-			ComplaintHistoryUtil complainthistoryUtil = new ComplaintHistoryUtil();
-
-			for (int i = 0; i < object.length; i++) {
-				switch (i) {
-				case 0:
-					complainthistoryUtil.setDescription((String) object[0]);
-					break;
-				case 1:
-					complainthistoryUtil.setCreatedAt((Date) object[i]);
-					break;
-				default:
-					break;
-				}
-			}
-			getComplaintHistory.add(complainthistoryUtil);
-		}
-
-		return (getComplaintHistory);
-
-	} 
-	
-}
+	/*
+	 * @GetMapping("/complaints/complainthistory/{id}")
+	 * 
+	 * @PreAuthorize("permitAll()") // @PreAuthorize("permitAll()") public
+	 * List<ComplaintHistoryUtil> getComplaintHistoryDetail(@PathVariable(value =
+	 * "id") Long userId) throws ResourceNotFoundException { List<Object>
+	 * complainthistoryInfo =
+	 * complaintRepository.getDataForcomplaintHistory(userId);
+	 * List<ComplaintHistoryUtil> getComplaintHistory = new ArrayList<>();
+	 * 
+	 * for (Iterator<Object> iterator = complainthistoryInfo.iterator();
+	 * iterator.hasNext();) { Object[] object = (Object[]) iterator.next();
+	 * ComplaintHistoryUtil complainthistoryUtil = new ComplaintHistoryUtil();
+	 * 
+	 * for (int i = 0; i < object.length; i++) { switch (i) { case 0:
+	 * complainthistoryUtil.setDescription((String) object[0]); break; case 1:
+	 * complainthistoryUtil.setCreatedAt((Date) object[i]); break; default: break; }
+	 * } getComplaintHistory.add(complainthistoryUtil); }
+	 * 
+	 * return (getComplaintHistory);
+	 * 
+	 * }
+	 * 
+	 */}

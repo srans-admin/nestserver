@@ -48,21 +48,26 @@ public class ExpenseController {
 	@GetMapping("/expenses")
 	@PreAuthorize("permitAll()")
 	public List<Expense> getAllExpenses() {
-
+		  logger.info("get all expenses");
 		return expensesRepository.findAll();
 	}
 
 	@GetMapping("expenses/{id}")
 	@PreAuthorize("permitAll()")
 	public List<Expense> getExpensesData(@PathVariable(value = "id") Long hostelId) {
+		logger.info("IN::getExpensesData::" + hostelId);
 
-		return expensesRepository.getExpenses(hostelId);
+		List<Expense> expenses = expensesRepository.getExpenses(hostelId);
+		logger.info("OUT::getExpensesData::" + hostelId);
+		return expenses;
 	}
-
+	
 	@PutMapping("/expenses/{id}")
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<Expense> updateExpenses(@PathVariable(value = "id") Long expensesId,
 			@Valid @RequestBody Expense expensesDetails) throws ResourceNotFoundException {
+		logger.info("IN::POST::/expenses::updateExpense::" + expensesId);
+
 		Expense expenses = expensesRepository.findById(expensesId)
 				.orElseThrow(() -> new ResourceNotFoundException("Expenses not found for this id :: " + expensesId));
 
@@ -70,6 +75,8 @@ public class ExpenseController {
 		expenses.setAmount(expensesDetails.getAmount());
 		//expenses.setHostelName(expensesDetails.getHostelName());
 		final Expense updatedExpenses = expensesRepository.save(expenses);
+		logger.info("OUT::POST::/expenses::updateExpense::" + expensesId);
+
 		return ResponseEntity.ok(updatedExpenses);
 	}
 
@@ -77,12 +84,16 @@ public class ExpenseController {
 	@PreAuthorize("permitAll()")
 	public Map<String, Boolean> deleteExpenses(@PathVariable(value = "id") Long expensesId)
 			throws ResourceNotFoundException {
+		logger.info("IN::POST::/expenses::deleteExpense::" + expensesId);
+
 		Expense expenses = expensesRepository.findById(expensesId)
 				.orElseThrow(() -> new ResourceNotFoundException("Expenses not found for this id :: " + expensesId));
 
 		expensesRepository.delete(expenses);
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
+		logger.info("OUT::POST::/expenses::deleteExpense::" + expensesId);
+
 		return response;
 	}
 }

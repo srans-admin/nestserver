@@ -69,6 +69,8 @@ public class TenantBookingController {
 
 	@GetMapping("/tenantbooking")
 	public List<User> getAllPosts() {
+		logger.info("Get all tenantbooking");
+
 		return userRepository.findAll();
 
 	}
