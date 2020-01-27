@@ -27,12 +27,18 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 	@Autowired
 	public PaymentRepository paymentRepository = null;
 
-	@Query(value = "select tb.room_name,tb.room_type,tb.room_rent,name,user_id,py.created_at\r\n"
-			+ "from tenantbooking tb\r\n" + "inner join payments py\r\n" + "on tb.tenant_id = py.user_id\r\n"
-			+ "where user_id =1;", nativeQuery = true)
+//	@Query(value = "select tb.room_name,tb.room_type,tb.room_rent,name,user_id,py.created_at\r\n"
+//			+ "from tenantbooking tb\r\n" + "inner join payments py\r\n" + "on tb.tenant_id = py.user_id\r\n"
+//			+ "where user_id =1;", nativeQuery = true)
+//
+//	public List<Object> getDataForpaymentHistory(Long userId);
 
-	public List<Object> getDataForpaymentHistory(Long userId);
-
+	@Query(value = "SELECT p FROM Payment p WHERE p.userId=?1" )
+	public List<Payment> getPaymentHistory(Long userId);
+	
+	@Query(value = "SELECT p FROM Payment p WHERE p.adminId=?1" )
+	public List<Payment> getAllUserPaymentsForAdmin(Long adminId);
+	
 	@Query(value = "SELECT room_type FROM ROOM WHERE id=?1", nativeQuery = true)
 	public String roomtype(Long floor_id);
 
