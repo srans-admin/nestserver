@@ -21,7 +21,9 @@ public interface TenantBookRepository extends JpaRepository<TenantBooking, Long>
 	@Query(value="select guest_id from tenantbooking where room_bed_id=?1",nativeQuery=true)
      public Long findByGuestId(Long roomBedId); 
 	
-	//List<TenantBooking> findByTenantId(Long tenant_id); 
+	@Query(value="select hostel_id from tenantbooking where tenant_id=?1",nativeQuery = true)
+	public Long findHostelId(Long tenant_id);
+	
 	
 	@Query(value="SELECT tenant_id from tenantbooking where active='Y'",nativeQuery=true)
 	public Long[] getAllTenantId();

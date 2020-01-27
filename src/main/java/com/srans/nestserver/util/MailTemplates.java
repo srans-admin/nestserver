@@ -99,16 +99,9 @@ public class MailTemplates {
 			+ "                <td>\r\n" + "                   Total: 5000.00\r\n" + "                </td>\r\n"
 			+ "            </tr>\r\n" + "        </table>\r\n" + "    </div>\r\n" + "</body>\r\n" + "</html>";
 
-	public static final String ADMIN_SUBSCRIPTION_TEMPLATE = "<html><head><title></title>" + "<body>" + "<div>"
-			+ "Dear ##NAME##," + "</div>"
-			+ "  <div> <p style='font-size: 18px; text-align: center; '>Your subscription request has been submitted.<br> "
-			+ " You can login using this username- ##USER_NAME##  and temprory password-  ." + "</p>"
-			+ "</div>" + "</body>" + "</head></html>";
+	
 
-	public static final String ADMIN_VACATED_NOTIFICATION_TEMPLATE = "<html><head><title></title>" + "<body>" + "<div>"
-			+ "Dear ##NAME##," + "</div>"
-			+ "  <div> <p style='font-size: 18px; text-align: center; '>Your vacated request has been submitted.<br> "
-			+ " " + "</p>" + "</div>" + "</body>" + "</head></html>";
+	
 
 	public static final String GUEST_BOOKING_TEMPLATE = "<html><head><title></title>" + "<body>" + "<div>"
 			+ "Dear ##NAME##," + "</div>"
@@ -118,11 +111,7 @@ public class MailTemplates {
 			+ "<p> Protect your bed for seven days by going to the payment step and paying the reserved amount.\r\n"
 			+ "</P>" + "</div>" + "</body>" + "</head></html>";
 
-	public static final String GUEST_REGISTRATION_TEMPLATE = "<html><head><title></title>" + "<body>" + "<div>"
-			+ "Dear ##NAME##," + "</div>"
-			+ "  <div><p style='font-size: 18px; text-align: center; '>You successfully registered.<br>"
-			+ " You can login using this username- ##USER_NAME##  and temprory password- ##PASSWORD## " + "</p>"
-			+ "</div>" + "</body>" + "</head></html>";
+	
 	public static final String GUEST_AMOUNT_TEMPLATE = "<html><head><title></title>" + "<body>" + "<div>"
 			+ "Dear ##NAME##,"
 			+ "<p style='font-size: 18px; text-align: center; '>Thank you for booking the bed.Your booking details below :-<br> "
