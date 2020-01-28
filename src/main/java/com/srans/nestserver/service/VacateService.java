@@ -44,7 +44,7 @@ public class VacateService {
 
 	@Autowired
 	private TenantService tenantService;
-	
+
 	@Autowired
 	private NiodsMailer niodsMailer;
 
@@ -56,69 +56,64 @@ public class VacateService {
 
 	@Autowired
 	private BedRepository bedRepo;
-	
+
 	@Autowired
 	private HostelRepository hostelRepo;
-	
+
 	@Autowired
 	private TemplateEngine templateEngine;
-	
+
 	Long floorId;
 	Long roomId;
 	Long roomRent;
 	Long roomBedId;
-	
 
-	public Vacation processVacation(Vacation vacate) throws MailException, MessagingException, IOException, TemplateException {
-		
-		
+	public Vacation processVacation(Vacation vacate)
+			throws MailException, MessagingException, IOException, TemplateException {
+
 		String email = null, subject = null, ccMail = null, bccMail = null, message = null;
 		logger.debug("IN::processVacation::");
 		Vacation responseVacation = null;
 
 		try {
-			// STEP-1: Save Vaction Details
+			// STEP-1: Save vacation Details
 			vacate.setApprovedStatus('N');
 			responseVacation = vacationRepository.save(vacate);
 
-			// STEP-2 : Prepare one Notification to Admin(s)
+			// STEP-2 : Prepare One Notification to Admin
 			notificationService.tenantVacatedNotifictaion(vacate);
 
 			// STEP-3 : Trigger The Mail For Tenant
 			User userResponse = userRepo.getOne(responseVacation.getTenantId());
 			System.out.println(userResponse.getEmailId());
-			
+
 			logger.debug("In::processVacation");
 
-			
 			email = userResponse.getEmailId();
 			System.out.println(email);
 			subject = "NIDOS Confirmation";
 			ccMail = null;
 			bccMail = null;
-			//tenantService.triggerAlertEmail(userResponse);
+			// tenantService.triggerAlertEmail(userResponse);
 			System.out.println(userResponse.getRole());
 			Long checkId = vacationRepository.checkTenantId(userResponse.getUserId());
 			System.out.println(checkId);
-			
-				message = this.getTemplate("vacation_confirmation", userResponse);
-			
+
+			message = this.getTemplate("vacation_confirmation", userResponse);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		niodsMailer.sendEmail(email, subject, ccMail, bccMail, message);
 
 		System.out.println("EMIAL SENT ----------------------------------");
-		
 
 		logger.debug("Out::processVacation");
 
-
 		return (responseVacation);
 	}
-	
+
 	/**
 	 * 
 	 * @param templateFileName Name of the template file without extension
@@ -129,30 +124,28 @@ public class VacateService {
 	Map<String, Object> reqParamtersMap;
 
 	public String getTemplate(String templateFileName, User user) {
-		logger.trace("In::");
+		logger.trace("In:: getTemplate" + templateFileName);
 		reqParamtersMap = new HashMap<>();
 
 		System.out.println(user.getUserId());
 		reqParamtersMap.put("name", user.getName());
-		Long hostelid=tenantBookRepo.findHostelId(user.getUserId());
-		
-		tenantBookRepo.findAll().forEach(tenantInfo ->{
-			if(tenantInfo.getTenantId()==user.getUserId()) {
-				 floorId=tenantInfo.getFloorId();
-				 roomId=tenantInfo.getRoomId();
-				 roomRent=tenantInfo.getRoomRent();
-				 roomBedId=tenantInfo.getRoomBedId();
-				 
+		Long hostelid = tenantBookRepo.findHostelId(user.getUserId());
+
+		tenantBookRepo.findAll().forEach(tenantInfo -> {
+			if (tenantInfo.getTenantId() == user.getUserId()) {
+				floorId = tenantInfo.getFloorId();
+				roomId = tenantInfo.getRoomId();
+				roomRent = tenantInfo.getRoomRent();
+				roomBedId = tenantInfo.getRoomBedId();
+
 			}
 		});
-		
-		
-		
+
 		reqParamtersMap.put("hostel_name", (hostelRepo.getOne(hostelid).getHostelName()));
 		System.out.println();
 		reqParamtersMap.put("floor_number", floorId);
 		reqParamtersMap.put("room_number", roomId);
-		reqParamtersMap.put("room_rent", roomRent);	
+		reqParamtersMap.put("room_rent", roomRent);
 		reqParamtersMap.put("bed", roomBedId);
 
 		String output = this.templateEngine.process(templateFileName,
@@ -160,7 +153,7 @@ public class VacateService {
 
 		reqParamtersMap = null;
 
-		logger.trace("Out::");
+		logger.trace("Out::getTemplate" + templateFileName);
 		return output;
 	}
 
@@ -169,19 +162,18 @@ public class VacateService {
 		return (vacationRepository.getOne(tenantId));
 	}
 
-	public String approveVacation(Long tenantId) {
+	public void approveVacation(Long tenantId) {
+		logger.debug("IN::approveVacation::" + tenantId);
+		// Update Approved status
 
-		// Upadte Approved status
-
-		Long status =vacationRepository.findVacationId(tenantId);
-		Vacation vacate = vacationRepository.getOne(status);
+		Long vacationId = vacationRepository.findVacationId(tenantId);
+		Vacation vacate = vacationRepository.getOne(vacationId);
 		vacate.setApprovedStatus('N');
 		vacationRepository.save(vacate);
 
 		// Update bed status
 		Long roomBedId = vacationRepository.findRoomBedId(tenantId);
 		System.out.println(roomBedId);
-
 		Bed bed = bedRepo.getOne(roomBedId);
 		System.out.println(bed.getAlloted());
 		bed.setAlloted('Y');
@@ -189,16 +181,15 @@ public class VacateService {
 
 		// Update Tenant Status
 		User user = userRepo.getOne(tenantId);
-		user.setStatus("NA");
+		user.setStatus("NA"); // note active
 		userRepo.save(user);
 
 		// Trigger Email
-		//tenantService.triggerAlertEmail(user);
+		tenantService.triggerAlertEmail(user);
 
 		// Trigger SMS
 		tenantService.triggerSMS(user);
-
-		return ("vacate tenant Successfully");
+		logger.debug("OUT::approveVacation::" + tenantId);
 
 	}
 

@@ -18,15 +18,27 @@ public class Notification extends AuditModel implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
-	private Long id; 
+	private Long id;
+
+	@Column
+	private Long tenantId;
 
 	@Column
 	private String message;
 
 	public Notification() {
-		this.id = 0L; 
-		this.message = "";  
-	} 
+		this.id = 0L;
+		this.tenantId = 0L;
+		this.message = "";
+	}
+
+	public Long getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(Long tenantId) {
+		this.tenantId = tenantId;
+	}
 
 	public Long getId() {
 		return id;
@@ -36,7 +48,6 @@ public class Notification extends AuditModel implements Serializable {
 		this.id = id;
 	}
 
-	 
 	public String getMessage() {
 		return message;
 	}
@@ -45,19 +56,12 @@ public class Notification extends AuditModel implements Serializable {
 		this.message = message;
 	}
 
-	 
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Notification [id=");
-		builder.append(id);
-		builder.append(", message=");
-		builder.append(message); 
-		builder.append("]");
+		builder.append("Notification [id=").append(id).append(", tenantId=").append(tenantId).append(", message=")
+				.append(message).append("]");
 		return builder.toString();
 	}
- 
-	
-	
+
 }

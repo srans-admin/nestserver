@@ -11,14 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.srans.nestserver.model.TenantBooking;
 import com.srans.nestserver.model.Vacation;
 import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
@@ -57,25 +56,31 @@ public class VacateController {
 		return vacation;
 	}
 
-	@GetMapping("users/vacate/{id}")
-	@PreAuthorize("permitAll()")
-	public Vacation displayVacationDetails(@PathVariable(value = "id") Long tenantId) throws NSException {
-		logger.info("IN::POST::/users/vacation::displayVacationDetails::" + tenantId);
-		
-		logger.info("OUT::POST::/users/vacation::displayVacationDetails::" + tenantId);
-
-		
-		return vacateService.getVacationDetails(tenantId);
-
-	}
+	/*
+	 * @GetMapping("users/vacate/{id}")
+	 * 
+	 * @PreAuthorize("permitAll()") public Vacation
+	 * displayVacationDetails(@PathVariable(value = "id") Long tenantId) throws
+	 * NSException {
+	 * logger.info("IN::POST::/users/vacation::displayVacationDetails::" +
+	 * tenantId);
+	 * 
+	 * logger.info("OUT::POST::/users/vacation::displayVacationDetails::" +
+	 * tenantId);
+	 * 
+	 * 
+	 * return vacateService.getVacationDetails(tenantId);
+	 * 
+	 * }
+	 */
 	
-	@GetMapping("users/vacate/approved/{id}")
+	@PutMapping("users/vacate")
 	@PreAuthorize("permitAll()")
-	public String vacationApproved(@PathVariable(value="id") Long tenantId)throws NSException{
+	public void vacationApproved(@RequestParam Long tenantId)throws NSException{
 		logger.info("IN::POST::/users/vacation::vacationApproved::" + tenantId);
 		logger.info("OUT::POST::/users/vacation::vacationApproved::" + tenantId);
 
-		return vacateService.approveVacation(tenantId);
+		 vacateService.approveVacation(tenantId);
 		
 	}
 

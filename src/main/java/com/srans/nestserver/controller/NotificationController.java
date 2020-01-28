@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.model.Notification;
@@ -30,11 +30,11 @@ public class NotificationController {
 	
  
 	//Get Notification	
-	@GetMapping(value = "/users/{userId}/notifications")
+	@GetMapping(value = "/users/vacate")
 	@PreAuthorize("permitAll()")
-	public List<Notification> getAllUserNotification(@PathVariable(value = "userId") Long userId) throws NSException {
+	public List<Notification> getAllUserNotification(@RequestParam Long adminId) throws NSException {
 		logger.info("In::getAllNotificationsOfUser::" );
-		List<Object[]> response = notificationRepo.getAllNotification(userId);
+		List<Object[]> response = notificationRepo.getAllNotification(adminId);
 		System.out.println(response.size());
 		List<Notification> l1 =new ArrayList<>();
 		Notification notifications = null;
@@ -42,7 +42,8 @@ public class NotificationController {
 			 
 			 notifications =new Notification();
 			 notifications.setId(((BigInteger) s[0]).longValue());
-			 notifications.setMessage((String) s[1]);
+			 notifications.setMessage((String) s[1]); 
+			 notifications.setTenantId(((BigInteger) s[2]).longValue());
 			 l1.add(notifications);
 			 
 		 }
