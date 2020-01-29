@@ -181,7 +181,7 @@ public class VacateService {
 
 		// Update Tenant Status
 		User user = userRepo.getOne(tenantId);
-		user.setStatus("NA"); // note active
+		user.setStatus("NA"); // not active
 		userRepo.save(user);
 
 		// Trigger Email

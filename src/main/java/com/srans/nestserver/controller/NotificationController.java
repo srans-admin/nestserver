@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.tomcat.util.modeler.NotificationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.srans.nestserver.config.VacationInfo;
 import com.srans.nestserver.model.Notification;
 import com.srans.nestserver.repository.NotificationRepository;
+import com.srans.nestserver.repository.VacationRepository;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(value = "*", allowedHeaders = "*")
@@ -27,24 +30,30 @@ public class NotificationController {
 	@Autowired
 	private NotificationRepository notificationRepo;
 	
+	@Autowired
+	private VacationRepository vacationRepo;
+	
 	
  
 	//Get Notification	
 	@GetMapping(value = "/users/vacate")
 	@PreAuthorize("permitAll()")
-	public List<Notification> getAllUserNotification(@RequestParam Long adminId) throws NSException {
+	public List<VacationInfo> getAllUserNotification(@RequestParam Long adminId) throws NSException {
 		logger.info("In::getAllNotificationsOfUser::" );
 		List<Object[]> response = notificationRepo.getAllNotification(adminId);
 		System.out.println(response.size());
-		List<Notification> l1 =new ArrayList<>();
-		Notification notifications = null;
+		List<VacationInfo> l1 =new ArrayList<>();
+		VacationInfo vacationInfo = null;
+		
 		 for(Object[] s:response) {		
 			 
-			 notifications =new Notification();
-			 notifications.setId(((BigInteger) s[0]).longValue());
-			 notifications.setMessage((String) s[1]); 
-			 notifications.setTenantId(((BigInteger) s[2]).longValue());
-			 l1.add(notifications);
+			 vacationInfo =new VacationInfo();
+			 vacationInfo.setId(((BigInteger) s[0]).longValue());
+			 vacationInfo.setMessage((String) s[1]); 
+			 vacationInfo.setTenantId(((BigInteger) s[2]).longValue());	
+	
+			 vacationInfo.setRefundAmount(vacationRepo.getRefundAmount(((BigInteger) s[2]).longValue()));
+			 l1.add(vacationInfo);
 			 
 		 }
 		 

@@ -22,6 +22,9 @@ public interface VacationRepository extends JpaRepository<Vacation, Long> {
 	
 	@Query(value = "select count(tenant_id) from vacation where tenant_id=?1 ",nativeQuery = true)
 	public Long checkTenantId(Long tenantId);
+	
+	@Query(value = "select refund_amount from vacation where tenant_id=?1",nativeQuery = true )
+	public Long getRefundAmount(Long tenantId);
 
 
 	
