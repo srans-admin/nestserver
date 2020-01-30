@@ -40,6 +40,7 @@ public class NotificationController {
 	@PreAuthorize("permitAll()")
 	public List<VacationInfo> getAllUserNotification(@RequestParam Long adminId) throws NSException {
 		logger.info("In::getAllNotificationsOfUser::" );
+		
 		List<Object[]> response = notificationRepo.getAllNotification(adminId);
 		System.out.println(response.size());
 		List<VacationInfo> vacation =new ArrayList<>();
@@ -48,11 +49,11 @@ public class NotificationController {
 		 for(Object[] s:response) {		
 			 
 			 vacationInfo =new VacationInfo();
-			 vacationInfo.setId(((BigInteger) s[0]).longValue());
+			 vacationInfo.setId( (Long) s[0]);
 			 vacationInfo.setMessage((String) s[1]); 
-			 vacationInfo.setTenantId(((BigInteger) s[2]).longValue());	
+			 vacationInfo.setTenantId((Long) s[2]);	
 	
-			 vacationInfo.setRefundAmount(vacationRepo.getRefundAmount(((BigInteger) s[2]).longValue()));
+			 vacationInfo.setRefundAmount(vacationRepo.getRefundAmount((Long) s[2]).longValue());
 			 vacation.add(vacationInfo);
 			 
 		 }
