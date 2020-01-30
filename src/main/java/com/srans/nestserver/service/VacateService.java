@@ -1,6 +1,8 @@
 package com.srans.nestserver.service;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -25,7 +27,6 @@ import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.UserRepository;
 import com.srans.nestserver.repository.VacationRepository;
-import com.srans.nestserver.util.NSConstants;
 
 import freemarker.template.TemplateException;
 
@@ -67,6 +68,8 @@ public class VacateService {
 	Long roomId;
 	Long roomRent;
 	Long roomBedId;
+	Date vacateDate;
+	Long refundAmount;
 
 	public Vacation processVacation(Vacation vacate)
 			throws MailException, MessagingException, IOException, TemplateException {
@@ -79,6 +82,9 @@ public class VacateService {
 			// STEP-1: Save vacation Details
 			vacate.setApprovedStatus('N');
 			responseVacation = vacationRepository.save(vacate);
+			
+			vacateDate=(Date) vacate.getDate();
+			refundAmount=vacate.getRefundAmount();
 
 			// STEP-2 : Prepare One Notification to Admin
 			notificationService.tenantVacatedNotifictaion(vacate);
@@ -129,6 +135,9 @@ public class VacateService {
 
 		System.out.println(user.getUserId());
 		reqParamtersMap.put("name", user.getName());
+		reqParamtersMap.put("contactNumber", user.getContactNumber());
+		reqParamtersMap.put("informDate", LocalDate.now());
+		
 		Long hostelid = tenantBookRepo.findHostelId(user.getUserId());
 
 		tenantBookRepo.findAll().forEach(tenantInfo -> {
@@ -137,16 +146,22 @@ public class VacateService {
 				roomId = tenantInfo.getRoomId();
 				roomRent = tenantInfo.getRoomRent();
 				roomBedId = tenantInfo.getRoomBedId();
+				
 
 			}
 		});
 
-		reqParamtersMap.put("hostel_name", (hostelRepo.getOne(hostelid).getHostelName()));
+		reqParamtersMap.put("hostelName", (hostelRepo.getOne(hostelid).getHostelName()));
 		System.out.println();
-		reqParamtersMap.put("floor_number", floorId);
-		reqParamtersMap.put("room_number", roomId);
-		reqParamtersMap.put("room_rent", roomRent);
-		reqParamtersMap.put("bed", roomBedId);
+		reqParamtersMap.put("FloorNumber", floorId);
+		reqParamtersMap.put("roomNumber", roomId);
+		reqParamtersMap.put("roomRent", roomRent);
+		reqParamtersMap.put("bedNumber", roomBedId);
+		reqParamtersMap.put("vacateDate", vacateDate);
+		reqParamtersMap.put("refundAmount",refundAmount );
+		Date lastPayment=paymentRepo.lastPayment(user.getUserId());
+		reqParamtersMap.put("lastPayment", lastPayment);
+		
 
 		String output = this.templateEngine.process(templateFileName,
 				new Context(Locale.getDefault(), reqParamtersMap));
