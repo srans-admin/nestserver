@@ -64,12 +64,12 @@ public class VacateService {
 	@Autowired
 	private TemplateEngine templateEngine;
 
-	Long floorId;
-	Long roomId;
-	Long roomRent;
-	Long roomBedId;
-	Date vacateDate;
-	Long refundAmount;
+	private Long floorId;
+	private Long roomId;
+	private Long roomRent;
+	private Long roomBedId;
+	private Date vacateDate;
+	private Long refundAmount;
 
 	public Vacation processVacation(Vacation vacate)
 			throws MailException, MessagingException, IOException, TemplateException {
@@ -140,19 +140,18 @@ public class VacateService {
 		
 		Long hostelid = tenantBookRepo.findHostelId(user.getUserId());
 
-		tenantBookRepo.findAll().forEach(tenantInfo -> {
-			if (tenantInfo.getTenantId() == user.getUserId()) {
-				floorId = tenantInfo.getFloorId();
-				roomId = tenantInfo.getRoomId();
-				roomRent = tenantInfo.getRoomRent();
-				roomBedId = tenantInfo.getRoomBedId();
+		tenantBookRepo.getTenantBookingInfo(user.getUserId()).stream().forEach(bookingInfo -> {
+			if (bookingInfo.getTenantId() == user.getUserId()) {
+				floorId = bookingInfo.getFloorId();
+				roomId = bookingInfo.getRoomId();
+				roomRent = bookingInfo.getRoomRent();
+				roomBedId = bookingInfo.getRoomBedId();
 				
 
 			}
 		});
 
 		reqParamtersMap.put("hostelName", (hostelRepo.getOne(hostelid).getHostelName()));
-		System.out.println();
 		reqParamtersMap.put("FloorNumber", floorId);
 		reqParamtersMap.put("roomNumber", roomId);
 		reqParamtersMap.put("roomRent", roomRent);

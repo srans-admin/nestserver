@@ -36,13 +36,13 @@ public class NotificationController {
 	
  
 	//Get Notification	
-	@GetMapping(value = "/users/vacate")
+	@GetMapping(value = "/users/notifications")
 	@PreAuthorize("permitAll()")
 	public List<VacationInfo> getAllUserNotification(@RequestParam Long adminId) throws NSException {
 		logger.info("In::getAllNotificationsOfUser::" );
 		List<Object[]> response = notificationRepo.getAllNotification(adminId);
 		System.out.println(response.size());
-		List<VacationInfo> l1 =new ArrayList<>();
+		List<VacationInfo> vacation =new ArrayList<>();
 		VacationInfo vacationInfo = null;
 		
 		 for(Object[] s:response) {		
@@ -53,13 +53,13 @@ public class NotificationController {
 			 vacationInfo.setTenantId(((BigInteger) s[2]).longValue());	
 	
 			 vacationInfo.setRefundAmount(vacationRepo.getRefundAmount(((BigInteger) s[2]).longValue()));
-			 l1.add(vacationInfo);
+			 vacation.add(vacationInfo);
 			 
 		 }
 		 
 		
 		logger.info("Out::getAllNotificationsOfUser::"+response );
-		return l1 ;
+		return vacation ;
 	}
 	
 	

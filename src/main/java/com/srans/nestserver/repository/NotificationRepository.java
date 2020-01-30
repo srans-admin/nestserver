@@ -11,11 +11,11 @@ import com.srans.nestserver.model.Notification;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-	@Query(value = "	select id from notification where view_status='N'", nativeQuery = true)
+	@Query(value = "	select notificationId from NotificationUser where viewStatus='N'")
 	public Long[] getNotificationId();
 
 	//get all new notification
-	@Query(value = "select n.id, n.message, n.tenant_id from notification n  inner JOIN notification_user nu on (n.id=nu.notification_id) where nu.view_status='N' and nu.user_id=?1", nativeQuery = true)
+	@Query(value = "SELECT n.id, n.message, n.tenantId from Notification n  INNER JOIN NotificationUser nu on (n.id=nu.notificationId) where nu.viewStatus='N' and nu.userId=?1")
 	public List<Object[]> getAllNotification(Long userId);
 	
 	

@@ -45,14 +45,14 @@ public class VacateController {
 
 	@PostMapping("/users/vacate")
 	@PreAuthorize("permitAll()")
-	public Vacation saveVacationDetails(@Valid @RequestBody Vacation vacation) throws NSException, MailException, MessagingException, IOException, TemplateException {
+	public Vacation saveVacationDetails(@Valid @RequestBody Vacation vacation)
+			throws NSException, MailException, MessagingException, IOException, TemplateException {
 		logger.info("IN::POST::/users/vacation::saveVacationDetails::" + vacation);
 
 		vacation = vacateService.processVacation(vacation);
 
 		logger.info("OUT::POST::/users/vacation::saveVacationDetails::" + vacation);
 
-		
 		return vacation;
 	}
 
@@ -68,20 +68,19 @@ public class VacateController {
 	 * logger.info("OUT::POST::/users/vacation::displayVacationDetails::" +
 	 * tenantId);
 	 * 
-	 * 
 	 * return vacateService.getVacationDetails(tenantId);
 	 * 
 	 * }
 	 */
-	
+
 	@PutMapping("users/vacate")
 	@PreAuthorize("permitAll()")
-	public void vacationApproved(@RequestParam Long tenantId)throws NSException{
-		logger.info("IN::POST::/users/vacation::vacationApproved::" + tenantId);
-		logger.info("OUT::POST::/users/vacation::vacationApproved::" + tenantId);
+	public void approveVaction(@RequestParam Long tenantId) throws NSException {
+		logger.info("IN::POST::/users/vacation::approveVaction::" + tenantId);
+		logger.info("OUT::POST::/users/vacation::approveVaction::" + tenantId);
 
-		 vacateService.approveVacation(tenantId);
-		
+		vacateService.approveVacation(tenantId);
+
 	}
 
 }
