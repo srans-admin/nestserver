@@ -8,18 +8,25 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import com.srans.nestserver.communication.NiodsMailer;
 import com.srans.nestserver.communication.NiodsSmsGateway;
@@ -31,6 +38,7 @@ import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.UserRepository;
 import com.srans.nestserver.service.TenantService;
+import com.srans.nestserver.service.VacateService;
 import com.srans.nestserver.util.MailTemplates;
 import com.srans.nestserver.util.SMSTemplates;
 
@@ -67,16 +75,50 @@ public class NIODSScheduler {
 
 	@Autowired
 	private NiodsSmsGateway niodsSmsGateway;
+	
+	@Autowired
+	private TemplateEngine templateEngine;
+	
+	@Autowired
+	private PaymentRepository paymentRepo;
 
-	Date bookingDate = null;
-	Long bedId = null;
-	LocalDate nextWeek = null;
+	private Logger logger = LoggerFactory.getLogger(NIODSScheduler.class);
+
+  private	Date bookingDate = null;
+  private Long bedId = null;
+  private LocalDate nextWeek = null;
+  private Map<String, Object> reqParamtersMap;
+
+	public String getTemplate(String templateFileName, User user) {
+		logger.trace("In:: getTemplate" + templateFileName);
+		reqParamtersMap = new HashMap<>();
+
+		System.out.println(user.getUserId());
+		
+		  reqParamtersMap.put("name", user.getName());
+		  
+		  reqParamtersMap.put("date", LocalDate.now());	  
+		  
+		  reqParamtersMap.put("monthlyRent",paymentRepo.getRoomRent(user.getUserId()));  
+		 
+		  reqParamtersMap.put("amount", paymentRepo.getRoomRent(user.getUserId()));
+		 
+
+		String output = this.templateEngine.process(templateFileName,
+				new Context(Locale.getDefault(), reqParamtersMap));
+
+		reqParamtersMap = null;
+
+		logger.trace("Out::getTemplate" + templateFileName);
+		return output;
+	}
+
 
 	public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
 		return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 
-	// Fire The Schedular Every Day On 23:59 AM(Night)
+	// Fire The Scheduler Every Day On 23:59 AM(Night)
 	@Scheduled(cron = "${nidos.cron.bed-reservation-trigger}")
 	public void updateBedStatusAfterSevenDays() throws ResourceNotFoundException {
 
@@ -110,36 +152,41 @@ public class NIODSScheduler {
 
 		}
 	}
-
-	@Scheduled(cron = "${nidos.cron.tenant-invoice-trigger}")
-	public void generateInvoiceOntime() throws MessagingException {
-
+	
+	
+	
 	
 
-		try {
+	// Triggering the scheduler starting 5 days of the every month.
+		@Scheduled(cron = "${nidos.cron.tenant-invoice-trigger}")
+		public void generateInvoiceOntime() throws MessagingException {
 
-			Long[] tenantId = tenantBookRepo.getAllTenantId();
-			for (Long tid : tenantId) {
-				User userInfo = userRepo.getOne(tid);
-				String email = userInfo.getEmailId();
-				String subject = "Invoice";
-				String ccMail = null;
-				String bccMail = null;
-				String message = MailTemplates.TENANT_INVOICE_TEMPLATE.replaceAll("##USER_NAME##", "rahul")
-						.replaceAll("##PASSWORD##", "1234").replaceAll("##HOSTEL_NAME##", "NIODS");
-				niodsMailer.sendEmail(email, subject, ccMail, bccMail, message);
-				//trigger Email
-				tenantService.triggerSMS(userInfo);
-				
-				//Trigger SMS
-				String invoiceMessage = SMSTemplates.TENANT_INVOICE_TEMPLATE;
-				niodsSmsGateway.sendSMS("" + userInfo.getContactNumber(), invoiceMessage);
+			try {
+
+				Long[] tenantId = tenantBookRepo.getAllTenantId();
+				for (Long tid : tenantId) {
+					User userInfo = userRepo.getOne(tid);
+					String email = userInfo.getEmailId();
+					String subject = "Invoice";
+					String ccMail = null;
+					String bccMail = null;
+					String message = this.getTemplate("invoice", userInfo);
+
+					niodsMailer.sendEmail(email, subject, ccMail, bccMail, message);
+					// trigger Email
+					//tenantService.triggerSMS(userInfo);
+
+					// Trigger SMS
+					String invoiceMessage = SMSTemplates.TENANT_INVOICE_TEMPLATE;
+					System.out.println(userInfo.getContactNumber());
+					niodsSmsGateway.sendSMS("" + userInfo.getContactNumber(), invoiceMessage);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
-	}
 
 }
