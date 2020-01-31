@@ -16,7 +16,7 @@ public class SMSTemplates {
 																"Thanks\n"+
 																"--\n@Team NIODS";
 	
-	public static final String TENANT_CREDETIALS = "Dear ##USER_NAME##,\nYour User ID: ##USER_ID## \nTemp Password : ##TEMP_PASSWORD## \n--\n@Team NIODS \nWe recommend you to change passowrd on first login.\n"; 
+	public static final String TENANT_CREDETIALS = "Dear ##USER_NAME##,\nYour User ID: ##USER_ID## \nTemp Password : ##TEMP_PASSWORD## \n--\n@Team NIDOS \nWe recommend you to change passowrd on first login.\n"; 
 	
 	public static final String TENANT_INVOICE_TEMPLATE= "Dear User, \n"+
 	                                                     "Your monthly invoice has been generated, pleasee check your registered email for more information \n--\n@Team NIODS"; 

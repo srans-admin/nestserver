@@ -66,5 +66,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
 	@Query(value = "SELECT t.roomId, u.name  from TenantBooking t INNER JOIN User u on (t.tenantId=u.userId) where t.tenantId=?1")
 	public List<Object[]> getTenantInfo(Long tenantId);
+	
+	@Query(value="SELECT roomRent from Payment where userId=?1")
+	public Long getRoomRent(Long userId);
 
 }

@@ -83,7 +83,7 @@ public class VacateService {
 			vacate.setApprovedStatus('N');
 			responseVacation = vacationRepository.save(vacate);
 			
-			vacateDate=(Date) vacate.getDate();
+			vacateDate= vacate.getDate();
 			refundAmount=vacate.getRefundAmount();
 
 			// STEP-2 : Prepare One Notification to Admin

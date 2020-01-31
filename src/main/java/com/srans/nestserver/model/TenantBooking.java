@@ -70,7 +70,7 @@ public class TenantBooking extends AuditModel {
 		this.tenantId = 0L;
 		this.tenantName = "";
 		this.allotedFrom = null;
-		this.active = "0";
+		this.active = "Y";
 		this.allotedTill = null;
 		this.bedPosition = "";
 		this.floorName = "";
