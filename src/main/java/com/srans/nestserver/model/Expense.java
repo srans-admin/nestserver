@@ -26,7 +26,7 @@ public class Expense extends AuditModel {
 	private Long hostelId;
 
 	@Column
-	private Long expenseType;
+	private String expenseType;
 
 	@Column
 	private Long amount; 
@@ -47,7 +47,7 @@ public class Expense extends AuditModel {
 	}
 
 
-	public Expense(Long id, Long expenseType, Long amount) {
+	public Expense(Long id, String expenseType, Long amount) {
 		super();
 		this.id = id; 
 		this.expenseType = expenseType;
@@ -64,11 +64,11 @@ public class Expense extends AuditModel {
 
  
 
-	public Long getExpenseType() {
+	public String getExpenseType() {
 		return expenseType;
 	}
 
-	public void setExpenseType(Long expenseType) {
+	public void setExpenseType(String expenseType) {
 		this.expenseType = expenseType;
 	}
 
