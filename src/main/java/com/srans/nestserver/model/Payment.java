@@ -11,175 +11,193 @@ import javax.persistence.Table;
 @Table(name = "payment")
 public class Payment extends AuditModel {
 
-/**
-*
-* @author likhit
-*/
-private static final long serialVersionUID = 1L;
+	/**
+	 *
+	 * @author likhit
+	 */
+	private static final long serialVersionUID = 1L;
 
-		@Id
-		@GeneratedValue(strategy = GenerationType.AUTO)
-		private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-		@Column private Long userId; 
-		@Column private Long bookingid; 
-		//@Column private String name; 
-		//@Column private String amountType; 
-		//@Column private String roomName; 
-		//@Column private String roomType; 
-		//@Column private Long roomRent;
-		//@Column private Long roomBedId;
-		@Column private String paymentThrough; 
-		@Column private Long transactionId; 
-		@Column private String bankName; 
-		@Column private String date; 
-		@Column private Long depositAmount; 
-		@Column private Long roomRent;
-		@Column private Long discountAmount;
-		
+	@Column
+	private Long userId;
+	@Column
+	private Long bookingid;
+	// @Column private String name;
+	// @Column private String amountType;
+	// @Column private String roomName;
+	// @Column private String roomType;
+	// @Column private Long roomRent;
+	// @Column private Long roomBedId;
+	@Column
+	private String paymentThrough;
+	@Column
+	private Long transactionId;
+	@Column
+	private String bankName;
+	@Column
+	private String date;
+	@Column
+	private Long depositAmount;
+	@Column
+	private Long roomRent;
+	@Column
+	private Long discountAmount;
+	@Column
+	private Long AmountToBePaid;
 
-		@Column private Long adminId;
+	@Column
+	private Long adminId;
 
+	public Payment() {
+		super();
 
-		public Long getId() {
-			return id;
-		}
+	}
 
+	public Payment(Long id, Long userId, Long bookingid, String paymentThrough, Long transactionId, String bankName,
+			String date, Long depositAmount, Long roomRent, Long discountAmount, Long amountToBePaid, Long adminId) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.bookingid = bookingid;
+		this.paymentThrough = paymentThrough;
+		this.transactionId = transactionId;
+		this.bankName = bankName;
+		this.date = date;
+		this.depositAmount = depositAmount;
+		this.roomRent = roomRent;
+		this.discountAmount = discountAmount;
+		this.AmountToBePaid = amountToBePaid;
+		this.adminId = adminId;
+	}
 
-		public void setId(Long id) {
-			this.id = id;
-		}
+	public Long getAmountToBePaid() {
+		return AmountToBePaid;
+	}
 
+	public void setAmountToBePaid(Long amountToBePaid) {
+		AmountToBePaid = amountToBePaid;
+	}
 
-		public Long getUserId() {
-			return userId;
-		}
+	public Long getId() {
+		return id;
+	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-		public void setUserId(Long userId) {
-			this.userId = userId;
-		}
+	public Long getUserId() {
+		return userId;
+	}
 
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 
-		public Long getBookingid() {
-			return bookingid;
-		}
+	public Long getBookingid() {
+		return bookingid;
+	}
 
+	public void setBookingid(Long bookingid) {
+		this.bookingid = bookingid;
+	}
 
-		public void setBookingid(Long bookingid) {
-			this.bookingid = bookingid;
-		}
+	public String getPaymentThrough() {
+		return paymentThrough;
+	}
 
+	public void setPaymentThrough(String paymentThrough) {
+		this.paymentThrough = paymentThrough;
+	}
 
-		public String getPaymentThrough() {
-			return paymentThrough;
-		}
+	public Long getTransactionId() {
+		return transactionId;
+	}
 
+	public void setTransactionId(Long transactionId) {
+		this.transactionId = transactionId;
+	}
 
-		public void setPaymentThrough(String paymentThrough) {
-			this.paymentThrough = paymentThrough;
-		}
+	public String getBankName() {
+		return bankName;
+	}
 
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
 
-		public Long getTransactionId() {
-			return transactionId;
-		}
+	public String getDate() {
+		return date;
+	}
 
+	public void setDate(String date) {
+		this.date = date;
+	}
 
-		public void setTransactionId(Long transactionId) {
-			this.transactionId = transactionId;
-		}
+	public Long getDepositAmount() {
+		return depositAmount;
+	}
 
+	public void setDepositAmount(Long depositAmount) {
+		this.depositAmount = depositAmount;
+	}
 
-		public String getBankName() {
-			return bankName;
-		}
+	public Long getRoomRent() {
+		return roomRent;
+	}
 
+	public void setRoomRent(Long roomRent) {
+		this.roomRent = roomRent;
+	}
 
-		public void setBankName(String bankName) {
-			this.bankName = bankName;
-		}
+	public Long getDiscountAmount() {
+		return discountAmount;
+	}
 
+	public void setDiscountAmount(Long discountAmount) {
+		this.discountAmount = discountAmount;
+	}
 
-		public String getDate() {
-			return date;
-		}
+	public Long getAdminId() {
+		return adminId;
+	}
 
+	public void setAdminId(Long adminId) {
+		this.adminId = adminId;
+	}
 
-		public void setDate(String date) {
-			this.date = date;
-		}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Payment [id=");
+		builder.append(id);
+		builder.append(", userId=");
+		builder.append(userId);
+		builder.append(", bookingid=");
+		builder.append(bookingid);
+		builder.append(", paymentThrough=");
+		builder.append(paymentThrough);
+		builder.append(", transactionId=");
+		builder.append(transactionId);
+		builder.append(", bankName=");
+		builder.append(bankName);
+		builder.append(", date=");
+		builder.append(date);
+		builder.append(", depositAmount=");
+		builder.append(depositAmount);
+		builder.append(", roomRent=");
+		builder.append(roomRent);
+		builder.append(", discountAmount=");
+		builder.append(discountAmount);
+		builder.append(", AmountToBePaid=");
+		builder.append(AmountToBePaid);
+		builder.append(", adminId=");
+		builder.append(adminId);
+		builder.append("]");
+		return builder.toString();
+	}
 
-
-		public Long getDepositAmount() {
-			return depositAmount;
-		}
-
-
-		public void setDepositAmount(Long depositAmount) {
-			this.depositAmount = depositAmount;
-		}
-
-
-		public Long getRoomRent() {
-			return roomRent;
-		}
-
-
-		public void setRoomRent(Long roomRent) {
-			this.roomRent = roomRent;
-		}
-
-
-		public Long getDiscountAmount() {
-			return discountAmount;
-		}
-
-
-		public void setDiscountAmount(Long discountAmount) {
-			this.discountAmount = discountAmount;
-		}
-
-
-		public Long getAdminId() {
-			return adminId;
-		}
-
-
-		public void setAdminId(Long adminId) {
-			this.adminId = adminId;
-		}
-
-
-		@Override
-		public String toString() {
-			StringBuilder builder = new StringBuilder();
-			builder.append("Payment [id=");
-			builder.append(id);
-			builder.append(", userId=");
-			builder.append(userId);
-			builder.append(", bookingid=");
-			builder.append(bookingid);
-			builder.append(", paymentThrough=");
-			builder.append(paymentThrough);
-			builder.append(", transactionId=");
-			builder.append(transactionId);
-			builder.append(", bankName=");
-			builder.append(bankName);
-			builder.append(", date=");
-			builder.append(date);
-			builder.append(", depositAmount=");
-			builder.append(depositAmount);
-			builder.append(", roomRent=");
-			builder.append(roomRent);
-			builder.append(", discountAmount=");
-			builder.append(discountAmount);
-			builder.append(", adminId=");
-			builder.append(adminId);
-			builder.append("]");
-			return builder.toString();
-		}
-		
-		
- 
 }

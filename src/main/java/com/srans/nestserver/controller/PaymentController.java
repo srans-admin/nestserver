@@ -145,27 +145,7 @@ public class PaymentController {
 		return paymentRepository.save(payment);
 	}
 
-	@GetMapping("payments/users/{id}")
-	@PreAuthorize("permitAll()")
-	// @PreAuthorize("permitAll()")
-	public Payment getTenantInfo(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException {
-		Payment paymentInfo = new Payment();
-		paymentRepository.getPaymentByUserId(userId).stream().forEach(tenantInfo -> {
-			if (tenantInfo.getUserId() == userId) {
-				paymentInfo.setName(tenantInfo.getName());
-				paymentInfo.setRoomType(tenantInfo.getRoomType());
-				paymentInfo.setRoomName(tenantInfo.getRoomName());
-			}
-
-		});
-		return paymentInfo;
-
-		/*
-		 * logger.info("IN::getTenantByName::" + name); User user =
-		 * userRepository.findById(id); logger.info("OUT::getTenantByName::" + name);
-		 * return ResponseEntity.ok().body(id);
-		 */
-	}
+	
 
 	@GetMapping("/payments/{id}")
 	public ResponseEntity<Payment> getPaymentById(@PathVariable(value = "id") Long paymentId)
