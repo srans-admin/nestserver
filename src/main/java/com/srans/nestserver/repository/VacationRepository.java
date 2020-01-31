@@ -1,8 +1,9 @@
 package com.srans.nestserver.repository;
 
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +24,7 @@ public interface VacationRepository extends JpaRepository<Vacation, Long> {
 	@Query(value = "select count(tenant_id) from vacation where tenant_id=?1 ",nativeQuery = true)
 	public Long checkTenantId(Long tenantId);
 	
-	@Query(value = "select refund_amount from vacation where tenant_id=?1",nativeQuery = true )
+	@Query(value = "SELECT refundAmount from Vacation where tenantId=?1" )
 	public Long getRefundAmount(Long tenantId);
 
 
