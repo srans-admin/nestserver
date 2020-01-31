@@ -40,16 +40,19 @@ public class Vacation extends AuditModel implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Vacation(Long id, Long tenantId, Date vacateDate, Character approvedStatus, String comment, Long amount,
-			Long discount, Long refundAmount) {
+	
+
+	public Vacation(Long id, Long tenantId, Date date, Character approvedStatus, String comment, Long refundAmount) {
 		super();
 		this.id = id;
 		this.tenantId = tenantId;
-		this.date = vacateDate;
+		this.date = date;
 		this.approvedStatus = approvedStatus;
 		this.comment = comment;
 		this.refundAmount = refundAmount;
 	}
+
+
 
 	public Long getId() {
 		return id;

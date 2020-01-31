@@ -101,6 +101,8 @@ public class UserService {
 		try {
 
 			// STEP-1: Save User
+			
+			user.setStatus("A");
 			responseTenant = userRepository.save(user);
 
 			if (responseTenant.getUserId() != -1) { 
@@ -171,9 +173,11 @@ public class UserService {
 			responseTenant = userRepository.save(user);
 
 			// STEP-2 : Now drop an email to tenant
-			if (responseTenant.getEmailId() != null && !responseTenant.getEmailId().isEmpty()) {
-				tenantService.triggerAlertEmail(responseTenant);
-			}
+			/*
+			 * if (responseTenant.getEmailId() != null &&
+			 * !responseTenant.getEmailId().isEmpty()) {
+			 * tenantService.triggerAlertEmail(responseTenant); }
+			 */
 
  
 			// STEP-3 : Now drop an SMS to tenant

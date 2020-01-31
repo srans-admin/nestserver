@@ -73,7 +73,7 @@ public class TenantService {
 		logger.trace("In::");
 		reqParamtersMap = new HashMap<>();
 
-		if(user.getRole().endsWith(NSConstants.ROLE_TENANT)) {
+		if(user.getRole().endsWith(NSConstants.ROLE_TENANT)&& user.getStatus().equals("A")) {
 		reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());
 		reqParamtersMap.put("name", user.getName());
  
@@ -82,6 +82,12 @@ public class TenantService {
 		reqParamtersMap.put("room_number", user.getTenantBooking().getRoomId());
 		reqParamtersMap.put("room_rent", user.getTenantBooking().getRoomRent());	
 		reqParamtersMap.put("bed", user.getTenantBooking().getRoomBedId());
+		}
+		
+		else if(user.getRole().endsWith(NSConstants.ROLE_TENANT) && user.getStatus().equals("NA")) {
+			
+			reqParamtersMap.put("name", user.getName());
+			
 		}
 		else if(user.getRole().endsWith(NSConstants.ROLE_GUEST)) {
 			reqParamtersMap.put("name", user.getName());
@@ -129,6 +135,11 @@ public class TenantService {
 				message = this.getTemplate("tenant_booking", responseTenant);
 
 			}
+			
+			else if(responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT) && responseTenant.getStatus().equals("NA")) {
+			
+				message=this.getTemplate("vacation_approved", responseTenant);
+			}
 
 			else if (responseTenant.getRole().endsWith(NSConstants.ROLE_ADMIN)) {
 				message = this.getTemplate("admin_subscription", responseTenant);
@@ -174,7 +185,8 @@ public class TenantService {
 		try {
 			String message = "";
 
-			if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)) {
+			if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT
+					)&& responseTenant.getStatus().equals("A")) {
 
 				message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE
 						.replaceAll("##USER_NAME##", responseTenant.getName())
@@ -184,10 +196,10 @@ public class TenantService {
 						.replaceAll("##ROOM_RENT##", "" + responseTenant.getTenantBooking().getRoomRent());
 
 			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)
-					&& vacationRepo.checkTenantId(responseTenant.getUserId()) == 0) {
+					&& responseTenant.getStatus().equals("A")) {
 				message = SMSTemplates.TENANT_INVOICE_TEMPLATE;
 			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)
-					&& vacationRepo.checkApprovedStatus(responseTenant.getUserId()) == 'Y') {
+					&& responseTenant.getStatus().equals("NA")) {
 				message = SMSTemplates.VACATE_TENANT_MESSAGE_TEMPLATE;
 			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_USER)) {
 				message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE;

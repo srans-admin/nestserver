@@ -156,20 +156,26 @@ public class NotificationService {
 			// STEP-1 prepare Notification object with messsage
 			Notification notification = new Notification();
 
+			
 			User userResponse = userRepository.getOne(responseVacate.getTenantId());
-
+			Long hostelId=tenantBookingRepo.findHostelId(userResponse.getUserId());
+			Hostel hostel=hostelRepo.getOne(hostelId);
+			
 			notification.setMessage(userResponse.getName() + " ,wanted to vacate on " + responseVacate.getDate()
 					+ ". And his Tenant Id::" + responseVacate.getTenantId() + ", please review.");
+			notification.setTenantId(responseVacate.getTenantId());
 			final Notification notificationResponse = notificationRepo.save(notification);
 
-			// STEP-2: Get superAdmins from UAA
+			// STEP-2: Get admins from UAA
 			userRepository.getUsersByRole(NSConstants.ROLE_ADMIN).stream().forEach(admin -> {
 
 				// STEP-3 for each super admin assign
+				if(hostel.getAdminId()==admin.getUserId()) {		
 				NotificationUser notificationUser = new NotificationUser();
 				notificationUser.setNotificationId(notificationResponse.getId());
 				notificationUser.setUserId(admin.getUserId());
 				notificationUserRepo.save(notificationUser);
+				}
 
 			});
 

@@ -1,6 +1,8 @@
 package com.srans.nestserver.repository;
 
 import java.util.Collection;
+
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,9 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
 	@Query(value = "select count(room_bed_id) from payment where room_bed_id=?1", nativeQuery = true)
 	public Long findRoomBedId(Long bedId);
+	
+	@Query(value="select created_at from payment where user_id=?1 order by created_at desc limit 1",nativeQuery = true)
+	public Date lastPayment(Long tenantId);
 
 	@Query(value = "SELECT p from Payment p where user_id=?1")
 	public List<Payment> getPaymentByUserId(Long user_id);
