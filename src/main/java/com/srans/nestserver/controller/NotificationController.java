@@ -4,18 +4,21 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.tomcat.util.modeler.NotificationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.srans.nestserver.config.VacationInfo;
 import com.srans.nestserver.model.Notification;
 import com.srans.nestserver.repository.NotificationRepository;
+import com.srans.nestserver.repository.VacationRepository;
 import com.srans.nestserver.util.NSException;
 
 @CrossOrigin(value = "*", allowedHeaders = "*")
@@ -27,29 +30,37 @@ public class NotificationController {
 	@Autowired
 	private NotificationRepository notificationRepo;
 	
+	@Autowired
+	private VacationRepository vacationRepo;
+	
 	
  
 	//Get Notification	
-	@GetMapping(value = "/users/{userId}/notifications")
+	@GetMapping(value = "/users/notifications")
 	@PreAuthorize("permitAll()")
-	public List<Notification> getAllUserNotification(@PathVariable(value = "userId") Long userId) throws NSException {
+	public List<VacationInfo> getAllUserNotification(@RequestParam Long adminId) throws NSException {
 		logger.info("In::getAllNotificationsOfUser::" );
-		List<Object[]> response = notificationRepo.getAllNotification(userId);
+		
+		List<Object[]> response = notificationRepo.getAllNotification(adminId);
 		System.out.println(response.size());
-		List<Notification> l1 =new ArrayList<>();
-		Notification notifications = null;
+		List<VacationInfo> vacation =new ArrayList<>();
+		VacationInfo vacationInfo = null;
+		
 		 for(Object[] s:response) {		
 			 
-			 notifications =new Notification();
-			 notifications.setId(((BigInteger) s[0]).longValue());
-			 notifications.setMessage((String) s[1]);
-			 l1.add(notifications);
+			 vacationInfo =new VacationInfo();
+			 vacationInfo.setId( (Long) s[0]);
+			 vacationInfo.setMessage((String) s[1]); 
+			 vacationInfo.setTenantId((Long) s[2]);	
+	
+			 vacationInfo.setRefundAmount(vacationRepo.getRefundAmount((Long) s[2]).longValue());
+			 vacation.add(vacationInfo);
 			 
 		 }
 		 
 		
 		logger.info("Out::getAllNotificationsOfUser::"+response );
-		return l1 ;
+		return vacation ;
 	}
 	
 	

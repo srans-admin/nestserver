@@ -11,14 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.srans.nestserver.model.TenantBooking;
 import com.srans.nestserver.model.Vacation;
 import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
@@ -46,37 +45,42 @@ public class VacateController {
 
 	@PostMapping("/users/vacate")
 	@PreAuthorize("permitAll()")
-	public Vacation saveVacationDetails(@Valid @RequestBody Vacation vacation) throws NSException, MailException, MessagingException, IOException, TemplateException {
+	public Vacation saveVacationDetails(@Valid @RequestBody Vacation vacation)
+			throws NSException, MailException, MessagingException, IOException, TemplateException {
 		logger.info("IN::POST::/users/vacation::saveVacationDetails::" + vacation);
 
 		vacation = vacateService.processVacation(vacation);
 
 		logger.info("OUT::POST::/users/vacation::saveVacationDetails::" + vacation);
 
-		
 		return vacation;
 	}
 
-	@GetMapping("users/vacate/{id}")
+	/*
+	 * @GetMapping("users/vacate/{id}")
+	 * 
+	 * @PreAuthorize("permitAll()") public Vacation
+	 * displayVacationDetails(@PathVariable(value = "id") Long tenantId) throws
+	 * NSException {
+	 * logger.info("IN::POST::/users/vacation::displayVacationDetails::" +
+	 * tenantId);
+	 * 
+	 * logger.info("OUT::POST::/users/vacation::displayVacationDetails::" +
+	 * tenantId);
+	 * 
+	 * return vacateService.getVacationDetails(tenantId);
+	 * 
+	 * }
+	 */
+
+	@PutMapping("users/vacate")
 	@PreAuthorize("permitAll()")
-	public Vacation displayVacationDetails(@PathVariable(value = "id") Long tenantId) throws NSException {
-		logger.info("IN::POST::/users/vacation::displayVacationDetails::" + tenantId);
-		
-		logger.info("OUT::POST::/users/vacation::displayVacationDetails::" + tenantId);
+	public void approveVaction(@RequestParam Long tenantId) throws NSException {
+		logger.info("IN::POST::/users/vacation::approveVaction::" + tenantId);
+		logger.info("OUT::POST::/users/vacation::approveVaction::" + tenantId);
 
-		
-		return vacateService.getVacationDetails(tenantId);
+		vacateService.approveVacation(tenantId);
 
-	}
-	
-	@GetMapping("users/vacate/approved/{id}")
-	@PreAuthorize("permitAll()")
-	public String vacationApproved(@PathVariable(value="id") Long tenantId)throws NSException{
-		logger.info("IN::POST::/users/vacation::vacationApproved::" + tenantId);
-		logger.info("OUT::POST::/users/vacation::vacationApproved::" + tenantId);
-
-		return vacateService.approveVacation(tenantId);
-		
 	}
 
 }
