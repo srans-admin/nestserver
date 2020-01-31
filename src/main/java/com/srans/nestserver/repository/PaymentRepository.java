@@ -1,5 +1,7 @@
 package com.srans.nestserver.repository;
 
+import java.util.Collection;
+
 import java.sql.Date;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.srans.nestserver.config.PaymentHistory;
 import com.srans.nestserver.model.Payment;
 
 @Repository
@@ -34,12 +37,12 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 //
 //	public List<Object> getDataForpaymentHistory(Long userId);
 
-	@Query(value = "SELECT p FROM Payment p WHERE p.userId=?1" )
+	@Query(value = "SELECT p FROM Payment p WHERE p.userId=?1")
 	public List<Payment> getPaymentHistory(Long userId);
-	
-	@Query(value = "SELECT p FROM Payment p WHERE p.adminId=?1" )
+
+	@Query(value = "SELECT p FROM Payment p WHERE p.adminId=?1")
 	public List<Payment> getAllUserPaymentsForAdmin(Long adminId);
-	
+
 	@Query(value = "SELECT room_type FROM ROOM WHERE id=?1", nativeQuery = true)
 	public String roomtype(Long floor_id);
 
@@ -57,5 +60,11 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 	
 	@Query(value="select created_at from payment where user_id=?1 order by created_at desc limit 1",nativeQuery = true)
 	public Date lastPayment(Long tenantId);
+
+	@Query(value = "SELECT p from Payment p where user_id=?1")
+	public List<Payment> getPaymentByUserId(Long user_id);
+
+	@Query(value = "SELECT t.roomId, u.name  from TenantBooking t INNER JOIN User u on (t.tenantId=u.userId) where t.tenantId=?1")
+	public List<Object[]> getTenantInfo(Long tenantId);
 
 }
