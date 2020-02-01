@@ -30,9 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.srans.nestserver.config.UserInfo;
 import com.srans.nestserver.exception.ResourceNotFoundException;
-import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.Payment;
 import com.srans.nestserver.model.TenantBooking;
 import com.srans.nestserver.model.User;
@@ -124,8 +122,18 @@ public class UserController {
 	public User getTenantById(@PathVariable(value = "id") Long tenantId) throws ResourceNotFoundException {
 		logger.info("IN::getTenantById::" + tenantId);
 		User user = userRepository.getOne(tenantId);
+		TenantBooking tenantBookingInfo = tenantBookingRepo.getTenantBookedInfoForUser(tenantId);
 		user.setTenantBooking(tenantBookingRepo.getTenantBookedInfoForUser(tenantId));
-		 
+
+		user.setBed(bedRepo.getBedInfoByHostelId(tenantBookingInfo.getHostelId()));
+
+		user.setPayment(paymentRepo.getPaymentByUserId(tenantId));
+
+		user.setHostel(hostelRepo.getOne(tenantBookingInfo.getHostelId()));
+
+		user.setFloorInfo(floorRepo.getOne(tenantBookingInfo.getFloorId()));
+
+		user.setRoom(roomRepo.getOne(tenantBookingInfo.getRoomId()));
 
 		logger.info("OUT::getTenantById::" + tenantId);
 		return user;

@@ -62,7 +62,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 	public Date lastPayment(Long tenantId);
 
 	@Query(value = "SELECT p from Payment p where user_id=?1")
-	public List<Payment> getPaymentByUserId(Long user_id);
+	public Payment getPaymentByUserId(Long user_id);
 
 	@Query(value = "SELECT t.roomId, u.name  from TenantBooking t INNER JOIN User u on (t.tenantId=u.userId) where t.tenantId=?1")
 	public List<Object[]> getTenantInfo(Long tenantId);

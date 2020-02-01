@@ -97,6 +97,9 @@ public class User implements Serializable {
 	private Payment payment;
 
 	@Transient
+	private Hostel hostel;
+
+	@Transient
 	private Bed bed;
 
 	@Column(name = "subscriptions")
@@ -108,6 +111,12 @@ public class User implements Serializable {
 	@Transient
 	private UserSubscription userSubscriptionWrapper;
 
+	@Transient
+	private Floor floorInfo;
+
+	@Transient
+	private Room room;
+
 	public User() {
 
 	}
@@ -116,8 +125,9 @@ public class User implements Serializable {
 			Long fatherphoneNumber, String motherName, long motherphoneNumber, Date dob, long emergencyContactNumber,
 			String nameOfTheEmployer, String bloodGroup, String officeAddress, Long mobileNumber, String emailId,
 			String permanentAddress, String hostelName, long floor, String roomName, String roomType,
-			Long depositAmount, long paymentThrough, TenantBooking tenantBooking, Payment payment, Bed bed,
-			int subscriptions, String subscriptionType, UserSubscription userSubscriptionWrapper) {
+			Long depositAmount, long paymentThrough, TenantBooking tenantBooking, Payment payment, Hostel hostel,
+			Bed bed, int subscriptions, String subscriptionType, UserSubscription userSubscriptionWrapper,
+			Floor floorInfo, Room room) {
 		super();
 		this.userId = userId;
 		this.name = name;
@@ -144,10 +154,13 @@ public class User implements Serializable {
 		this.paymentThrough = paymentThrough;
 		this.tenantBooking = tenantBooking;
 		this.payment = payment;
+		this.hostel = hostel;
 		this.bed = bed;
 		this.subscriptions = subscriptions;
 		this.subscriptionType = subscriptionType;
 		this.userSubscriptionWrapper = userSubscriptionWrapper;
+		this.floorInfo = floorInfo;
+		this.room = room;
 	}
 
 	public Long getUserId() {
@@ -222,6 +235,14 @@ public class User implements Serializable {
 		this.motherphoneNumber = motherphoneNumber;
 	}
 
+	public Date getDob() {
+		return dob;
+	}
+
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+
 	public long getEmergencyContactNumber() {
 		return emergencyContactNumber;
 	}
@@ -280,7 +301,6 @@ public class User implements Serializable {
 
 	public String getHostelName() {
 		return hostelName;
-
 	}
 
 	public void setHostelName(String hostelName) {
@@ -301,7 +321,6 @@ public class User implements Serializable {
 
 	public void setRoomName(String roomName) {
 		this.roomName = roomName;
-
 	}
 
 	public String getRoomType() {
@@ -312,7 +331,13 @@ public class User implements Serializable {
 		this.roomType = roomType;
 	}
 
-	
+	public Long getDepositAmount() {
+		return depositAmount;
+	}
+
+	public void setDepositAmount(Long depositAmount) {
+		this.depositAmount = depositAmount;
+	}
 
 	public long getPaymentThrough() {
 		return paymentThrough;
@@ -336,6 +361,14 @@ public class User implements Serializable {
 
 	public void setPayment(Payment payment) {
 		this.payment = payment;
+	}
+
+	public Hostel getHostel() {
+		return hostel;
+	}
+
+	public void setHostel(Hostel hostel) {
+		this.hostel = hostel;
 	}
 
 	public Bed getBed() {
@@ -370,23 +403,24 @@ public class User implements Serializable {
 		this.userSubscriptionWrapper = userSubscriptionWrapper;
 	}
 
+	public Floor getFloorInfo() {
+		return floorInfo;
+	}
+
+	public void setFloorInfo(Floor floorInfo) {
+		this.floorInfo = floorInfo;
+	}
+
+	public Room getRoom() {
+		return room;
+	}
+
+	public void setRoom(Room room) {
+		this.room = room;
+	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-	}
-
-	public Date getDob() {
-		return dob;
-	}
-
-	public void setDob(Date dob) {
-		this.dob = dob;
-	}
-	public Long getDepositAmount() {
-		return depositAmount;
-	}
-
-	public void setDepositAmount(Long depositAmount) {
-		this.depositAmount = depositAmount;
 	}
 
 	@Override
@@ -442,6 +476,8 @@ public class User implements Serializable {
 		builder.append(tenantBooking);
 		builder.append(", payment=");
 		builder.append(payment);
+		builder.append(", hostel=");
+		builder.append(hostel);
 		builder.append(", bed=");
 		builder.append(bed);
 		builder.append(", subscriptions=");
@@ -450,10 +486,12 @@ public class User implements Serializable {
 		builder.append(subscriptionType);
 		builder.append(", userSubscriptionWrapper=");
 		builder.append(userSubscriptionWrapper);
+		builder.append(", floorInfo=");
+		builder.append(floorInfo);
+		builder.append(", room=");
+		builder.append(room);
 		builder.append("]");
 		return builder.toString();
 	}
-
-
 
 }
