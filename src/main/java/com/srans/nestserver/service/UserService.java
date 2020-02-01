@@ -134,7 +134,7 @@ public class UserService {
 				// STEP-4 : Now drop an email to tenant
 				if (responseTenant.getEmailId() != null && !responseTenant.getEmailId().isEmpty()) {
 					//tenantService.triggerAlertEmail(responseTenant);
-
+         
 					// STEP-5 : Prepare one Notification to SuperAdmin(s)
 					notificationService.addTenantNotifictaion(responseTenant);
 				}
