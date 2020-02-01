@@ -102,59 +102,21 @@ public class UserController {
 	@GetMapping("/users")
 	// @PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
 	@PreAuthorize("permitAll()")
-	public List<UserInfo> getAllTenants(@RequestParam("adminId") Long adminId, @RequestParam("type") String type) {
+	public List<User> getAllTenants(@RequestParam("adminId") Long adminId, @RequestParam("type") String type) {
 		logger.info("IN::getAllTenants::" + adminId + "::" + type);
 
 		List<User> users = null;
-		List<UserInfo> userInfo = new ArrayList<>();
-		UserInfo user = new UserInfo();
 
 		if (type != null && type.equalsIgnoreCase(NSConstants.ROLE_TENANT)) {
 			users = userRepository.getUsersForAdmin(adminId, type);
+			logger.info("IN::getAllTenants::" + adminId);
+		} else if (type != null && type.equalsIgnoreCase(NSConstants.ROLE_GUEST)) {
+			users = userRepository.getUsersByRole(NSConstants.ROLE_GUEST);
 
-			for (User tenantInfo : users) {
-
-				Long hostelId = tenantBookingRepo.findHostelId(tenantInfo.getUserId());
-
-				Hostel hostel = hostelRepo.getOne(hostelId);
-
-				user.setHostelName(hostel.getHostelName());
-
-				floorRepo.findByHostelId(hostelId).stream().forEach(floor -> {
-
-					user.setFloorName(floor.getFloorName());
-
-					roomRepo.findByFloorId(floor.getId()).stream().forEach(room -> {
-						tenantInfo.setRoomName(room.getRoomName());
-						tenantInfo.setRoomType(room.getRoomType());
-						user.setRoomName(room.getRoomName());
-						user.setSharingType(room.getRoomType());
-
-						bedRepo.findByRoomId(room.getId()).stream().forEach(bed -> {
-							user.setBedNo(bed.getBedNo().longValue());
-						});
-
-					});
-
-				});
-				paymentRepo.getPaymentByUserId(tenantInfo.getUserId()).stream().forEach(payment -> {
-					user.setAmountToBePaid(payment.getAmountToBePaid());
-					user.setDepositAmount(payment.getDepositAmount());
-					user.setDiscountAmount(payment.getDiscountAmount());
-					user.setRoomRent(payment.getRoomRent());
-					user.setJoiningDate(payment.getCreatedAt());
-					user.setPaymentType(payment.getPaymentType());
-					user.setPaymentThrough(payment.getPaymentThrough());
-
-				});
-
-			}
-			
-			userInfo.add(user);
-
-		} 
+		}
 		logger.info("OUT::getAllTenants::" + adminId);
-		return userInfo;
+
+		return users;
 	}
 
 	@GetMapping("/users/{id}")
@@ -163,6 +125,7 @@ public class UserController {
 		logger.info("IN::getTenantById::" + tenantId);
 		User user = userRepository.getOne(tenantId);
 		user.setTenantBooking(tenantBookingRepo.getTenantBookedInfoForUser(tenantId));
+		 
 
 		logger.info("OUT::getTenantById::" + tenantId);
 		return user;
