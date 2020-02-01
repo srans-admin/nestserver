@@ -1,6 +1,7 @@
 package com.srans.nestserver.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,10 +30,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.srans.nestserver.config.UserInfo;
 import com.srans.nestserver.exception.ResourceNotFoundException;
+import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.Payment;
 import com.srans.nestserver.model.TenantBooking;
 import com.srans.nestserver.model.User;
+import com.srans.nestserver.repository.BedRepository;
+import com.srans.nestserver.repository.FloorRepository;
+import com.srans.nestserver.repository.HostelRepository;
+import com.srans.nestserver.repository.PaymentRepository;
+import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.UserRepository;
 import com.srans.nestserver.service.BedAvailabilityService;
@@ -64,62 +72,112 @@ public class UserController {
 	@Autowired
 	private BedAvailabilityService bedAvailabilityService = new BedAvailabilityService();
 
+	@Autowired
+	private HostelRepository hostelRepo;
+
+	@Autowired
+	private RoomRepository roomRepo;
+
+	@Autowired
+	private BedRepository bedRepo;
+
+	@Autowired
+	private PaymentRepository paymentRepo;
+
+	@Autowired
+	private FloorRepository floorRepo;
+
 	@PostMapping("/users")
 	@PreAuthorize("permitAll()")
-	public User saveUser(@Valid @RequestBody User user) throws NSException {
+	public User user(@Valid @RequestBody User user) throws NSException {
 
-		logger.info("IN::POST::/users::saveUser::" + user);
+		logger.info("IN::POST::/users::user::" + user);
 
 		user = userService.processUser(user);
 
-		logger.info("OUT::POST::/users::saveUser::" + user);
+		logger.info("OUT::POST::/users::user::" + user);
 		return user;
 	}
 
 	@GetMapping("/users")
-	//@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
-    @PreAuthorize("permitAll()")
-	public List<User> getAllTenants(@RequestParam("adminId") Long adminId, @RequestParam("type") String type) {
-		//logger.info("IN::getAllTenants::"  + adminId "::" + type);
+	// @PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	@PreAuthorize("permitAll()")
+	public List<UserInfo> getAllTenants(@RequestParam("adminId") Long adminId, @RequestParam("type") String type) {
+		logger.info("IN::getAllTenants::" + adminId + "::" + type);
 
 		List<User> users = null;
-		
-		if(type != null && type.equalsIgnoreCase(NSConstants.ROLE_TENANT)){
-			users = userRepository.getUsersForAdmin(adminId, type);
-			logger.info("IN::getAllTenants::"  + adminId);
-		} else if(type != null && type.equalsIgnoreCase(NSConstants.ROLE_GUEST)){
-			users = userRepository.getUsersByRole(NSConstants.ROLE_GUEST);
-			
-		}
-		logger.info("OUT::getAllTenants::"  + adminId);
+		List<UserInfo> userInfo = new ArrayList<>();
+		UserInfo user = new UserInfo();
 
-		return users;
+		if (type != null && type.equalsIgnoreCase(NSConstants.ROLE_TENANT)) {
+			users = userRepository.getUsersForAdmin(adminId, type);
+
+			for (User tenantInfo : users) {
+
+				Long hostelId = tenantBookingRepo.findHostelId(tenantInfo.getUserId());
+
+				Hostel hostel = hostelRepo.getOne(hostelId);
+
+				user.setHostelName(hostel.getHostelName());
+
+				floorRepo.findByHostelId(hostelId).stream().forEach(floor -> {
+
+					user.setFloorName(floor.getFloorName());
+
+					roomRepo.findByFloorId(floor.getId()).stream().forEach(room -> {
+						tenantInfo.setRoomName(room.getRoomName());
+						tenantInfo.setRoomType(room.getRoomType());
+						user.setRoomName(room.getRoomName());
+						user.setSharingType(room.getRoomType());
+
+						bedRepo.findByRoomId(room.getId()).stream().forEach(bed -> {
+							user.setBedNo(bed.getBedNo().longValue());
+						});
+
+					});
+
+				});
+				paymentRepo.getPaymentByUserId(tenantInfo.getUserId()).stream().forEach(payment -> {
+					user.setAmountToBePaid(payment.getAmountToBePaid());
+					user.setDepositAmount(payment.getDepositAmount());
+					user.setDiscountAmount(payment.getDiscountAmount());
+					user.setRoomRent(payment.getRoomRent());
+					user.setJoiningDate(payment.getCreatedAt());
+					user.setPaymentType(payment.getPaymentType());
+					user.setPaymentThrough(payment.getPaymentThrough());
+
+				});
+
+			}
+			
+			userInfo.add(user);
+
+		} 
+		logger.info("OUT::getAllTenants::" + adminId);
+		return userInfo;
 	}
 
 	@GetMapping("/users/{id}")
 	@PreAuthorize("permitAll()")
-	public User getTenantById(@PathVariable(value = "id") Long tenantId)
-			throws ResourceNotFoundException {
-		logger.info("IN::getTenantById::"  +  tenantId);
-		User user = userRepository.getOne(tenantId); 
-		user.setTenantBooking(tenantBookingRepo.getTenantBookedInfoForUser(tenantId)); 
-		 
-		logger.info("OUT::getTenantById::"  +  tenantId);
+	public User getTenantById(@PathVariable(value = "id") Long tenantId) throws ResourceNotFoundException {
+		logger.info("IN::getTenantById::" + tenantId);
+		User user = userRepository.getOne(tenantId);
+		user.setTenantBooking(tenantBookingRepo.getTenantBookedInfoForUser(tenantId));
+
+		logger.info("OUT::getTenantById::" + tenantId);
 		return user;
 	}
 
-	
 	@GetMapping("/users/byname/{name}")
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<User> getTenantByName(@PathVariable(value = "name") String name)
 			throws ResourceNotFoundException {
-		logger.info("IN::getTenantByName::"  +  name);
+		logger.info("IN::getTenantByName::" + name);
 
 		User user = userRepository.findByName(name);
-		logger.info("OUT::getTenantByName::"  +  name);
+		logger.info("OUT::getTenantByName::" + name);
 		return ResponseEntity.ok().body(user);
 	}
-	
 
 	@PostMapping("/users/{id}/upload/{cat}")
 	@PreAuthorize("permitAll()")
@@ -149,7 +207,7 @@ public class UserController {
 	public ResponseEntity<InputStreamResource> retriveIdproofImage(@PathVariable("id") Long id,
 			@PathVariable("cat") String cat) throws NSException, IOException {
 		logger.info("In::POST::/usersidproof/{id}/retrive/{cat}::retriveIdproofImage::" + id + "::" + cat);
-		logger.info("OUT::POST::/usersidproof/{id}/retrive/{cat}::retriveIdproofImage::" + id + "::" + cat);	
+		logger.info("OUT::POST::/usersidproof/{id}/retrive/{cat}::retriveIdproofImage::" + id + "::" + cat);
 		return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG)
 				.body(new InputStreamResource(storageService.retriveIdproofImage(id, cat)));
 
@@ -170,8 +228,8 @@ public class UserController {
 	@GetMapping("/users/guest-reserve-bed/{hostelId}")
 	@PreAuthorize("permitAll()")
 	public List<AvailableBedsUtil> getAvailableBed(@PathVariable("hostelId") Long hostelId) throws NSException {
-		logger.info("IN::getAvailableBed::"  +  hostelId);
-		logger.info("OUT::getAvailableBed::"  +  hostelId);
+		logger.info("IN::getAvailableBed::" + hostelId);
+		logger.info("OUT::getAvailableBed::" + hostelId);
 		return bedAvailabilityService.getAllAvailableBed(hostelId);
 
 	}
@@ -193,8 +251,8 @@ public class UserController {
 	public Payment postSaveAmountDetails(@Valid @RequestBody Payment payment) throws NSException {
 		logger.info("IN::POST::/users::postSaveAmountDetails::" + payment);
 		logger.info("OUT::POST::/users::postSaveAmountDetails::" + payment);
-		return null;//bedAvailabilityService.saveAmountDetails(payment);
-		 
+		return null;// bedAvailabilityService.saveAmountDetails(payment);
+
 	}
 
 	/*
@@ -207,20 +265,21 @@ public class UserController {
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<User> updateUser(@PathVariable(value = "id") Long tenantId,
 			@Valid @RequestBody User userDetails) throws ResourceNotFoundException {
-		/*User user = userRepository.findById(tenantId)
-				.orElseThrow(() -> new ResourceNotFoundException("Tenant not found for this Id :: " + tenantId));
+		/*
+		 * User user = userRepository.findById(tenantId) .orElseThrow(() -> new
+		 * ResourceNotFoundException("Tenant not found for this Id :: " + tenantId));
+		 * 
+		 * user.setUserId(userDetails.getUserId());
+		 * user.setBloodGroup(userDetails.getBloodGroup());
+		 * user.setContactNumber(userDetails.getContactNumber());
+		 * user.setDob(userDetails.getDob()); user.setEmailId(userDetails.getEmailId());
+		 * user.setPermanentAddress(userDetails.getPermanentAddress());
+		 */
 
-		user.setUserId(userDetails.getUserId());
-		user.setBloodGroup(userDetails.getBloodGroup());
-		user.setContactNumber(userDetails.getContactNumber());
-		user.setDob(userDetails.getDob());
-		user.setEmailId(userDetails.getEmailId());
-      user.setPermanentAddress(userDetails.getPermanentAddress());*/
-
-		logger.info("IN::updateUser::"  +  tenantId);
+		logger.info("IN::updateUser::" + tenantId);
 
 		final User updatedTenant = userRepository.save(userDetails);
-		logger.info("OUT::updateUser::"  +  tenantId);
+		logger.info("OUT::updateUser::" + tenantId);
 
 		return ResponseEntity.ok(updatedTenant);
 	}

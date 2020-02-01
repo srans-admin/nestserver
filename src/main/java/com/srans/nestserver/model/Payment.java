@@ -26,7 +26,8 @@ public class Payment extends AuditModel {
 	@Column
 	private Long bookingid;
 	// @Column private String name;
-	// @Column private String amountType;
+	@Column
+	private String paymentType;
 	// @Column private String roomName;
 	// @Column private String roomType;
 	// @Column private Long roomRent;
@@ -46,7 +47,7 @@ public class Payment extends AuditModel {
 	@Column
 	private Long discountAmount;
 	@Column
-	private Long AmountToBePaid;
+	private Long amountToBePaid;
 
 	@Column
 	private Long adminId;
@@ -56,12 +57,14 @@ public class Payment extends AuditModel {
 
 	}
 
-	public Payment(Long id, Long userId, Long bookingid, String paymentThrough, Long transactionId, String bankName,
-			String date, Long depositAmount, Long roomRent, Long discountAmount, Long amountToBePaid, Long adminId) {
+	public Payment(Long id, Long userId, Long bookingid, String paymentType, String paymentThrough, Long transactionId,
+			String bankName, String date, Long depositAmount, Long roomRent, Long discountAmount, Long amountToBePaid,
+			Long adminId) {
 		super();
 		this.id = id;
 		this.userId = userId;
 		this.bookingid = bookingid;
+		this.paymentType = paymentType;
 		this.paymentThrough = paymentThrough;
 		this.transactionId = transactionId;
 		this.bankName = bankName;
@@ -69,16 +72,8 @@ public class Payment extends AuditModel {
 		this.depositAmount = depositAmount;
 		this.roomRent = roomRent;
 		this.discountAmount = discountAmount;
-		this.AmountToBePaid = amountToBePaid;
+		this.amountToBePaid = amountToBePaid;
 		this.adminId = adminId;
-	}
-
-	public Long getAmountToBePaid() {
-		return AmountToBePaid;
-	}
-
-	public void setAmountToBePaid(Long amountToBePaid) {
-		AmountToBePaid = amountToBePaid;
 	}
 
 	public Long getId() {
@@ -103,6 +98,14 @@ public class Payment extends AuditModel {
 
 	public void setBookingid(Long bookingid) {
 		this.bookingid = bookingid;
+	}
+
+	public String getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
 	}
 
 	public String getPaymentThrough() {
@@ -161,12 +164,24 @@ public class Payment extends AuditModel {
 		this.discountAmount = discountAmount;
 	}
 
+	public Long getAmountToBePaid() {
+		return amountToBePaid;
+	}
+
+	public void setAmountToBePaid(Long amountToBePaid) {
+		this.amountToBePaid = amountToBePaid;
+	}
+
 	public Long getAdminId() {
 		return adminId;
 	}
 
 	public void setAdminId(Long adminId) {
 		this.adminId = adminId;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	@Override
@@ -178,6 +193,8 @@ public class Payment extends AuditModel {
 		builder.append(userId);
 		builder.append(", bookingid=");
 		builder.append(bookingid);
+		builder.append(", paymentType=");
+		builder.append(paymentType);
 		builder.append(", paymentThrough=");
 		builder.append(paymentThrough);
 		builder.append(", transactionId=");
@@ -192,8 +209,8 @@ public class Payment extends AuditModel {
 		builder.append(roomRent);
 		builder.append(", discountAmount=");
 		builder.append(discountAmount);
-		builder.append(", AmountToBePaid=");
-		builder.append(AmountToBePaid);
+		builder.append(", amountToBePaid=");
+		builder.append(amountToBePaid);
 		builder.append(", adminId=");
 		builder.append(adminId);
 		builder.append("]");
