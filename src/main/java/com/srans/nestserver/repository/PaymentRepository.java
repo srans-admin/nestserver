@@ -1,7 +1,5 @@
 package com.srans.nestserver.repository;
 
-import java.util.Collection;
-
 import java.sql.Date;
 import java.util.List;
 
@@ -10,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.srans.nestserver.config.PaymentHistory;
 import com.srans.nestserver.model.Payment;
 
 @Repository

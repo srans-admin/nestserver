@@ -17,7 +17,7 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 	@Query(value="SELECT c FROM Complaint c WHERE c.userId=?1")
 	public Optional<List<Complaint>> getCompliantsForUser(Long userId );
 	
-	@Query(value="SELECT c FROM Complaint c WHERE c.admin_id=?1", nativeQuery=true)
+	@Query(value="SELECT c FROM Complaint c WHERE c.adminId=?1")
 	public List<Complaint> getCompliantsForAdmin(Long adminId );
 	
 	

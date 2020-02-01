@@ -1,9 +1,8 @@
 package com.srans.nestserver.controller;
 
-import java.sql.Date;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,7 +30,6 @@ import com.srans.nestserver.model.ComplaintWrapper;
 import com.srans.nestserver.repository.ComplaintCommentsRepository;
 import com.srans.nestserver.repository.ComplaintRepository;
 import com.srans.nestserver.repository.UserRepository;
-import com.srans.nestserver.util.ComplaintHistoryUtil;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -97,9 +95,10 @@ public class ComplaintController {
 		if(adminId.isPresent()) {
 			
 			Object aid = adminId.get();
-			if(aid instanceof String) {
-				complaint.setAdminId(Long.parseLong((String) aid)); ;
-			}
+			//if(aid instanceof Long) {
+			BigInteger aidBigInteger = (BigInteger) aid;
+			complaint.setAdminId(aidBigInteger.longValue()); 
+			//}
 			//complaint.setAdminId((Long)adminId.get());
 		}else {
 			throw new Exception("Unable to find Admin Id for the user : "+complaint.getUserId());
