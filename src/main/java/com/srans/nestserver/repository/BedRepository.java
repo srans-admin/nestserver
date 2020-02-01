@@ -63,7 +63,7 @@ public interface BedRepository extends JpaRepository<Bed, Long> {
 	public List <Object> getAvailableBedsByHostelId(Long hosteId);
 	
 	@Query(value = "SELECT b from Bed b where hostelId=?1")
-	public Bed getBedInfoByHostelId(Long hostelId);
+	public List <Bed> getBedInfoByHostelId(Long hostelId);
 	
 
 
