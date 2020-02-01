@@ -116,9 +116,12 @@ public class User implements Serializable {
 
 	@Transient
 	private Room room;
+	
+	@Transient
+	private String guestToTenant;
 
 	public User() {
-
+		//this.isGuestToTenant = false;
 	}
 
 	public User(Long userId, String name, String role, String status, Long contactNumber, String fatherName,
@@ -161,6 +164,7 @@ public class User implements Serializable {
 		this.userSubscriptionWrapper = userSubscriptionWrapper;
 		this.floorInfo = floorInfo;
 		this.room = room;
+		
 	}
 
 	public Long getUserId() {
@@ -421,6 +425,15 @@ public class User implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	} 
+ 
+
+	public String getGuestToTenant() {
+		return guestToTenant;
+	}
+
+	public void setGuestToTenant(String guestToTenant) {
+		this.guestToTenant = guestToTenant;
 	}
 
 	@Override
@@ -490,6 +503,8 @@ public class User implements Serializable {
 		builder.append(floorInfo);
 		builder.append(", room=");
 		builder.append(room);
+		builder.append(", guestToTenant=");
+		builder.append(guestToTenant); 
 		builder.append("]");
 		return builder.toString();
 	}
