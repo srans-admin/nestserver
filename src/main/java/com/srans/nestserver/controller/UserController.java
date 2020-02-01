@@ -1,3 +1,4 @@
+ 
 package com.srans.nestserver.controller;
 
 import java.io.IOException;
@@ -87,7 +88,7 @@ public class UserController {
 
 	@PostMapping("/users")
 	@PreAuthorize("permitAll()")
-	public User user(@Valid @RequestBody User user) throws NSException {
+	public User user(@Valid @RequestBody User user ) throws NSException {
 
 		logger.info("IN::POST::/users::user::" + user);
 
@@ -124,17 +125,17 @@ public class UserController {
 		User user = userRepository.getOne(tenantId);
 		TenantBooking tenantBookingInfo = tenantBookingRepo.getTenantBookedInfoForUser(tenantId);
 		user.setTenantBooking(tenantBookingInfo);
-		
-	  user.setBed(bedRepo.getOne(tenantBookingInfo.getBookingId()));
-		  
-		  user.setPayment(paymentRepo.getPaymentByUserId(tenantId));
-		  
-		  user.setHostel(hostelRepo.getOne(tenantBookingInfo.getHostelId()));
-		  
-		  user.setFloorInfo(floorRepo.getOne(tenantBookingInfo.getFloorId()));
-		  
-		  user.setRoom(roomRepo.getOne(tenantBookingInfo.getRoomId()));
-		 
+		//user.setTenantBooking(tenantBookingRepo.getTenantBookedInfoForUser(tenantId));
+
+		//user.setBed(bedRepo.getBedInfoByHostelId(tenantBookingInfo.getHostelId()));
+
+		//user.setPayment(paymentRepo.getPaymentByUserId(tenantId));
+
+		//user.setHostel(hostelRepo.getOne(tenantBookingInfo.getHostelId()));
+
+		//user.setFloorInfo(floorRepo.getOne(tenantBookingInfo.getFloorId()));
+
+		//user.setRoom(roomRepo.getOne(tenantBookingInfo.getRoomId()));
 
 		logger.info("OUT::getTenantById::" + tenantId);
 		return user;
@@ -272,5 +273,5 @@ public class UserController {
 		logger.info("OUT::POST::/users::deleteUser::" + tenantId);
 		return response;
 	}
-
+ 
 }

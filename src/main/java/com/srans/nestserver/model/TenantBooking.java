@@ -30,10 +30,14 @@ public class TenantBooking extends AuditModel {
 	private Long tenantId;
 	@Column
 	private Long hostelId;
+	
+	@Transient
+	private Long hostelName;
+	
 	@Column
-	private Long floorId;
+	private Long floorId;  
 	@Column
-	private Long roomId;
+	private Long roomId; 
 	@Column
 	private Long roomBedId;
 	@Column
