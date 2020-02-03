@@ -13,7 +13,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "sransUser")
-public class User implements Serializable {
+public class User extends AuditModel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -90,14 +90,17 @@ public class User implements Serializable {
 	@Column(name = "paymentThrough")
 	private long paymentThrough;
 
+	@Column(name = "idProof")
+	private String idProof;
+
+	@Column(name = "idProofId")
+	private String idProofId;
+
 	@Transient
 	private TenantBooking tenantBooking;
 
 	@Transient
 	private Payment payment;
-
-	@Transient
-	private Hostel hostel;
 
 	@Transient
 	private Bed bed;
@@ -112,25 +115,19 @@ public class User implements Serializable {
 	private UserSubscription userSubscriptionWrapper;
 
 	@Transient
-	private Floor floorInfo;
-
-	@Transient
-	private Room room;
-	
-	@Transient
 	private String guestToTenant;
 
 	public User() {
-		//this.isGuestToTenant = false;
+		// this.isGuestToTenant = false;
 	}
 
 	public User(Long userId, String name, String role, String status, Long contactNumber, String fatherName,
 			Long fatherphoneNumber, String motherName, long motherphoneNumber, Date dob, long emergencyContactNumber,
 			String nameOfTheEmployer, String bloodGroup, String officeAddress, Long mobileNumber, String emailId,
 			String permanentAddress, String hostelName, long floor, String roomName, String roomType,
-			Long depositAmount, long paymentThrough, TenantBooking tenantBooking, Payment payment, Hostel hostel,
-			Bed bed, int subscriptions, String subscriptionType, UserSubscription userSubscriptionWrapper,
-			Floor floorInfo, Room room) {
+			Long depositAmount, long paymentThrough, String idProof, String idProofId, TenantBooking tenantBooking,
+			Payment payment, Bed bed, int subscriptions, String subscriptionType,
+			UserSubscription userSubscriptionWrapper, String guestToTenant) {
 		super();
 		this.userId = userId;
 		this.name = name;
@@ -155,16 +152,15 @@ public class User implements Serializable {
 		this.roomType = roomType;
 		this.depositAmount = depositAmount;
 		this.paymentThrough = paymentThrough;
+		this.idProof = idProof;
+		this.idProofId = idProofId;
 		this.tenantBooking = tenantBooking;
 		this.payment = payment;
-		this.hostel = hostel;
 		this.bed = bed;
 		this.subscriptions = subscriptions;
 		this.subscriptionType = subscriptionType;
 		this.userSubscriptionWrapper = userSubscriptionWrapper;
-		this.floorInfo = floorInfo;
-		this.room = room;
-		
+		this.guestToTenant = guestToTenant;
 	}
 
 	public Long getUserId() {
@@ -197,6 +193,22 @@ public class User implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getIdProof() {
+		return idProof;
+	}
+
+	public void setIdProof(String idProof) {
+		this.idProof = idProof;
+	}
+
+	public String getIdProofId() {
+		return idProofId;
+	}
+
+	public void setIdProofId(String idProofId) {
+		this.idProofId = idProofId;
 	}
 
 	public Long getContactNumber() {
@@ -367,14 +379,6 @@ public class User implements Serializable {
 		this.payment = payment;
 	}
 
-	public Hostel getHostel() {
-		return hostel;
-	}
-
-	public void setHostel(Hostel hostel) {
-		this.hostel = hostel;
-	}
-
 	public Bed getBed() {
 		return bed;
 	}
@@ -407,33 +411,16 @@ public class User implements Serializable {
 		this.userSubscriptionWrapper = userSubscriptionWrapper;
 	}
 
-	public Floor getFloorInfo() {
-		return floorInfo;
-	}
-
-	public void setFloorInfo(Floor floorInfo) {
-		this.floorInfo = floorInfo;
-	}
-
-	public Room getRoom() {
-		return room;
-	}
-
-	public void setRoom(Room room) {
-		this.room = room;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	} 
- 
-
 	public String getGuestToTenant() {
 		return guestToTenant;
 	}
 
 	public void setGuestToTenant(String guestToTenant) {
 		this.guestToTenant = guestToTenant;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	@Override
@@ -485,12 +472,14 @@ public class User implements Serializable {
 		builder.append(depositAmount);
 		builder.append(", paymentThrough=");
 		builder.append(paymentThrough);
+		builder.append(", idProof=");
+		builder.append(idProof);
+		builder.append(", idProofId=");
+		builder.append(idProofId);
 		builder.append(", tenantBooking=");
 		builder.append(tenantBooking);
 		builder.append(", payment=");
 		builder.append(payment);
-		builder.append(", hostel=");
-		builder.append(hostel);
 		builder.append(", bed=");
 		builder.append(bed);
 		builder.append(", subscriptions=");
@@ -499,12 +488,8 @@ public class User implements Serializable {
 		builder.append(subscriptionType);
 		builder.append(", userSubscriptionWrapper=");
 		builder.append(userSubscriptionWrapper);
-		builder.append(", floorInfo=");
-		builder.append(floorInfo);
-		builder.append(", room=");
-		builder.append(room);
 		builder.append(", guestToTenant=");
-		builder.append(guestToTenant); 
+		builder.append(guestToTenant);
 		builder.append("]");
 		return builder.toString();
 	}

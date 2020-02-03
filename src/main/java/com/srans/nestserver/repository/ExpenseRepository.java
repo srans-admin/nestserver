@@ -15,4 +15,10 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long>{
 	
 	@Query(value="SELECT * FROM expensescategory WHERE type_id=?1",nativeQuery = true)
    public List<Expense>getExpenses(long type_id);
+	
+	@Query(value="SELECT e FROM Expense e WHERE hostelId=?1")
+	public List<Expense> getexpenseHistoryDetail(Long hostelid);
+	
+	@Query(value = "SELECT count(e.hostelId) from Expense e where hostelId=?1")
+	public Long checkHostelId(Long hostelId);
 }

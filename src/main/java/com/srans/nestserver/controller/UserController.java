@@ -2,7 +2,6 @@
 package com.srans.nestserver.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
+import com.srans.nestserver.model.Floor;
+import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.Payment;
+import com.srans.nestserver.model.Room;
 import com.srans.nestserver.model.TenantBooking;
 import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.BedRepository;
@@ -124,19 +126,15 @@ public class UserController {
 		logger.info("IN::getTenantById::" + tenantId);
 		User user = userRepository.getOne(tenantId);
 		TenantBooking tenantBookingInfo = tenantBookingRepo.getTenantBookedInfoForUser(tenantId);
+		Hostel hostel=hostelRepo.getOne(tenantBookingInfo.getHostelId());
+		tenantBookingInfo.setHostelName(hostel.getHostelName());
+		Floor floor=floorRepo.getOne(tenantBookingInfo.getFloorId());
+		tenantBookingInfo.setFloorName(floor.getFloorName());
+	    Room room=roomRepo.getOne(tenantBookingInfo.getRoomId());
+	    tenantBookingInfo.setRoomName(room.getRoomName());
+	    tenantBookingInfo.setSharing(room.getRoomType());
+        user.setPayment(paymentRepo.getPaymentByUserId(tenantId));
 		user.setTenantBooking(tenantBookingInfo);
-		//user.setTenantBooking(tenantBookingRepo.getTenantBookedInfoForUser(tenantId));
-
-		//user.setBed(bedRepo.getBedInfoByHostelId(tenantBookingInfo.getHostelId()));
-
-		//user.setPayment(paymentRepo.getPaymentByUserId(tenantId));
-
-		//user.setHostel(hostelRepo.getOne(tenantBookingInfo.getHostelId()));
-
-		//user.setFloorInfo(floorRepo.getOne(tenantBookingInfo.getFloorId()));
-
-		//user.setRoom(roomRepo.getOne(tenantBookingInfo.getRoomId()));
-
 		logger.info("OUT::getTenantById::" + tenantId);
 		return user;
 	}
