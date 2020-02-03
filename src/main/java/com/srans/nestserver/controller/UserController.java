@@ -125,18 +125,21 @@ public class UserController {
 	public User getTenantById(@PathVariable(value = "id") Long tenantId) throws ResourceNotFoundException {
 		logger.info("IN::getTenantById::" + tenantId);
 		User user = userRepository.getOne(tenantId);
-		if (!user.getRole().equals(NSConstants.ROLE_ADMIN ) && !user.getRole().equals(NSConstants.ROLE_GUEST)) {
-			TenantBooking tenantBookingInfo = tenantBookingRepo.getTenantBookedInfoForUser(tenantId);
-			Hostel hostel = hostelRepo.getOne(tenantBookingInfo.getHostelId());
-			tenantBookingInfo.setHostelName(hostel.getHostelName());
-			Floor floor = floorRepo.getOne(tenantBookingInfo.getFloorId());
-			tenantBookingInfo.setFloorName(floor.getFloorName());
-			Room room = roomRepo.getOne(tenantBookingInfo.getRoomId());
-			tenantBookingInfo.setRoomName(room.getRoomName());
-			tenantBookingInfo.setSharing(room.getRoomType());
-			user.setPayment(paymentRepo.getPaymentByUserId(tenantId));
-			user.setTenantBooking(tenantBookingInfo);
+
+		
+		if(!user.getRole().equals(NSConstants.ROLE_ADMIN ) && !user.getRole().equals(NSConstants.ROLE_GUEST)) {
+		TenantBooking tenantBookingInfo = tenantBookingRepo.getTenantBookedInfoForUser(tenantId);
+		Hostel hostel=hostelRepo.getOne(tenantBookingInfo.getHostelId());
+		tenantBookingInfo.setHostelName(hostel.getHostelName());
+		Floor floor=floorRepo.getOne(tenantBookingInfo.getFloorId());
+		tenantBookingInfo.setFloorName(floor.getFloorName());
+	    Room room=roomRepo.getOne(tenantBookingInfo.getRoomId());
+	    tenantBookingInfo.setRoomName(room.getRoomName());
+	    tenantBookingInfo.setSharing(room.getRoomType());
+        user.setPayment(paymentRepo.getPaymentByUserId(tenantId));
+		user.setTenantBooking(tenantBookingInfo);
 		}
+		
 		logger.info("OUT::getTenantById::" + tenantId);
 		return user;
 	}
