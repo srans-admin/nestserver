@@ -1,4 +1,4 @@
- 
+
 package com.srans.nestserver.controller;
 
 import java.io.IOException;
@@ -90,7 +90,7 @@ public class UserController {
 
 	@PostMapping("/users")
 	@PreAuthorize("permitAll()")
-	public User user(@Valid @RequestBody User user ) throws NSException {
+	public User user(@Valid @RequestBody User user) throws NSException {
 
 		logger.info("IN::POST::/users::user::" + user);
 
@@ -125,6 +125,7 @@ public class UserController {
 	public User getTenantById(@PathVariable(value = "id") Long tenantId) throws ResourceNotFoundException {
 		logger.info("IN::getTenantById::" + tenantId);
 		User user = userRepository.getOne(tenantId);
+
 		
 		if(!user.getRole().equals(NSConstants.ROLE_ADMIN ) && !user.getRole().equals(NSConstants.ROLE_GUEST)) {
 		TenantBooking tenantBookingInfo = tenantBookingRepo.getTenantBookedInfoForUser(tenantId);
@@ -275,5 +276,5 @@ public class UserController {
 		logger.info("OUT::POST::/users::deleteUser::" + tenantId);
 		return response;
 	}
- 
+
 }
