@@ -126,7 +126,7 @@ public class UserController {
 		logger.info("IN::getTenantById::" + tenantId);
 		User user = userRepository.getOne(tenantId);
 		
-		if(!user.getRole().equals(NSConstants.ROLE_ADMIN)) {
+		if(!user.getRole().equals(NSConstants.ROLE_ADMIN ) && !user.getRole().equals(NSConstants.ROLE_GUEST)) {
 		TenantBooking tenantBookingInfo = tenantBookingRepo.getTenantBookedInfoForUser(tenantId);
 		Hostel hostel=hostelRepo.getOne(tenantBookingInfo.getHostelId());
 		tenantBookingInfo.setHostelName(hostel.getHostelName());
