@@ -137,6 +137,7 @@ public class UserController {
 			user.setPayment(paymentRepo.getPaymentByUserId(tenantId));
 			user.setTenantBooking(tenantBookingInfo);
 		}
+
 		logger.info("OUT::getTenantById::" + tenantId);
 		return user;
 	}
