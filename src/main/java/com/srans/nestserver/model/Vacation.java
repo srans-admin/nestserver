@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "vacation")
@@ -34,13 +35,21 @@ public class Vacation extends AuditModel implements Serializable {
 	@Column
 	private Long refundAmount;
 
+	@Transient
+	private Long hostelId;
+
+	@Transient
+	private String hostelName;
 	
+	@Transient
+	private Long bedId;
+
+	
+
 	public Vacation() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	
 
 	public Vacation(Long id, Long tenantId, Date date, Character approvedStatus, String comment, Long refundAmount) {
 		super();
@@ -51,8 +60,6 @@ public class Vacation extends AuditModel implements Serializable {
 		this.comment = comment;
 		this.refundAmount = refundAmount;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -102,12 +109,48 @@ public class Vacation extends AuditModel implements Serializable {
 		this.refundAmount = refundAmount;
 	}
 
+	public Long getHostelId() {
+		return hostelId;
+	}
+
+	public void setHostelId(Long hostelId) {
+		this.hostelId = hostelId;
+	}
+
+	public String getHostelName() {
+		return hostelName;
+	}
+
+	public void setHostelName(String hostelName) {
+		this.hostelName = hostelName;
+	}
+	public Long getBedId() {
+		return bedId;
+	}
+
+	public void setBedId(Long bedId) {
+		this.bedId = bedId;
+	}
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Vacation [id=").append(id).append(", tenantId=").append(tenantId).append(", date=").append(date)
-				.append(", approvedStatus=").append(approvedStatus).append(", comment=").append(comment)
-				.append(", refundAmount=").append(refundAmount).append("]");
+		builder.append("Vacation [id=");
+		builder.append(id);
+		builder.append(", tenantId=");
+		builder.append(tenantId);
+		builder.append(", date=");
+		builder.append(date);
+		builder.append(", approvedStatus=");
+		builder.append(approvedStatus);
+		builder.append(", comment=");
+		builder.append(comment);
+		builder.append(", refundAmount=");
+		builder.append(refundAmount);
+		builder.append(", hostelId=");
+		builder.append(hostelId);
+		builder.append(", hostelName=");
+		builder.append(hostelName);
+		builder.append("]");
 		return builder.toString();
 	}
 

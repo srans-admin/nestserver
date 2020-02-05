@@ -82,9 +82,9 @@ public class VacateService {
 			// STEP-1: Save vacation Details
 			vacate.setApprovedStatus('N');
 			responseVacation = vacationRepository.save(vacate);
-			
-			vacateDate= vacate.getDate();
-			refundAmount=vacate.getRefundAmount();
+
+			vacateDate = vacate.getDate();
+			refundAmount = vacate.getRefundAmount();
 
 			// STEP-2 : Prepare One Notification to Admin
 			notificationService.tenantVacatedNotifictaion(vacate);
@@ -137,7 +137,7 @@ public class VacateService {
 		reqParamtersMap.put("name", user.getName());
 		reqParamtersMap.put("contactNumber", user.getContactNumber());
 		reqParamtersMap.put("informDate", LocalDate.now());
-		
+
 		Long hostelid = tenantBookRepo.findHostelId(user.getUserId());
 
 		tenantBookRepo.getTenantBookingInfo(user.getUserId()).stream().forEach(bookingInfo -> {
@@ -146,7 +146,6 @@ public class VacateService {
 				roomId = bookingInfo.getRoomId();
 				roomRent = bookingInfo.getRoomRent();
 				roomBedId = bookingInfo.getRoomBedId();
-				
 
 			}
 		});
@@ -157,10 +156,9 @@ public class VacateService {
 		reqParamtersMap.put("roomRent", roomRent);
 		reqParamtersMap.put("bedNumber", roomBedId);
 		reqParamtersMap.put("vacateDate", vacateDate);
-		reqParamtersMap.put("refundAmount",refundAmount );
-		Date lastPayment=paymentRepo.lastPayment(user.getUserId());
+		reqParamtersMap.put("refundAmount", refundAmount);
+		Date lastPayment = paymentRepo.lastPayment(user.getUserId());
 		reqParamtersMap.put("lastPayment", lastPayment);
-		
 
 		String output = this.templateEngine.process(templateFileName,
 				new Context(Locale.getDefault(), reqParamtersMap));
@@ -182,21 +180,27 @@ public class VacateService {
 
 		Long vacationId = vacationRepository.findVacationId(tenantId);
 		Vacation vacate = vacationRepository.getOne(vacationId);
-		vacate.setApprovedStatus('N');
+		vacate.setApprovedStatus('Y');
 		vacationRepository.save(vacate);
 
 		// Update bed status
 		Long roomBedId = vacationRepository.findRoomBedId(tenantId);
-		System.out.println(roomBedId);
+		System.out.println("room bed id "+roomBedId);
 		Bed bed = bedRepo.getOne(roomBedId);
-		System.out.println(bed.getAlloted());
-		bed.setAlloted('Y');
+		System.out.println("bed  book status "+bed.getAlloted());
+		bed.setAlloted('N');
 		bedRepo.save(bed);
 
 		// Update Tenant Status
 		User user = userRepo.getOne(tenantId);
 		user.setStatus("NA"); // not active
 		userRepo.save(user);
+		
+		// delete record from tenant booking table		
+		tenantBookRepo.getTenantBookingInfo(tenantId).stream().forEach(tenant->{
+			tenant.setActive("N");
+			tenantBookRepo.save(tenant);
+		});
 
 		// Trigger Email
 		tenantService.triggerAlertEmail(user);

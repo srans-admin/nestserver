@@ -1,6 +1,5 @@
 package com.srans.nestserver.model;
 
-import java.io.Serializable;
 import java.sql.Date;
 
 import javax.persistence.Column;
