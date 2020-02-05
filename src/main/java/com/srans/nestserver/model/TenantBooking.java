@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "tenantbooking")
@@ -32,7 +33,7 @@ public class TenantBooking extends AuditModel {
 	private Long floorId;
 	@Column
 	private Long roomId;
-	@Column
+	@Column(unique = true)
 	private Long roomBedId;
 	@Column
 	private Long roomRent;
