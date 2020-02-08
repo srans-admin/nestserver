@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
+import com.srans.nestserver.model.AmenityType;
 import com.srans.nestserver.model.Floor;
 import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.Room;
@@ -37,6 +38,7 @@ import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
+import com.srans.nestserver.service.AmenityService;
 import com.srans.nestserver.service.HostelService;
 import com.srans.nestserver.service.NotificationService;
 import com.srans.nestserver.service.StorageService;
@@ -73,6 +75,9 @@ public class HostelController {
 
 	@Autowired
 	private TenantBookRepository tenantBookRepo;
+	
+	@Autowired
+	private AmenityService amenityService;
 
 	@Autowired
 	private SubAdminService adminService = new SubAdminService();
@@ -96,7 +101,6 @@ public class HostelController {
 	}
 
 	@GetMapping("/hostels/our-hostels")
-
 	@PreAuthorize("permitAll()")
 	public List<Hostel> getAllHostelsForTenant(@RequestParam("id") Long tenantId) {
 List<Hostel> allHostelForTenant =new ArrayList<>();
@@ -128,6 +132,14 @@ List<Hostel> allHostelForTenant =new ArrayList<>();
 		});
 
 		return (allHostelForTenant);
+	}
+	
+	@PostMapping("/hostels/amenity")
+	@PreAuthorize("permitAll()")
+	public AmenityType postAmenity(@RequestBody AmenityType amenityType) {
+		logger.info("IN::POST::/hostels::saveHostel::" + amenityType);
+		return amenityService.saveAmenity(amenityType);
+		
 	}
 
 	@GetMapping("/hostels/{id}")

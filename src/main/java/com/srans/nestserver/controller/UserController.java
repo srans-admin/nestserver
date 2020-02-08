@@ -140,6 +140,7 @@ public class UserController {
 		logger.info("OUT::getTenantById::" + tenantId);
 		return user;
 	}
+	
 
 	@GetMapping("/users/byname/{name}")
 	@PreAuthorize("permitAll()")

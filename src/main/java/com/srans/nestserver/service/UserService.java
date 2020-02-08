@@ -211,24 +211,49 @@ public class UserService {
 			// STEP-1: Save User
 			responseTenant = userRepository.save(user);
 
-			if (responseTenant.getUserId() != -1) {
-
-				// STEP-2 : Post this info to UAA
-				//tenantToUaaService.postUserToUaa(responseTenant);
-				
+			if (responseTenant.getUserId() != -1) { 
+				 
+				// STEP-2
  
-				// STEP-3 : Now drop an SMS to tenant
-				//if (!("" + responseTenant.getContactNumber()).isEmpty()) {
-				//	tenantService.triggerSMS(responseTenant); 
-				//} 
+				user.getTenantBooking().setTenantId(responseTenant.getUserId());
+				TenantBooking tenantBooking = new TenantBooking();
+				tenantBooking = tenantBookRepository.save(user.getTenantBooking()); 
+				 
 
-				// STEP-4 :Now drop an email to tenant
-				//if (responseTenant.getEmailId() != null && !responseTenant.getEmailId().isEmpty()) {
-				//	tenantService.triggerAlertEmail(responseTenant);
-				//}
+				// Update Bed with alloted_state as R
+				Bed bed = new Bed();
+				bed.setId(tenantBooking.getRoomBedId());
+				bed.setHostelId(tenantBooking.getHostelId());
+				bed.setFloorId(tenantBooking.getFloorId());
+				bed.setRoomId(tenantBooking.getRoomId());
+				bed.setAlloted('R');
+				bed.setUpdatedAt(new Date());
+
+				responseTenant.setTenantBooking(tenantBooking);
+				responseTenant.setBed(bedRepository.saveAndFlush(bed));
+ 
+				// STEP-3: Save Payment Information
+ 
+				user.getPayment().setUserId(responseTenant.getUserId());
+				responseTenant.setPayment(paymentRepository.save(user.getPayment()));
+
+				// STEP-4 : Now drop an email to tenant
+				if (responseTenant.getEmailId() != null && !responseTenant.getEmailId().isEmpty()) {
+					//tenantService.triggerAlertEmail(responseTenant);
+            
+					// STEP-5 : Prepare one Notification to SuperAdmin(s)
+					notificationService.addTenantNotifictaion(responseTenant);
+				}
+
+				// STEP-6 : Now drop an SMS to tenant
+				if (!("" + responseTenant.getContactNumber()).isEmpty()) {
+					tenantService.triggerSMS(responseTenant);
+				}
+
+				
 
 			} else {
-				throw new NSException("Unable to save tenant ");
+				throw new NSException("Unable to save Guest ");
 			}
 
 		} catch (Exception e) {

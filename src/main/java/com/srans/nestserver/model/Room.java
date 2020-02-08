@@ -27,7 +27,7 @@ public class Room implements Serializable{
 	private Long hostelId;
 	@Column
 	private Long floorId;
-	@Column
+	
 	private String roomName;
 	@Column
 	private String roomType;

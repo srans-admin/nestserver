@@ -65,6 +65,7 @@ public class TenantBookingController {
 		if(responsetenant.getUserId() != -1) {
 			//user.getTenantBooking().set
 			tenantBookRepository.save(user.getTenantBooking());
+			
 		}
 
 	
