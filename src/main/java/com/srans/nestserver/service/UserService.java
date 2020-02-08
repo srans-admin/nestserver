@@ -94,6 +94,34 @@ public class UserService {
 
 	}
 
+	
+	/*
+	 * private User processGuestOps(User user) {
+	 * logger.debug("IN::processGuestOps"); User responseGuest = null;
+	 * 
+	 * try { //STEP -1 Save User user.setStatus("A"); responseGuest =
+	 * userRepository.save(user);
+	 * 
+	 * if(responseGuest.getUserId()!=-1) {
+	 * 
+	 * //STEP -2 user.getTenantBooking().setGuestId(responseGuest.getUserId());
+	 * 
+	 * 
+	 * } } }
+	 */
+	 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
 	private User processTenantOps(User user) {
 		logger.debug("In::processTenantOps");
 		User responseTenant = null;
@@ -256,3 +284,6 @@ public class UserService {
 	}
 
 }
+
+
+      

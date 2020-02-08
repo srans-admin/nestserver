@@ -199,7 +199,9 @@ public class HostelController {
 
 
 	}
-
+	
+	
+	
 	//Get Hostel Details For Admin 
 	@GetMapping("/hostels")
 	@PreAuthorize("permitAll()")

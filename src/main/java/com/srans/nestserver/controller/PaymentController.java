@@ -1,9 +1,12 @@
 package com.srans.nestserver.controller;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.config.PaymentHistory;
 import com.srans.nestserver.exception.ResourceNotFoundException;
+import com.srans.nestserver.model.Expense;
 import com.srans.nestserver.model.Payment;
 import com.srans.nestserver.model.Room;
 import com.srans.nestserver.model.User;
@@ -34,6 +38,7 @@ import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.PaymentRepository;
 import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.repository.UserRepository;
+import com.srans.nestserver.util.HistoryUtil;
 import com.srans.nestserver.util.NSConstants;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -78,7 +83,7 @@ public class PaymentController {
 					payment.setDepositAmount(payments.getDepositAmount());
 					payment.setDiscountAmount(payments.getDiscountAmount());
 					payment.setAmountToBePaid(payments.getAmountToBePaid());
-
+                    payment.setPaidDate(payments.getPaidDate());
 				}
 			});
 
@@ -111,7 +116,7 @@ public class PaymentController {
 				paymentHistory.setDepositAmount(payments.getDepositAmount());
 				paymentHistory.setDiscountAmount(payments.getDiscountAmount());
 				paymentHistory.setAmountToBePaid(payments.getAmountToBePaid());
-
+                paymentHistory.setPaidDate(payments.getPaidDate());
 				List<Object[]> response = paymentRepository.getTenantInfo(payments.getUserId());
 
 				Long roomId = 0L;
@@ -136,6 +141,73 @@ public class PaymentController {
 		}
 		return paymentList;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
+	 * @GetMapping("/payments/{user_id}") public Optional<Payment>
+	 * getpaymentsOfParticularUser(@PathVariable(value = "id") long userId) {
+	 * logger.info("payment history of a particular user"); return
+	 * paymentRepository.findById(userId); }
+	 * 
+	 */
+	
+	
+	
+	
+	
+	
+	
+	
+	@GetMapping("payments/history/{id}")
+	@PreAuthorize("permitAll()")
+	// @PreAuthorize("permitAll()")
+	public List<HistoryUtil> getPaymentHistoryDetail(@PathVariable(value = "id") Long userId)
+			throws ResourceNotFoundException {
+		
+		List<HistoryUtil> getPaymentHistory = new ArrayList<>();
+		
+		 paymentRepository.getDataForpaymentHistory(userId).stream().forEach(paymentInfo ->{
+			HistoryUtil historyUtil=new HistoryUtil();
+			//historyUtil.setAmount(paymentInfo.getRoomRent());
+			historyUtil.setRoomRent(paymentInfo.getRoomRent());
+			historyUtil.setPaymentThrough(paymentInfo.getPaymentThrough());
+            historyUtil.setPaidDate(paymentInfo.getPaidDate());			
+			getPaymentHistory.add(historyUtil);
+			
+		});
+	
+
+		
+
+		return (getPaymentHistory);
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@PostMapping("/payments")
 	@PreAuthorize("permitAll()")

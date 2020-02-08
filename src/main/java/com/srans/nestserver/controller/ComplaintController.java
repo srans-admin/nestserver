@@ -63,7 +63,7 @@ public class ComplaintController {
 			try {
 				complaintsOpt = complaintRepository.getCompliantsForUser(userId);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 			complaints = complaintsOpt.get();

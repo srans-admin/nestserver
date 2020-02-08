@@ -41,6 +41,9 @@ public class User implements Serializable {
 
 	@Column(name = "motherName")
 	private String motherName;
+	
+	@Column(name = "gender")
+	private String gender;
 
 	@Column(name = "motherphoneNumber")
 	private long motherphoneNumber;
@@ -125,12 +128,12 @@ public class User implements Serializable {
 	}
 
 	public User(Long userId, String name, String role, String status, Long contactNumber, String fatherName,
-			Long fatherphoneNumber, String motherName, long motherphoneNumber, Date dob, long emergencyContactNumber,
-			String nameOfTheEmployer, String bloodGroup, String officeAddress, Long mobileNumber, String emailId,
-			String permanentAddress, String hostelName, long floor, String roomName, String roomType,
-			Long depositAmount, long paymentThrough, TenantBooking tenantBooking, Payment payment, Hostel hostel,
-			Bed bed, int subscriptions, String subscriptionType, UserSubscription userSubscriptionWrapper,
-			Floor floorInfo, Room room) {
+			Long fatherphoneNumber, String motherName, String gender, long motherphoneNumber, Date dob,
+			long emergencyContactNumber, String nameOfTheEmployer, String bloodGroup, String officeAddress,
+			Long mobileNumber, String emailId, String permanentAddress, String hostelName, long floor, String roomName,
+			String roomType, Long depositAmount, long paymentThrough, TenantBooking tenantBooking, Payment payment,
+			Hostel hostel, Bed bed, int subscriptions, String subscriptionType,
+			UserSubscription userSubscriptionWrapper, Floor floorInfo, Room room, String guestToTenant) {
 		super();
 		this.userId = userId;
 		this.name = name;
@@ -140,6 +143,7 @@ public class User implements Serializable {
 		this.fatherName = fatherName;
 		this.fatherphoneNumber = fatherphoneNumber;
 		this.motherName = motherName;
+		this.gender = gender;
 		this.motherphoneNumber = motherphoneNumber;
 		this.dob = dob;
 		this.emergencyContactNumber = emergencyContactNumber;
@@ -164,7 +168,7 @@ public class User implements Serializable {
 		this.userSubscriptionWrapper = userSubscriptionWrapper;
 		this.floorInfo = floorInfo;
 		this.room = room;
-		
+		this.guestToTenant = guestToTenant;
 	}
 
 	public Long getUserId() {
@@ -229,6 +233,14 @@ public class User implements Serializable {
 
 	public void setMotherName(String motherName) {
 		this.motherName = motherName;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public long getMotherphoneNumber() {
@@ -423,11 +435,6 @@ public class User implements Serializable {
 		this.room = room;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	} 
- 
-
 	public String getGuestToTenant() {
 		return guestToTenant;
 	}
@@ -455,6 +462,8 @@ public class User implements Serializable {
 		builder.append(fatherphoneNumber);
 		builder.append(", motherName=");
 		builder.append(motherName);
+		builder.append(", gender=");
+		builder.append(gender);
 		builder.append(", motherphoneNumber=");
 		builder.append(motherphoneNumber);
 		builder.append(", dob=");
@@ -504,7 +513,7 @@ public class User implements Serializable {
 		builder.append(", room=");
 		builder.append(room);
 		builder.append(", guestToTenant=");
-		builder.append(guestToTenant); 
+		builder.append(guestToTenant);
 		builder.append("]");
 		return builder.toString();
 	}
