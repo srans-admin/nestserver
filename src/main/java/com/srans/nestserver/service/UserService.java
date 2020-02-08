@@ -214,7 +214,7 @@ public class UserService {
 			if (responseTenant.getUserId() != -1) {
 
 				// STEP-2 : Post this info to UAA
-				tenantToUaaService.postUserToUaa(responseTenant);
+				//tenantToUaaService.postUserToUaa(responseTenant);
 				
  
 				// STEP-3 : Now drop an SMS to tenant
