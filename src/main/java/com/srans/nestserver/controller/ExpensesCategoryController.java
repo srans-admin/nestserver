@@ -45,6 +45,13 @@ public class ExpensesCategoryController {
 		return expensescategory;
 
 	}
+	
+
+	
+	
+	
+	
+	
 
 	@GetMapping("/categories")
 	@PreAuthorize("permitAll()")

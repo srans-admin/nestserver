@@ -247,8 +247,6 @@ public class Hostel implements Serializable {
 		this.subAdminDetails = subAdminDetails;
 	}
 
-
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -285,9 +283,4 @@ public class Hostel implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
- 
-
-	
-	
-	
 }

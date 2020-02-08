@@ -230,6 +230,10 @@ List<Hostel> allHostelForTenant =new ArrayList<>();
 
 	}
 
+	
+	
+	
+
 	// Get Hostel Details For Admin
 	@GetMapping("/hostels")
 	@PreAuthorize("permitAll()")

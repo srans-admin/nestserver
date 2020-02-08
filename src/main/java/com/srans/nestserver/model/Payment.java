@@ -1,5 +1,7 @@
 package com.srans.nestserver.model;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,7 +41,7 @@ public class Payment extends AuditModel {
 	@Column
 	private String bankName;
 	@Column
-	private String date;
+	private Date paidDate;
 	@Column
 	private Long depositAmount;
 	@Column
@@ -58,7 +60,7 @@ public class Payment extends AuditModel {
 	}
 
 	public Payment(Long id, Long userId, Long bookingid, String paymentType, String paymentThrough, Long transactionId,
-			String bankName, String date, Long depositAmount, Long roomRent, Long discountAmount, Long amountToBePaid,
+			String bankName, Date paidDate, Long depositAmount, Long roomRent, Long discountAmount, Long amountToBePaid,
 			Long adminId) {
 		super();
 		this.id = id;
@@ -68,7 +70,7 @@ public class Payment extends AuditModel {
 		this.paymentThrough = paymentThrough;
 		this.transactionId = transactionId;
 		this.bankName = bankName;
-		this.date = date;
+		this.paidDate = paidDate;
 		this.depositAmount = depositAmount;
 		this.roomRent = roomRent;
 		this.discountAmount = discountAmount;
@@ -132,12 +134,12 @@ public class Payment extends AuditModel {
 		this.bankName = bankName;
 	}
 
-	public String getDate() {
-		return date;
+	public Date getPaidDate() {
+		return paidDate;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setPaidDate(Date paidDate) {
+		this.paidDate = paidDate;
 	}
 
 	public Long getDepositAmount() {
@@ -180,10 +182,6 @@ public class Payment extends AuditModel {
 		this.adminId = adminId;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -201,8 +199,8 @@ public class Payment extends AuditModel {
 		builder.append(transactionId);
 		builder.append(", bankName=");
 		builder.append(bankName);
-		builder.append(", date=");
-		builder.append(date);
+		builder.append(", paidDate=");
+		builder.append(paidDate);
 		builder.append(", depositAmount=");
 		builder.append(depositAmount);
 		builder.append(", roomRent=");

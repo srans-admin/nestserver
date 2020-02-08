@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -31,6 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
+import com.srans.nestserver.model.Expense;
+
 import com.srans.nestserver.model.Floor;
 import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.Payment;
@@ -176,6 +179,7 @@ public class UserController {
 
 	}
 
+		
 	@GetMapping("/usersidproof/{id}/retrive/{cat}")
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<InputStreamResource> retriveIdproofImage(@PathVariable("id") Long id,

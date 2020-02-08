@@ -36,6 +36,10 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
 	@Query(value = "SELECT p FROM Payment p WHERE p.userId=?1")
 	public List<Payment> getPaymentHistory(Long userId);
+	
+	
+	@Query(value = "SELECT p FROM Payment p WHERE p.userId=?1")
+	public List<Payment> getDataForpaymentHistory(Long userId);
 
 	@Query(value = "SELECT p FROM Payment p WHERE p.adminId=?1")
 	public List<Payment> getAllUserPaymentsForAdmin(Long adminId);
@@ -66,5 +70,9 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 	
 	@Query(value="SELECT roomRent from Payment where userId=?1")
 	public Long getRoomRent(Long userId);
-
+	
+	@Query(value = "SELECT p FROM Payment p WHERE p.userId=?1")
+	public List<Payment> getpaymentsOfParticularUser(Long userId);
+	
+	
 }
