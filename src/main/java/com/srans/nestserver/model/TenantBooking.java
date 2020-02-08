@@ -1,8 +1,6 @@
- package com.srans.nestserver.model;
+package com.srans.nestserver.model;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "tenantbooking")
@@ -30,15 +29,11 @@ public class TenantBooking extends AuditModel {
 	private Long tenantId;
 	@Column
 	private Long hostelId;
-	
-	@Transient
-	private Long hostelName;
-	
 	@Column
-	private Long floorId;  
+	private Long floorId;
 	@Column
-	private Long roomId; 
-	@Column
+	private Long roomId;
+	@Column(unique = true)
 	private Long roomBedId;
 	@Column
 	private Long roomRent;
@@ -49,21 +44,31 @@ public class TenantBooking extends AuditModel {
 	@Column
 	private String tenantName;
 	@Column
-	private String roomName;
-	@Column
 	private String active;
 	@Column
 	private String bedPosition;
 	@Column
 	private String roomType;
 	@Column
-	private String floorName;
-	@Column
 	private Long guestId;
-
+	@Transient
+	private String floorName;
+	@Transient
+	private String roomName;
+	@Transient
+	private String sharing;
+	@Transient
+	private Long depositAmount;
+	@Transient
+	private Long discountAmount;
+	@Transient
+	private Long amountToBePaid;
+	@Transient
+	private String paymentType;
+	@Transient
+	private String hostelName;
 	@Transient
 	private Payment payment;
-
 	@Column
 	private String createdBy;
 	@Column
@@ -86,9 +91,10 @@ public class TenantBooking extends AuditModel {
 	}
 
 	public TenantBooking(Long bookingId, Long tenantId, Long hostelId, Long floorId, Long roomId, Long roomBedId,
-			Long roomRent, Date allotedFrom, Date allotedTill, String tenantName, String roomName, String active,
-			String bedPosition, String roomType, String floorName, Long guestId, Payment payment, String createdBy,
-			String modifiedBy) {
+			Long roomRent, Date allotedFrom, Date allotedTill, String tenantName, String active, String bedPosition,
+			String roomType, Long guestId, String floorName, String roomName, String sharing, Long depositAmount,
+			Long discountAmount, Long amountToBePaid, String paymentType, String hostelName, Payment payment,
+			String createdBy, String modifiedBy) {
 		super();
 		this.bookingId = bookingId;
 		this.tenantId = tenantId;
@@ -100,12 +106,18 @@ public class TenantBooking extends AuditModel {
 		this.allotedFrom = allotedFrom;
 		this.allotedTill = allotedTill;
 		this.tenantName = tenantName;
-		this.roomName = roomName;
 		this.active = active;
 		this.bedPosition = bedPosition;
 		this.roomType = roomType;
-		this.floorName = floorName;
 		this.guestId = guestId;
+		this.floorName = floorName;
+		this.roomName = roomName;
+		this.sharing = sharing;
+		this.depositAmount = depositAmount;
+		this.discountAmount = discountAmount;
+		this.amountToBePaid = amountToBePaid;
+		this.paymentType = paymentType;
+		this.hostelName = hostelName;
 		this.payment = payment;
 		this.createdBy = createdBy;
 		this.modifiedBy = modifiedBy;
@@ -191,14 +203,6 @@ public class TenantBooking extends AuditModel {
 		this.tenantName = tenantName;
 	}
 
-	public String getRoomName() {
-		return roomName;
-	}
-
-	public void setRoomName(String roomName) {
-		this.roomName = roomName;
-	}
-
 	public String getActive() {
 		return active;
 	}
@@ -223,6 +227,14 @@ public class TenantBooking extends AuditModel {
 		this.roomType = roomType;
 	}
 
+	public Long getGuestId() {
+		return guestId;
+	}
+
+	public void setGuestId(Long guestId) {
+		this.guestId = guestId;
+	}
+
 	public String getFloorName() {
 		return floorName;
 	}
@@ -231,12 +243,60 @@ public class TenantBooking extends AuditModel {
 		this.floorName = floorName;
 	}
 
-	public Long getGuestId() {
-		return guestId;
+	public String getRoomName() {
+		return roomName;
 	}
 
-	public void setGuestId(Long guestId) {
-		this.guestId = guestId;
+	public void setRoomName(String roomName) {
+		this.roomName = roomName;
+	}
+
+	public String getSharing() {
+		return sharing;
+	}
+
+	public void setSharing(String sharing) {
+		this.sharing = sharing;
+	}
+
+	public Long getDepositAmount() {
+		return depositAmount;
+	}
+
+	public void setDepositAmount(Long depositAmount) {
+		this.depositAmount = depositAmount;
+	}
+
+	public Long getDiscountAmount() {
+		return discountAmount;
+	}
+
+	public void setDiscountAmount(Long discountAmount) {
+		this.discountAmount = discountAmount;
+	}
+
+	public Long getAmountToBePaid() {
+		return amountToBePaid;
+	}
+
+	public void setAmountToBePaid(Long amountToBePaid) {
+		this.amountToBePaid = amountToBePaid;
+	}
+
+	public String getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
+	}
+
+	public String getHostelName() {
+		return hostelName;
+	}
+
+	public void setHostelName(String hostelName) {
+		this.hostelName = hostelName;
 	}
 
 	public Payment getPayment() {
@@ -270,15 +330,57 @@ public class TenantBooking extends AuditModel {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("TenantBooking [bookingId=").append(bookingId).append(", tenantId=").append(tenantId)
-				.append(", hostelId=").append(hostelId).append(", floorId=").append(floorId).append(", roomId=")
-				.append(roomId).append(", roomBedId=").append(roomBedId).append(", roomRent=").append(roomRent)
-				.append(", allotedFrom=").append(allotedFrom).append(", allotedTill=").append(allotedTill)
-				.append(", tenantName=").append(tenantName).append(", roomName=").append(roomName).append(", active=")
-				.append(active).append(", bedPosition=").append(bedPosition).append(", roomType=").append(roomType)
-				.append(", floorName=").append(floorName).append(", guestId=").append(guestId).append(", payment=")
-				.append(payment).append(", createdBy=").append(createdBy).append(", modifiedBy=").append(modifiedBy)
-				.append("]");
+		builder.append("TenantBooking [bookingId=");
+		builder.append(bookingId);
+		builder.append(", tenantId=");
+		builder.append(tenantId);
+		builder.append(", hostelId=");
+		builder.append(hostelId);
+		builder.append(", floorId=");
+		builder.append(floorId);
+		builder.append(", roomId=");
+		builder.append(roomId);
+		builder.append(", roomBedId=");
+		builder.append(roomBedId);
+		builder.append(", roomRent=");
+		builder.append(roomRent);
+		builder.append(", allotedFrom=");
+		builder.append(allotedFrom);
+		builder.append(", allotedTill=");
+		builder.append(allotedTill);
+		builder.append(", tenantName=");
+		builder.append(tenantName);
+		builder.append(", active=");
+		builder.append(active);
+		builder.append(", bedPosition=");
+		builder.append(bedPosition);
+		builder.append(", roomType=");
+		builder.append(roomType);
+		builder.append(", guestId=");
+		builder.append(guestId);
+		builder.append(", floorName=");
+		builder.append(floorName);
+		builder.append(", roomName=");
+		builder.append(roomName);
+		builder.append(", sharing=");
+		builder.append(sharing);
+		builder.append(", depositAmount=");
+		builder.append(depositAmount);
+		builder.append(", discountAmount=");
+		builder.append(discountAmount);
+		builder.append(", amountToBePaid=");
+		builder.append(amountToBePaid);
+		builder.append(", paymentType=");
+		builder.append(paymentType);
+		builder.append(", hostelName=");
+		builder.append(hostelName);
+		builder.append(", payment=");
+		builder.append(payment);
+		builder.append(", createdBy=");
+		builder.append(createdBy);
+		builder.append(", modifiedBy=");
+		builder.append(modifiedBy);
+		builder.append("]");
 		return builder.toString();
 	}
 

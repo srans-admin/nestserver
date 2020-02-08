@@ -29,7 +29,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * 
 	 */
 	
-	@Query(value="SELECT u FROM User u WHERE u.role=?1") 
+	@Query(value="SELECT u FROM User u WHERE u.role=?1 order by u.userId desc") 
 	public List<User> getUsersByRole(String role);
  
 	// Geting All Consolidated Hostel Details 
@@ -40,7 +40,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	@Query(value="SELECT u from TenantBooking tb "+
 	  "join User u on (tb.tenantId = u.userId and u.role=?2) "+
-	  "join Hostel h on (tb.hostelId = h.id and h.adminId = ?1) ") 
+	  "join Hostel h on (tb.hostelId = h.id and h.adminId = ?1) where tb.active='Y' order by u.userId desc ") 
 	public List<User> getUsersForAdmin(long adminId, String role);
 	
 	

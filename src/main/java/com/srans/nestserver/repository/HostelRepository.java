@@ -21,8 +21,12 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 	public FloorRepository floorRepository = null ; 
 	
 	
+	
 	@Query(value="SELECT hostel_owner_id FROM HOSTEL WHERE id=?1",nativeQuery=true)
 	public Long hostelownerid(Long hostel_owner_id);
+	
+	@Query(value="select h.id from Hostel h where h.adminId=?1")
+	public Long[] getAdminHostelId(Long adminId);
 	
 	@Query(value="SELECT num_of_floors FROM HOSTEL WHERE id=?1", nativeQuery = true)
     public Long numOfFloor(Long hostel_id);
@@ -63,6 +67,8 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 	
 	@Query(value = "select id from hostel", nativeQuery = true)
 	public Long[] getAllHostelId(); 
+	
+	
 
 	public Optional<Hostel> findByhostelownerid(long hostelownerid);
 

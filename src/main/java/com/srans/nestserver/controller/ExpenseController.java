@@ -27,14 +27,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.srans.nestserver.exception.ResourceNotFoundException;
 import com.srans.nestserver.model.Expense;
+
 import com.srans.nestserver.model.Hostel;
 import com.srans.nestserver.model.Room;
+
+
+import com.srans.nestserver.model.User;
 import com.srans.nestserver.repository.ExpenseRepository;
 import com.srans.nestserver.repository.HostelRepository;
+import com.srans.nestserver.repository.UserRepository;
+import com.srans.nestserver.util.NSConstants;
+
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1")
+
 public class ExpenseController {
 	Logger logger = LoggerFactory.getLogger(ExpenseController.class);
 	@Autowired
@@ -43,6 +51,10 @@ public class ExpenseController {
 	@Autowired
 	private HostelRepository hostelRepo;
 	
+
+
+	@Autowired
+	private UserRepository userRepo;
 
 	@PostMapping("/expenses")
 	@PreAuthorize("permitAll()")
@@ -66,7 +78,6 @@ public class ExpenseController {
 	@PreAuthorize("permitAll()")
 	public List<Expense> getExpensesData(@PathVariable(value = "id") Long hostelId) {
 		logger.info("IN::getExpensesData::" + hostelId);
-
 		List<Expense> expenses = expensesRepository.getExpenses(hostelId);
 		logger.info("OUT::getExpensesData::" + hostelId);
 		return expenses;
@@ -178,6 +189,48 @@ public class ExpenseController {
 		return expensesRepository.findById(adminId);
 	}
 
+
+	/*/@GetMapping("expenses/{adminId}")
+	
+	//@GetMapping("/expenses/expensehistory")
+	//@PreAuthorize("permitAll()") 
+	///List<Expense> getexpenseHistoryDetail(@RequestParam("id") Long idType , @RequestParam("adminId") Long adminId) throws ResourceNotFoundException {
+		
+		//logger.info("IN::getexpenseHistoryDetail::" + idType+"::"+adminId);
+		
+	//	List<Expense> expenseInfo = new ArrayList<>();
+	//
+		//Long checkHostel=expensesRepository.checkHostelId(idType);
+	//	System.out.println(checkHostel);
+	//	//User user=userRepo.getOne(idType);
+		/if(idType!=0&&adminId==0) {
+		expensesRepository.getexpenseHistoryDetail(idType).stream().forEach(expenseDetails -> {
+			 Expense expense = new Expense();
+			expense.setExpenseType(expenseDetails.getExpenseType());
+			expense.setAmount(expenseDetails.getAmount());
+			expense.setCreatedAt(expenseDetails.getCreatedAt());
+			expenseInfo.add(expense);
+		  });
+		}
+		
+		else {
+			
+			Long [] hostelId=hostelRepo.getAdminHostelId(adminId);
+			for(Long hostelInfo:hostelId) {
+				expensesRepository.getexpenseHistoryDetail(hostelInfo).stream().forEach(expenseDetails -> {
+					 Expense expense = new Expense();
+					expense.setExpenseType(expenseDetails.getExpenseType());
+					expense.setAmount(expenseDetails.getAmount());
+					expense.setCreatedAt(expenseDetails.getCreatedAt());
+					expenseInfo.add(expense);
+				  });
+			}
+		}
+		
+		logger.info("OUT::getexpenseHistoryDetail::" + idType+"::"+adminId);
+		return (expenseInfo);
+	}
+	*//
 	@PutMapping("/expenses/{id}")
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<Expense> updateExpenses(@PathVariable(value = "id") Long expensesId,

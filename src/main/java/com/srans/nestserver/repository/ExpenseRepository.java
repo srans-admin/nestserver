@@ -26,6 +26,9 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
 	@Query(value = "SELECT * FROM expense WHERE admin_id=?1", nativeQuery = true)
 	public List<Expense> getExpensesOfParticularAdmin(Long adminId);
+
+//	@Query(value="SELECT * FROM expensescategory WHERE type_id=?1",nativeQuery = true)
+  // public List<Expense>getExpenses(long type_id);
 	
 	@Query(value="SELECT e FROM Expense e WHERE hostelId=?1")
 	public List<Expense> getexpenseHistoryDetail(Long hostelid);

@@ -1,6 +1,7 @@
 package com.srans.nestserver.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,7 @@ import com.srans.nestserver.repository.BedRepository;
 import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.RoomRepository;
+import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.service.HostelService;
 import com.srans.nestserver.service.NotificationService;
 import com.srans.nestserver.service.StorageService;
@@ -69,6 +71,8 @@ public class HostelController {
 	@Autowired
 	private HostelService hostelService;
 
+	@Autowired
+	private TenantBookRepository tenantBookRepo;
 
 	@Autowired
 	private SubAdminService adminService = new SubAdminService();
@@ -91,12 +95,46 @@ public class HostelController {
 		return hostelService.getHostelDetails();
 	}
 
-	@GetMapping("/hostels/{id}")
-	@PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
-	// @PreAuthorize("permitAll()")
-	public Hostel getHostel(@PathVariable(value = "id") Long hostelId) throws IOException {
-		logger.info("IN::hostels::"  + hostelId);
+	@GetMapping("/hostels/our-hostels")
 
+	@PreAuthorize("permitAll()")
+	public List<Hostel> getAllHostelsForTenant(@RequestParam("id") Long tenantId) {
+List<Hostel> allHostelForTenant =new ArrayList<>();
+		tenantBookRepo.getTenantBookingInfo(tenantId).stream().forEach(tenantBooking -> {
+			Long hostelId = tenantBooking.getHostelId();
+
+			Hostel hostel = hostelRepository.getOne(hostelId);
+
+			Long adminId = hostel.getAdminId();
+
+			Long[] allHostelId = hostelRepository.getAdminHostelId(adminId);
+
+			for (Long hostelInfo : allHostelId) {
+				Hostel responseHostel = hostelRepository.getOne(hostelInfo);
+
+				floorRepository.findByHostelId(hostelInfo).forEach(floor -> {
+					responseHostel.getFloors().add(floor);
+					roomRepository.findByFloorId(floor.getId()).forEach(room -> {
+						floor.getRooms().add(room);
+						bedRepository.findByRoomId(room.getId()).forEach(bed -> {
+							room.getBeds().add(bed);
+						});
+					});
+				});
+				
+				allHostelForTenant.add(responseHostel);
+			}
+
+		});
+
+		return (allHostelForTenant);
+	}
+
+	@GetMapping("/hostels/{id}")
+	// @PreAuthorize("hasRole('ROLE_SUPERADMIN') OR hasRole('ROLE_ADMIN')")
+	@PreAuthorize("permitAll()")
+	public Hostel getHostel(@PathVariable(value = "id") Long hostelId) throws IOException {
+		logger.info("IN::hostels::" + hostelId);
 
 		Hostel responseHostel = hostelRepository.getOne(hostelId);
 
@@ -109,7 +147,7 @@ public class HostelController {
 				});
 			});
 		});
-		logger.info("OUT::hostels::"  + hostelId);
+		logger.info("OUT::hostels::" + hostelId);
 
 		return responseHostel;
 	}
@@ -156,19 +194,12 @@ public class HostelController {
 		logger.info("OUT::POST::/hostels::saveHostel::" + hostel);
 		return responseHostel;
 	}
-	
-	
-	
-	
-	
-	
 
 	// Assign Multiple hostel for multiple admin
 	@PostMapping("/hostels/assign/")
 	@PreAuthorize("permitAll()")
 	public SubAdminDetails assignHostel(@Valid @RequestBody SubAdminDetails subAdminDetails) {
 		logger.info("IN::POST::/hostels::saveHostelassign::" + subAdminDetails);
-
 
 		subAdminDetails = adminService.subAdminProcess(subAdminDetails);
 		logger.info("IN::OUT::/hostels::saveHostelassign::" + subAdminDetails);
@@ -197,15 +228,16 @@ public class HostelController {
 		return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG)
 				.body(new InputStreamResource(storageService.retriveHostelImage(id, cat)));
 
-
 	}
+
 	
 	
 	
-	//Get Hostel Details For Admin 
+
+	// Get Hostel Details For Admin
 	@GetMapping("/hostels")
 	@PreAuthorize("permitAll()")
-	public List<Hostel> getHostelsBasedOnRole(@RequestParam("id")  Long id,@RequestParam("role") String role ) {
+	public List<Hostel> getHostelsBasedOnRole(@RequestParam("id") Long id, @RequestParam("role") String role) {
 		List<Hostel> hostelData = hostelService.getHostelsBasedOnRole(id, role);
 		logger.info("get all hostel details based on role");
 		return (hostelData);
@@ -215,9 +247,9 @@ public class HostelController {
 	@GetMapping("/hostels/admin1/{id}")
 	@PreAuthorize("permitAll()")
 	public Optional<Hostel> getHostelForAdmin1(@PathVariable("id") Long adminId) {
-		logger.info("IN::getHostelForAdmin1::"  + adminId);
+		logger.info("IN::getHostelForAdmin1::" + adminId);
 
-		logger.info("OUT::getHostelForAdmin1::"  + adminId);
+		logger.info("OUT::getHostelForAdmin1::" + adminId);
 		return hostelRepository.findById(adminId);
 
 	}
@@ -227,13 +259,13 @@ public class HostelController {
 	public Hostel updateHostel(@PathVariable Long id, @Valid @RequestBody Hostel hostelRequest) {
 
 		return hostelRepository.findById(id).map(hostel -> {
-			logger.info("IN::updateHostel::"  + hostelRequest);
+			logger.info("IN::updateHostel::" + hostelRequest);
 
 			hostel.setHostelName(hostelRequest.getHostelName());
 			hostel.setHostelAddress(hostelRequest.getHostelAddress());
 			hostel.setHostelType(hostelRequest.getHostelType());
 			hostel.setNumOfFloors(hostelRequest.getNumOfFloors());
-			logger.info("OUT::updateHostel::"  + hostelRequest);
+			logger.info("OUT::updateHostel::" + hostelRequest);
 			return hostelRepository.save(hostel);
 		}).orElseThrow(() -> new ResourceNotFoundException("HostelId " + id + " not found"));
 	}
@@ -241,11 +273,11 @@ public class HostelController {
 	@DeleteMapping("/hostels/{id}")
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<?> deleteHostel(@PathVariable Long id) {
-		logger.info("IN::deleteHostel::"  + id);
+		logger.info("IN::deleteHostel::" + id);
 
 		return hostelRepository.findById(id).map(hostel -> {
 			hostelRepository.delete(hostel);
-			logger.info("OUT::deleteHostel::"  + id);
+			logger.info("OUT::deleteHostel::" + id);
 			return ResponseEntity.ok().build();
 		}).orElseThrow(() -> new ResourceNotFoundException("HostelId " + id + " not found"));
 	}
@@ -261,7 +293,7 @@ public class HostelController {
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<Floor> getHostelById(@PathVariable(value = "id") Long hostelsId,
 			@PathVariable(value = "floor_id") Long floor_id) {
-		logger.info("IN::getHostelById::"  + hostelsId);
+		logger.info("IN::getHostelById::" + hostelsId);
 
 		if (!hostelRepository.existsById(hostelsId)) {
 			throw new ResourceNotFoundException("hostelId " + hostelsId + " not found");
@@ -270,7 +302,7 @@ public class HostelController {
 		Floor floor = floorRepository.findById(floor_id)
 				.orElseThrow(() -> new ResourceNotFoundException("Floor not found for this Hostelid :: " + hostelsId
 						+ "Floor not found for this Floor id::" + floor_id));
-		logger.info("OUT::getHostelById::"  + hostelsId);
+		logger.info("OUT::getHostelById::" + hostelsId);
 
 		return ResponseEntity.ok().body(floor);
 	}
@@ -298,7 +330,7 @@ public class HostelController {
 			throw new ResourceNotFoundException("hostelId " + id + " not found");
 		}
 		logger.info("IN::POST::/hostels::updateFloor::" + floor_id);
-		
+
 		return floorRepository.findById(floor_id).map(floor -> {
 			floor.setFloorName(floorRequest.getFloorName());
 			floor.setDescription(floorRequest.getDescription());
@@ -326,8 +358,8 @@ public class HostelController {
 	@GetMapping("/hostels/floor/{id}/room")
 	@PreAuthorize("permitAll()")
 	public List<Room> getAllFloorsByHostelid1(@PathVariable(value = "id") Long id) {
-		logger.info("IN::getAllFloorsByHostelid1::"  + id);
-		logger.info("OUT::getAllFloorsByHostelid1::"  + id);
+		logger.info("IN::getAllFloorsByHostelid1::" + id);
+		logger.info("OUT::getAllFloorsByHostelid1::" + id);
 		return roomRepository.findByFloorId(id);
 	}
 
@@ -339,8 +371,8 @@ public class HostelController {
 		if (!floorRepository.existsById(floor_id)) {
 			throw new ResourceNotFoundException("FloorId " + floor_id + " not found");
 		}
-		logger.info("IN::getFloorById::"  + floor_id);
-		logger.info("OUT::getFloorById::"  + floor_id);
+		logger.info("IN::getFloorById::" + floor_id);
+		logger.info("OUT::getFloorById::" + floor_id);
 
 		Room room = roomRepository.findById(room_id).orElseThrow(() -> new ResourceNotFoundException(
 				"Floor not found for this Floorid :: " + floor_id + "Floor not found for this Floor id::" + room_id));
@@ -394,8 +426,8 @@ public class HostelController {
 	@GetMapping("/hostels/{id}/extendingviews")
 	@PreAuthorize("permitAll()")
 	public List<Object> getTestMap(@PathVariable(value = "id") Long hostelId) {
-		logger.info("IN::getTestMap::"  + hostelId);
-		logger.info("OUT::getTestMap::"  + hostelId);
+		logger.info("IN::getTestMap::" + hostelId);
+		logger.info("OUT::getTestMap::" + hostelId);
 
 		return Arrays.asList(hostelRepository.numOfFloor(hostelId), roomRepository.countRoomByHostelId(hostelId),
 				roomRepository.countSingleSharing(hostelId), roomRepository.countDoubleSharing(hostelId),
