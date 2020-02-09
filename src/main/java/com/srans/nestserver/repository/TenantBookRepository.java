@@ -1,11 +1,11 @@
 package com.srans.nestserver.repository;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.srans.nestserver.model.Floor;
 import com.srans.nestserver.model.TenantBooking;
 
 public interface TenantBookRepository extends JpaRepository<TenantBooking, Long> {
@@ -36,6 +36,13 @@ public interface TenantBookRepository extends JpaRepository<TenantBooking, Long>
 
 	@Query(value="SELECT t from TenantBooking t where t.tenantId=?1")
 	public List<TenantBooking> getTenantBookingInfo(Long tenantId); 
+	
+	@Query(value = "SELECT t.bookingId from TenantBooking t where t.tenantId=?1")
+	public Long bookingId(Long tenantId);
+	
+	
+	
+	
 	
 
 }

@@ -25,8 +25,13 @@ public class SMSTemplates {
 	
 	public static final String GUEST_TEMPLATE="Hello ##USER_NAME##, \n"+
 	                                                          "Thank you for choosing NIDOS.\n"+
-	                                                          "YOUR User ID: ##USER_ID##  \nTemp Password : ##TEMP_PASSWORD##"+
-	                                                          "We recommend you to change passowrd on first login.\n"+
+	                                                          "YOUR reservation details below: \n"
+	                                                          + "Hostel Name :##HOSTEL_NAME## \n"+
+	                                                          "Floor Number : ##FLOOR_NUMBER##\n"+
+	                                                          "Room Number : ##ROOM_NUMBER##\n"+
+	                                                          "Room Rent : ##ROOM_RENT##\n"+
+	                                                          "Bed Number :##BED_NUMBER## \n"+
+	                                                          "Last Date :##LAST_DATE## \n"+
 			                                                   "--\n@Team NIODS"                 ;
 	
 	public static final String VACATE_TENANT_MESSAGE_TEMPLATE="Thank you for visiting the hostel";

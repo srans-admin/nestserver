@@ -74,6 +74,9 @@ public class TenantBooking extends AuditModel {
 	@Column
 	private String modifiedBy;
 
+	@Column
+	private Long remainingDate;
+
 	public TenantBooking() {
 		super();
 		this.tenantId = 0L;
@@ -87,6 +90,7 @@ public class TenantBooking extends AuditModel {
 		this.tenantName = "";
 		this.guestId = 0L;
 		this.payment = null;
+		this.remainingDate = 0L;
 
 	}
 
@@ -94,7 +98,7 @@ public class TenantBooking extends AuditModel {
 			Long roomRent, Date allotedFrom, Date allotedTill, String tenantName, String active, String bedPosition,
 			String roomType, Long guestId, String floorName, String roomName, String sharing, Long depositAmount,
 			Long discountAmount, Long amountToBePaid, String paymentType, String hostelName, Payment payment,
-			String createdBy, String modifiedBy) {
+			String createdBy, String modifiedBy, Long remainingDate) {
 		super();
 		this.bookingId = bookingId;
 		this.tenantId = tenantId;
@@ -121,6 +125,7 @@ public class TenantBooking extends AuditModel {
 		this.payment = payment;
 		this.createdBy = createdBy;
 		this.modifiedBy = modifiedBy;
+		this.remainingDate = remainingDate;
 	}
 
 	public Long getBookingId() {
@@ -327,6 +332,14 @@ public class TenantBooking extends AuditModel {
 		return serialVersionUID;
 	}
 
+	public Long getRemainingDate() {
+		return remainingDate;
+	}
+
+	public void setRemainingDate(Long remainingDate) {
+		this.remainingDate = remainingDate;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -380,6 +393,8 @@ public class TenantBooking extends AuditModel {
 		builder.append(createdBy);
 		builder.append(", modifiedBy=");
 		builder.append(modifiedBy);
+		builder.append(", remainingDate=");
+		builder.append(remainingDate);
 		builder.append("]");
 		return builder.toString();
 	}

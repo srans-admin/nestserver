@@ -4,6 +4,8 @@
 package com.srans.nestserver.service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -20,9 +22,15 @@ import org.thymeleaf.context.Context;
 
 import com.srans.nestserver.communication.NiodsMailer;
 import com.srans.nestserver.communication.NiodsSmsGateway;
+import com.srans.nestserver.model.Floor;
+import com.srans.nestserver.model.Hostel;
+import com.srans.nestserver.model.Room;
 import com.srans.nestserver.model.User;
+import com.srans.nestserver.repository.BedRepository;
+import com.srans.nestserver.repository.FloorRepository;
 import com.srans.nestserver.repository.HostelRepository;
 import com.srans.nestserver.repository.PaymentRepository;
+import com.srans.nestserver.repository.RoomRepository;
 import com.srans.nestserver.repository.TenantBookRepository;
 import com.srans.nestserver.repository.VacationRepository;
 import com.srans.nestserver.util.NSConstants;
@@ -60,6 +68,15 @@ public class TenantService {
 	@Autowired
 	private HostelRepository hostelRepo;
 
+	@Autowired
+	private FloorRepository floorRepository;
+
+	@Autowired
+	private RoomRepository roomRepository;
+
+	@Autowired
+	private BedRepository bedRepository;
+
 	/**
 	 * 
 	 * @param templateFileName Name of the template file without extension
@@ -73,31 +90,41 @@ public class TenantService {
 		logger.trace("In::");
 		reqParamtersMap = new HashMap<>();
 
-		if(user.getRole().endsWith(NSConstants.ROLE_TENANT)&& user.getStatus().equals("A")) {
-		reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());
-		reqParamtersMap.put("name", user.getName());
- 
-		reqParamtersMap.put("hostel_name", (hostelRepo.getOne(user.getTenantBooking().getHostelId())).getHostelName());
-		reqParamtersMap.put("floor_number", user.getTenantBooking().getFloorId());
-		reqParamtersMap.put("room_number", user.getTenantBooking().getRoomId());
-		reqParamtersMap.put("room_rent", user.getTenantBooking().getRoomRent());	
-		reqParamtersMap.put("bed", user.getTenantBooking().getRoomBedId());
-		}
-		
-		else if(user.getRole().endsWith(NSConstants.ROLE_TENANT) && user.getStatus().equals("NA")) {
-			
-			reqParamtersMap.put("name", user.getName());
-			
-		}
-		else if(user.getRole().endsWith(NSConstants.ROLE_GUEST)) {
-			reqParamtersMap.put("name", user.getName());
-
+		if (user.getRole().endsWith(NSConstants.ROLE_TENANT) && user.getStatus().equals("A")) {
 			reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());
+			reqParamtersMap.put("name", user.getName());
+
+			reqParamtersMap.put("hostel_name",
+					(hostelRepo.getOne(user.getTenantBooking().getHostelId())).getHostelName());
+			reqParamtersMap.put("floor_number", user.getTenantBooking().getFloorId());
+			reqParamtersMap.put("room_number", user.getTenantBooking().getRoomId());
+			reqParamtersMap.put("room_rent", user.getTenantBooking().getRoomRent());
+			reqParamtersMap.put("bed", user.getTenantBooking().getRoomBedId());
+		}
+
+		else if (user.getRole().endsWith(NSConstants.ROLE_TENANT) && user.getStatus().equals("NA")) {
+
+			reqParamtersMap.put("name", user.getName());
+
+		} else if (user.getRole().endsWith(NSConstants.ROLE_GUEST)) {
+
+			Hostel hostelInfo = hostelRepo.getOne(user.getTenantBooking().getHostelId());
+			Floor floorInfo = floorRepository.getOne(user.getTenantBooking().getFloorId());
+			Room roomInfo = roomRepository.getOne(user.getTenantBooking().getRoomId());
+
+			reqParamtersMap.put("Name", user.getName());
+			reqParamtersMap.put("HosteName", hostelInfo.getHostelName());
+			reqParamtersMap.put("Floor", floorInfo.getFloorName());
+			reqParamtersMap.put("Room", roomInfo.getRoomName());
+			reqParamtersMap.put("Bed", user.getTenantBooking().getRoomBedId());
+			reqParamtersMap.put("RoomRent", roomInfo.getRoomRent());
+			LocalDate localDate = user.getTenantBooking().getAllotedTill().toInstant().atZone(ZoneId.systemDefault())
+					.toLocalDate();
+			reqParamtersMap.put("LastDate", localDate);
 
 		}
- 
-		
-		else if(user.getRole().endsWith(NSConstants.ROLE_ADMIN)) {
+
+		else if (user.getRole().endsWith(NSConstants.ROLE_ADMIN)) {
 			reqParamtersMap.put("password", user.getUserSubscriptionWrapper().getUser().getPassword());
 			reqParamtersMap.put("name", user.getName());
 			reqParamtersMap.put("subscription", user.getSubscriptions());
@@ -135,10 +162,11 @@ public class TenantService {
 				message = this.getTemplate("tenant_booking", responseTenant);
 
 			}
-			
-			else if(responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT) && responseTenant.getStatus().equals("NA")) {
-			
-				message=this.getTemplate("vacation_approved", responseTenant);
+
+			else if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT)
+					&& responseTenant.getStatus().equals("NA")) {
+
+				message = this.getTemplate("vacation_approved", responseTenant);
 			}
 
 			else if (responseTenant.getRole().endsWith(NSConstants.ROLE_ADMIN)) {
@@ -148,7 +176,6 @@ public class TenantService {
 			else if (responseTenant.getRole().endsWith(NSConstants.ROLE_USER)
 					|| responseTenant.getRole().endsWith(NSConstants.ROLE_GUEST)) {
 				message = this.getTemplate("guest_confirmation", responseTenant);
-
 
 			} else {
 				message = "User added ...";
@@ -163,13 +190,10 @@ public class TenantService {
 		} catch (MailException e) {
 			e.printStackTrace();
 		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TemplateException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -185,8 +209,7 @@ public class TenantService {
 		try {
 			String message = "";
 
-			if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT
-					)&& responseTenant.getStatus().equals("A")) {
+			if (responseTenant.getRole().endsWith(NSConstants.ROLE_TENANT) && responseTenant.getStatus().equals("A")) {
 
 				message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE
 						.replaceAll("##USER_NAME##", responseTenant.getName())
@@ -208,7 +231,22 @@ public class TenantService {
 				message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE;
 
 			} else if (responseTenant.getRole().endsWith(NSConstants.ROLE_GUEST)) {
-				message = SMSTemplates.GUEST_TEMPLATE.replaceAll("USER_NAME", responseTenant.getName());
+
+				Hostel hostelInfo = hostelRepo.getOne(responseTenant.getTenantBooking().getHostelId());
+				Floor floorInfo = floorRepository.getOne(responseTenant.getTenantBooking().getFloorId());
+				Room roomInfo = roomRepository.getOne(responseTenant.getTenantBooking().getRoomId());
+
+				message = SMSTemplates.GUEST_TEMPLATE.replaceAll("USER_NAME",
+						responseTenant.getName().replaceAll("HOSTEL_NAME", hostelInfo.getHostelName())
+								.replaceAll("FLOOR_NUMBER", floorInfo.getFloorName())
+								.replaceAll("ROOM_NUMBER", roomInfo.getRoomName())
+								.replaceAll("ROOM_RENT", String.valueOf(roomInfo.getRoomRent()))
+								.replaceAll("BED_NUMBER",
+										String.valueOf(responseTenant.getTenantBooking().getRoomBedId()))
+								.replaceAll("LAST_DATE", responseTenant.getTenantBooking().getAllotedTill().toString())
+
+				);
+
 			} else {
 				message = SMSTemplates.TENANT_REGISTRATION_TEMPLATE;
 			}
@@ -220,7 +258,7 @@ public class TenantService {
 			logger.debug("Out::triggerAlertEmail");
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 

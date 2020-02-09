@@ -2,6 +2,7 @@
 package com.srans.nestserver.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,14 +107,25 @@ public class UserController {
 	public List<User> getAllTenants(@RequestParam("adminId") Long adminId, @RequestParam("type") String type) {
 		logger.info("IN::getAllTenants::" + adminId + "::" + type);
 
-		List<User> users = null;
+		final List<User> users = new ArrayList<>();
 
 		if (type != null && type.equalsIgnoreCase(NSConstants.ROLE_TENANT)) {
-			users = userRepository.getUsersForAdmin(adminId, type);
+			
+			userRepository.getUsersForAdmin(adminId, type).stream().forEach(tenant ->{
+				users.add(tenant);
+			});
 			logger.info("IN::getAllTenants::" + adminId);
 		} else if (type != null && type.equalsIgnoreCase(NSConstants.ROLE_GUEST)) {
-			users = userRepository.getUsersByRole(NSConstants.ROLE_GUEST);
 
+			userRepository.getUsersByRole(NSConstants.ROLE_GUEST).stream().forEach(guest -> {
+				Long bookingId = tenantBookingRepo.bookingId(guest.getUserId());
+				System.out.println(bookingId);
+				if (bookingId != null) {
+					guest.setTenantBooking(tenantBookingRepo.getOne(bookingId));
+					guest.setBed(bedRepo.getOne(tenantBookingRepo.getOne(bookingId).getRoomBedId()));
+					users.add(guest);
+				}
+			});
 		}
 		logger.info("OUT::getAllTenants::" + adminId);
 
@@ -125,7 +137,7 @@ public class UserController {
 	public User getTenantById(@PathVariable(value = "id") Long tenantId) throws ResourceNotFoundException {
 		logger.info("IN::getTenantById::" + tenantId);
 		User user = userRepository.getOne(tenantId);
-		if (!user.getRole().equals(NSConstants.ROLE_ADMIN ) && !user.getRole().equals(NSConstants.ROLE_GUEST)) {
+		if (!user.getRole().equals(NSConstants.ROLE_ADMIN) && !user.getRole().equals(NSConstants.ROLE_GUEST)) {
 			TenantBooking tenantBookingInfo = tenantBookingRepo.getTenantBookedInfoForUser(tenantId);
 			Hostel hostel = hostelRepo.getOne(tenantBookingInfo.getHostelId());
 			tenantBookingInfo.setHostelName(hostel.getHostelName());
@@ -140,7 +152,6 @@ public class UserController {
 		logger.info("OUT::getTenantById::" + tenantId);
 		return user;
 	}
-	
 
 	@GetMapping("/users/byname/{name}")
 	@PreAuthorize("permitAll()")
