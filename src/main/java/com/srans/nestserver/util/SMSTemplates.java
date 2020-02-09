@@ -14,7 +14,7 @@ public class SMSTemplates {
 																"Looking forward to serve you better.\n"+
 																"\n"+
 																"Thanks\n"+
-																"--\n@Team NIODS";
+																"--\n@Team NIODS--";
 	
 	public static final String TENANT_CREDETIALS = "Dear ##USER_NAME##,\nYour User ID: ##USER_ID## \nTemp Password : ##TEMP_PASSWORD## \n--\n@Team NIDOS \nWe recommend you to change passowrd on first login.\n"; 
 	
