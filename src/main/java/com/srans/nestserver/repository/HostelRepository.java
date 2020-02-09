@@ -72,9 +72,9 @@ public interface HostelRepository extends JpaRepository<Hostel, Long> {
 
 	public Optional<Hostel> findByhostelownerid(long hostelownerid);
 
-	@Query(value="select id from hostel ` ")
-	public static Long[] getAdminHostelId(Long adminId) {
-		// TODO Auto-generated method stub
-		return null;
-	}  
+	/*
+	 * @Query(value="select id from hostel ` ") public static Long[]
+	 * getAdminHostelId(Long adminId) { // TODO Auto-generated method stub return
+	 * null; }
+	 */
 }
