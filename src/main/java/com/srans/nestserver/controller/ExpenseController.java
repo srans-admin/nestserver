@@ -101,7 +101,7 @@ public class ExpenseController {
 	 * expensesRepository.getExpensesOfParticularAdmin(adminId); return expenses; }
 	 */
 
-	@GetMapping("/expenses/expensehistory")
+	/*@GetMapping("/expenses/expensehistory")
 
 	@PreAuthorize("permitAll()")
 	List<Expense> getexpenseHistoryDetail( @RequestParam("adminId") Long adminId)
@@ -131,7 +131,7 @@ public class ExpenseController {
 	}
 	
 	
-	
+	*/
 	
 	
 	
@@ -230,7 +230,7 @@ public class ExpenseController {
 		logger.info("OUT::getexpenseHistoryDetail::" + idType+"::"+adminId);
 		return (expenseInfo);
 	}
-	*//
+	*/
 	@PutMapping("/expenses/{id}")
 	@PreAuthorize("permitAll()")
 	public ResponseEntity<Expense> updateExpenses(@PathVariable(value = "id") Long expensesId,
