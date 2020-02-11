@@ -103,6 +103,7 @@ public class ExpenseController {
 
 /*	@GetMapping("/expenses/expensehistory")
 
+
 	@PreAuthorize("permitAll()")
 	List<Expense> getexpenseHistoryDetail( @RequestParam("adminId") Long adminId)
 			throws ResourceNotFoundException {
@@ -131,7 +132,7 @@ public class ExpenseController {
 	}
 	*/
 	
-	
+	*/
 	
 	
 	
