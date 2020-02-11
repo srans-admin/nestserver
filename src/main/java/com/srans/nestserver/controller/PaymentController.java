@@ -69,11 +69,11 @@ public class PaymentController {
 		logger.info("IN::GET::/payments::getPaymentHistory::" + userId + "::" + role);
 		List<PaymentHistory> paymentList = new ArrayList<>();
 
-		PaymentHistory payment = new PaymentHistory();
+		
 		if (role != null && role.equalsIgnoreCase(NSConstants.ROLE_TENANT)) {
 
 			paymentRepository.getPaymentHistory(userId).stream().forEach(payments -> {
-
+				PaymentHistory payment = new PaymentHistory();
 				if (payments.getUserId() == userId) {
 					payment.setId(payments.getId());
 					payment.setRoomRent(payments.getRoomRent());
@@ -83,25 +83,30 @@ public class PaymentController {
 					payment.setDepositAmount(payments.getDepositAmount());
 					payment.setDiscountAmount(payments.getDiscountAmount());
 					payment.setAmountToBePaid(payments.getAmountToBePaid());
-                    payment.setPaidDate(payments.getPaidDate());
+					payment.setPaidDate(payments.getPaidDate());
 				}
+				 paymentList.add(payment);
 			});
 
-			List<Object[]> response = paymentRepository.getTenantInfo(userId);
-			// List<PaymentHistory> paymentHistory=new ArrayList<PaymentHistory>();
-
-			Long roomId = 0L;
-			for (Object[] p : response) {
-
-				roomId = (Long) p[0];
-				payment.setName((String) p[1]);
-
-			}
-
-			Room room = roomRepository.getOne(roomId);
-			payment.setRoomName(room.getRoomName());
-			payment.setRoomType(room.getRoomType());
-			paymentList.add(payment);
+			
+			/*
+			 * List<Object[]> response = paymentRepository.getTenantInfo(userId); //
+			 * List<PaymentHistory> paymentHistory = new ArrayList<PaymentHistory>();
+			 * 
+			 * Long roomId = 0L;
+			 * 
+			 * for (Object[] p : response) {
+			 * 
+			 * roomId = (Long) p[0]; System.out.println(p[0]); payment.setName((String)
+			 * p[1]);
+			 * 
+			 * Room room = roomRepository.getOne(roomId);
+			 * payment.setRoomName(room.getRoomName());
+			 * 
+			 * payment.setRoomType(room.getRoomType()); //paymentList.add(payment); }
+			 */			 
+			  //paymentList.add(payment);
+		
 
 		} else {
 
@@ -116,40 +121,39 @@ public class PaymentController {
 				paymentHistory.setDepositAmount(payments.getDepositAmount());
 				paymentHistory.setDiscountAmount(payments.getDiscountAmount());
 				paymentHistory.setAmountToBePaid(payments.getAmountToBePaid());
-                paymentHistory.setPaidDate(payments.getPaidDate());
+				paymentHistory.setPaidDate(payments.getPaidDate());
 				List<Object[]> response = paymentRepository.getTenantInfo(payments.getUserId());
 
 				Long roomId = 0L;
 
+				// Room room = null;
+
 				for (Object[] p : response) {
 
 					roomId = (Long) p[0];
-					System.out.println(p[1]);
+					System.out.println(p[0]);
 					paymentHistory.setName((String) p[1]);
-
+					Room room = roomRepository.getOne((Long) p[0]);
+					
+					paymentHistory.setRoomName(room.getRoomName());
+					paymentHistory.setRoomType(room.getRoomType());
+					//ll.add(paymentHistory);
 				}
-				Room room = roomRepository.getOne(roomId);
-				paymentHistory.setRoomName(room.getRoomName());
-				paymentHistory.setRoomType(room.getRoomType());
+
+				// System.out.println(roomId);
+				// paymentHistory.setRoomName(room.getRoomName());
+				// paymentHistory.setRoomType(room.getRoomType());
 
 				ll.add(paymentHistory);
 
 			});
-			
+
 			paymentList.addAll(ll);
 			logger.info("OUT::GET::/payments::getPaymentHistory::" + userId + "::" + role);
 		}
 		return paymentList;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	/*
 	 * @GetMapping("/payments/{user_id}") public Optional<Payment>
 	 * getpaymentsOfParticularUser(@PathVariable(value = "id") long userId) {
@@ -157,57 +161,28 @@ public class PaymentController {
 	 * paymentRepository.findById(userId); }
 	 * 
 	 */
-	
-	
-	
-	
-	
-	
-	
-	
+
 	@GetMapping("payments/history/{id}")
 	@PreAuthorize("permitAll()")
 	// @PreAuthorize("permitAll()")
 	public List<HistoryUtil> getPaymentHistoryDetail(@PathVariable(value = "id") Long userId)
 			throws ResourceNotFoundException {
-		
+
 		List<HistoryUtil> getPaymentHistory = new ArrayList<>();
-		
-		 paymentRepository.getDataForpaymentHistory(userId).stream().forEach(paymentInfo ->{
-			HistoryUtil historyUtil=new HistoryUtil();
-			//historyUtil.setAmount(paymentInfo.getRoomRent());
+
+		paymentRepository.getDataForpaymentHistory(userId).stream().forEach(paymentInfo -> {
+			HistoryUtil historyUtil = new HistoryUtil();
+			historyUtil.setAmount(paymentInfo.getRoomRent());
 			historyUtil.setRoomRent(paymentInfo.getRoomRent());
 			historyUtil.setPaymentThrough(paymentInfo.getPaymentThrough());
-            historyUtil.setPaidDate(paymentInfo.getPaidDate());			
+			historyUtil.setPaidDate(paymentInfo.getPaidDate());
 			getPaymentHistory.add(historyUtil);
-			
-		});
-	
 
-		
+		});
 
 		return (getPaymentHistory);
 
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	@PostMapping("/payments")
 	@PreAuthorize("permitAll()")
@@ -216,8 +191,6 @@ public class PaymentController {
 		logger.info("OUT::POST::/payments::savePayment::" + payment);
 		return paymentRepository.save(payment);
 	}
-
-	
 
 	@GetMapping("/payments/{id}")
 	public ResponseEntity<Payment> getPaymentById(@PathVariable(value = "id") Long paymentId)

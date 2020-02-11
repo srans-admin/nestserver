@@ -37,7 +37,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 	@Query(value = "SELECT p FROM Payment p WHERE p.userId=?1")
 	public List<Payment> getPaymentHistory(Long userId);
 	
-	
 	@Query(value = "SELECT p FROM Payment p WHERE p.userId=?1")
 	public List<Payment> getDataForpaymentHistory(Long userId);
 
@@ -62,7 +61,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 	@Query(value="select created_at from payment where user_id=?1 order by created_at desc limit 1",nativeQuery = true)
 	public Date lastPayment(Long tenantId);
 
-	@Query(value = "SELECT p from Payment p where user_id=?1")
+	@Query(value = "SELECT p from payment p where p.user_id=?1 order by p.created_at desc limit 1", nativeQuery=true)
 	public Payment getPaymentByUserId(Long user_id);
 
 	@Query(value = "SELECT t.roomId, u.name  from TenantBooking t INNER JOIN User u on (t.tenantId=u.userId) where t.tenantId=?1")

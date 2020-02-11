@@ -101,7 +101,8 @@ public class ExpenseController {
 	 * expensesRepository.getExpensesOfParticularAdmin(adminId); return expenses; }
 	 */
 
-	/*@GetMapping("/expenses/expensehistory")
+/*	@GetMapping("/expenses/expensehistory")
+
 
 	@PreAuthorize("permitAll()")
 	List<Expense> getexpenseHistoryDetail( @RequestParam("adminId") Long adminId)
@@ -129,7 +130,7 @@ public class ExpenseController {
 		logger.info("OUT::getexpenseHistoryDetail::" + adminId);
 		return (expenseInfo);
 	}
-	
+	*/
 	
 	*/
 	
